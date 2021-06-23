@@ -16,15 +16,15 @@
 export default {
   TopBar: {
     pathData: [
-      ['Home', '../../../'],
-      ['AudioWorklet', '../../'],
-      ['MessagePort'],
+      ["Home", "../../../"],
+      ["AudioWorklet", "../../"],
+      ["MessagePort"],
     ],
   },
 
   Description: {
-    title: 'MessagePort',
+    title: "MessagePort",
     detail: `Demonstrates basic bi-directional communication between
-        AudioWorkletNode and AudioWorkletProcessor.`
+        AudioWorkletNode and AudioWorkletProcessor.`,
   },
 };

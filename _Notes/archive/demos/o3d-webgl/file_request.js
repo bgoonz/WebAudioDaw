@@ -29,38 +29,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * A FileRequest is used to carry out an asynchronous request for a file
  * to be loaded.  Its use parallels that of XMLHttpRequest; you create one, call
  * open, set the onreadystatechange callback, and call send.
  * Note that unlike XMLHttpRequests, FileRequests cannot be reused.
- * 
+ *
  * For RawData loads, on success the RawData will be stored in the data field
  * on the FileRequest itself. It is only valid until the FileRequest is freed by
  * calling pack.removeObject(request).
- * 
+ *
  * var request = pack.createFileRequest("RAWDATA");
  * request.open("GET", url, true);
  * request.onreadystatechange = function() {
  *   if (request.done) {
  *     if (request.success) {
  *       var rawData = request.data;
- *       
+ *
  *       ...
  *     } else {
  *       dump('Load of rawdata returned failure.');
  *     }
- *     
+ *
  *     pack.removeObject(request);
  *   }
  * };
  * request.send();
  */
-o3d.FileRequest = function() {
+o3d.FileRequest = function () {
   this.request_ = new XMLHttpRequest();
   var fileRequest = this;
-  this.request_.onreadystatechange = function() {
+  this.request_.onreadystatechange = function () {
     fileRequest.readyState = this.readyState;
     fileRequest.done = fileRequest.done || this.done;
     if (this.readyState == 4) {
@@ -72,10 +71,9 @@ o3d.FileRequest = function() {
     fileRequest.data = this.responseText;
     if (fileRequest.onreadystatechange)
       fileRequest.onreadystatechange.apply(fileRequest, arguments);
-  }
+  };
 };
-o3d.inherit('FileRequest', 'NamedObject');
-
+o3d.inherit("FileRequest", "NamedObject");
 
 /**
  * A callback to call whenever the ready state of the request changes.
@@ -83,15 +81,11 @@ o3d.inherit('FileRequest', 'NamedObject');
  */
 o3d.FileRequest.prototype.onreadystatechange = null;
 
-
-
 /**
  * The URI this request is for.
  * @type {string}
  */
-o3d.FileRequest.prototype.uri = '';
-
-
+o3d.FileRequest.prototype.uri = "";
 
 /**
  * On completion of successful RawData file loads, this holds the loaded
@@ -99,8 +93,6 @@ o3d.FileRequest.prototype.uri = '';
  * @type {o3d.RawData}
  */
 o3d.FileRequest.prototype.data = null;
-
-
 
 /**
  * This holds the same values as in XMLHttpRequest:
@@ -114,16 +106,12 @@ o3d.FileRequest.prototype.data = null;
  */
 o3d.FileRequest.prototype.readyState = 0;
 
-
-
 /**
  * This indicates whether any further processing will be done on this
  * FileRequest.
  * @type {boolean}
  */
 o3d.FileRequest.prototype.done = false;
-
-
 
 /**
  * This field is only valid if done is true.  It indicates whether or not the
@@ -132,7 +120,6 @@ o3d.FileRequest.prototype.done = false;
  */
 o3d.FileRequest.prototype.success = false;
 
-
 /**
  * The image object if we are opening an image.
  * @type {Image}
@@ -140,33 +127,30 @@ o3d.FileRequest.prototype.success = false;
  */
 o3d.FileRequest.prototype.image_ = null;
 
-
 /**
  * An error message.
  * If done is true and success is false this will be an error message
  * describing what went wrong.
  * @type {string}
  */
-o3d.FileRequest.prototype.error = '';
-
+o3d.FileRequest.prototype.error = "";
 
 /**
  * Guesses from a url whether the url is an image file.
  * @param {string} url The URL.
  * @private
  */
-o3d.FileRequest.prototype.isImageUrl_ = function(url) {
+o3d.FileRequest.prototype.isImageUrl_ = function (url) {
   var extension = url.substring(url.length - 4);
-  return (extension == '.png' || extension == '.jpg');
+  return extension == ".png" || extension == ".jpg";
 };
-
 
 /**
  * Called by the image class when the image file is loaded... if we're
  * loading an image.
  * @private
  */
-o3d.FileRequest.prototype.imageLoaded_ = function() {
+o3d.FileRequest.prototype.imageLoaded_ = function () {
   if (this.image_.complete) {
     this.success = true;
     this.done = true;
@@ -177,15 +161,13 @@ o3d.FileRequest.prototype.imageLoaded_ = function() {
   this.onreadystatechange.apply(this, arguments);
 };
 
-
 /**
  * Set up several of the request fields.
  * @param {string} method "GET" is the only supported method at this time
  * @param {string} uri the location of the file to fetch
  * @param {boolean} async true is the only legal value at this time.
  */
-o3d.FileRequest.prototype.open =
-    function(method, uri, async) {
+o3d.FileRequest.prototype.open = function (method, uri, async) {
   this.uri = uri;
   // TODO(petersont): I think there is a race condition here -- calling
   // code expects that it can still set up the onreadystatechange callback
@@ -194,24 +176,20 @@ o3d.FileRequest.prototype.open =
   if (this.isImageUrl_(uri)) {
     this.image_ = new Image();
     var that = this;
-    this.image_.onload = function() {
+    this.image_.onload = function () {
       that.imageLoaded_.call(that);
-    }
+    };
     this.image_.src = uri;
   } else {
     this.request_.open(method, uri, async);
   }
 };
 
-
 /**
  * Send the request.
  * Unlike XMLHttpRequest the onreadystatechange callback will be called no
  * matter what, with success or failure.
  */
-o3d.FileRequest.prototype.send = function() {
+o3d.FileRequest.prototype.send = function () {
   // This function left blank for compatability with o3djs.io.
 };
-
-
-

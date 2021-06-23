@@ -1,162 +1,154 @@
-
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>
-</title>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title> </title>
 
-<!-- Slider stuff -->
-<script type="text/javascript" src="lib/events.js"></script>
-<style type="text/css">
-  #slider { margin: 10px; }
-</style>
+    <!-- Slider stuff -->
+    <script type="text/javascript" src="lib/events.js"></script>
+    <style type="text/css">
+      #slider {
+        margin: 10px;
+      }
+    </style>
 
-<link rel="stylesheet" type="text/css" href = "style/simple.css" />
+    <link rel="stylesheet" type="text/css" href="style/simple.css" />
 
+    <!-- Our javascript code -->
+    <script type="text/javascript">
+      // Events
+      // init() once the page has finished loading.
+      window.onload = init;
 
-<!-- Our javascript code -->
-<script type="text/javascript">
+      var canvas;
+      var canvasContext;
+      var canvasWidth = 0;
+      var canvasHeight = 0;
 
-// Events
-// init() once the page has finished loading.
-window.onload = init;
+      var backgroundColor = "rgb(0, 0, 0)";
+      var curveColor1 = "rgb(192,192,192)";
+      var curveColor2 = "rgb(255,100,255)";
+      var gridColor = "rgb(200,200,200)";
 
-var canvas;
-var canvasContext;
-var canvasWidth = 0;
-var canvasHeight = 0;
+      var target = 0.5;
+      var k = 0.005;
 
-var backgroundColor = "rgb(0, 0, 0)";
-var curveColor1 = "rgb(192,192,192)";
-var curveColor2 = "rgb(255,100,255)";
-var gridColor = "rgb(200,200,200)";
+      function preWarp(x) {
+        return Math.asin(x) / (0.5 * Math.PI);
+      }
 
-var target = 0.5;
-var k = 0.005;
+      function postWarp(x) {
+        return Math.sin(0.5 * Math.PI * x);
+      }
 
-function preWarp(x) {
-    return Math.asin(x) / (0.5 * Math.PI);
-}
+      function drawCurve() {
+        var width = canvas.width;
+        var height = canvas.height;
 
-function postWarp(x) {
-    return Math.sin(0.5 * Math.PI * x);
-}
+        canvasContext.fillStyle = backgroundColor;
+        canvasContext.fillRect(0, 0, width, height);
 
-function drawCurve() {
-    var width = canvas.width;
-    var height = canvas.height;
+        canvasContext.strokeStyle = curveColor1;
+        canvasContext.lineWidth = 3;
 
-    canvasContext.fillStyle = backgroundColor;
-    canvasContext.fillRect(0, 0, width, height);
+        canvasContext.beginPath();
+        canvasContext.moveTo(0, 0);
 
-    canvasContext.strokeStyle = curveColor1;
-    canvasContext.lineWidth = 3;
+        // Draw unwarped curve.
+        var startingValue = 1;
+        var v = startingValue;
 
-    canvasContext.beginPath();
-    canvasContext.moveTo(0, 0);
-
-    // Draw unwarped curve.
-    var startingValue = 1;
-    var v = startingValue;
-    
-    for (var x = 0; x < width; ++x) {
-        if (x >= width / 4) {
+        for (var x = 0; x < width; ++x) {
+          if (x >= width / 4) {
             v += (target - v) * k;
+          }
+
+          var y = height - v * height;
+
+          canvasContext.lineTo(x, y);
         }
-        
-        var y = height - v * height;
-                
-        canvasContext.lineTo(x, y);
-    }
-    canvasContext.stroke();
-    
-    // Draw warped curve.
-    canvasContext.strokeStyle = curveColor2;
-    canvasContext.beginPath();
-    canvasContext.moveTo(0, 0);
+        canvasContext.stroke();
 
-    var preWarpedStartingValue = preWarp(startingValue);
-    var preWarpedTarget = preWarp(target);
-    
-    v = preWarpedStartingValue;
+        // Draw warped curve.
+        canvasContext.strokeStyle = curveColor2;
+        canvasContext.beginPath();
+        canvasContext.moveTo(0, 0);
 
-    for (var x = 0; x < width; ++x) {
-        if (x >= width / 4) {
+        var preWarpedStartingValue = preWarp(startingValue);
+        var preWarpedTarget = preWarp(target);
+
+        v = preWarpedStartingValue;
+
+        for (var x = 0; x < width; ++x) {
+          if (x >= width / 4) {
             v += (preWarpedTarget - v) * k;
+          }
+
+          var v2 = postWarp(v);
+
+          var y = height - v2 * height;
+
+          canvasContext.lineTo(x, y);
         }
-        
-        var v2 = postWarp(v);
-        
-        var y = height - v2 * height;
-                
-        canvasContext.lineTo(x, y);
-    }
 
-    canvasContext.stroke();      
-}
+        canvasContext.stroke();
+      }
 
-function targetHandler(event, ui) {
-  target = ui.value;
-  drawCurve();
-  
-  var info = document.getElementById("target-value");
-  info.innerHTML = "target = " + target;
-}
+      function targetHandler(event, ui) {
+        target = ui.value;
+        drawCurve();
 
-function kHandler(event, ui) {
-  k = 0.05 * ui.value;
-  drawCurve();
-  
-  var info = document.getElementById("k-value");
-  info.innerHTML = "k = " + target;
-}
+        var info = document.getElementById("target-value");
+        info.innerHTML = "target = " + target;
+      }
 
+      function kHandler(event, ui) {
+        k = 0.05 * ui.value;
+        drawCurve();
 
-function init() {
-    canvas = document.getElementById('canvasID');
-    canvasContext = canvas.getContext('2d');
+        var info = document.getElementById("k-value");
+        info.innerHTML = "k = " + target;
+      }
 
-    canvasWidth = parseFloat(window.getComputedStyle(canvas, null).width);
-    canvasHeight = parseFloat(window.getComputedStyle(canvas, null).height);    
+      function init() {
+        canvas = document.getElementById("canvasID");
+        canvasContext = canvas.getContext("2d");
 
-    addSlider("target");
-    addSlider("k");
-    configureSlider("target", target, 0.0, 1.0, targetHandler);
-    configureSlider("k", 20*k, 0, 1, kHandler);
+        canvasWidth = parseFloat(window.getComputedStyle(canvas, null).width);
+        canvasHeight = parseFloat(window.getComputedStyle(canvas, null).height);
 
-    drawCurve();
-}
+        addSlider("target");
+        addSlider("k");
+        configureSlider("target", target, 0.0, 1.0, targetHandler);
+        configureSlider("k", 20 * k, 0, 1, kHandler);
 
-</script>
-</head>
+        drawCurve();
+      }
+    </script>
+  </head>
 
-<body>
+  <body>
+    <h1>Warping of Exponential Slew</h1>
 
-<h1>Warping of Exponential Slew</h1>
+    <p>The warped (pink) curve transitions more smoothly at the break point.</p>
 
-<p>
-The warped (pink) curve transitions more smoothly at the break point.
-</p>
+    <div id="info"></div>
 
+    <canvas
+      id="canvasID"
+      width="1024"
+      height="768"
+      style="border: 2px inset blue"
+    >
+    </canvas>
 
-<div id="info">
-</div>
+    <br /><br />
 
-<canvas id="canvasID" width="1024" height="768" style="border: 2px inset blue;">
-</canvas>
+    <!-- Sliders and other controls will be added here -->
+    <div id="controls"></div>
 
-<br><br>
+    <div id="info"></div>
 
-<!-- Sliders and other controls will be added here -->
-<div id="controls"> </div>
-
-<div id="info"> </div>
-
-<div id="kits">
-</div>
-
-</body>
+    <div id="kits"></div>
+  </body>
 </html>

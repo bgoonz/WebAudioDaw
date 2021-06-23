@@ -4,7 +4,6 @@
  */
 demos.stack = {};
 
-
 /**
  * [initWorld description]
  * @param  {[type]} world [description]
@@ -20,21 +19,20 @@ demos.stack.initWorld = function (world) {
 
   let i;
   for (i = 0; i < 8; i++) {
-    bd.position.Set(500/2-Math.random()*2-1, (250-5-i*22));
+    bd.position.Set(500 / 2 - Math.random() * 2 - 1, 250 - 5 - i * 22);
     world.CreateBody(bd);
   }
   for (i = 0; i < 8; i++) {
-    bd.position.Set(500/2-100-Math.random()*5+i, (250-5-i*22));
+    bd.position.Set(500 / 2 - 100 - Math.random() * 5 + i, 250 - 5 - i * 22);
     world.CreateBody(bd);
   }
   for (i = 0; i < 8; i++) {
-    bd.position.Set(500/2+100+Math.random()*5-i, (250-5-i*22));
+    bd.position.Set(500 / 2 + 100 + Math.random() * 5 - i, 250 - 5 - i * 22);
     world.CreateBody(bd);
   }
-}
-
+};
 
 /**
- * 
+ *
  */
 demos.InitWorlds.push(demos.stack.initWorld);

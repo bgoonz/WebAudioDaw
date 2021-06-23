@@ -29,7 +29,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * @fileoverview This file contains matrix/vector math functions.
  * It adds them to the "math" module on the o3djs object.
@@ -99,7 +98,7 @@
  *
  */
 
-o3djs.provide('o3djs.math');
+o3djs.provide("o3djs.math");
 
 /**
  * A module for math for o3djs.math.
@@ -211,17 +210,19 @@ o3djs.math.Matrix = goog.typedef;
  * Returns a deterministic pseudorandom number between 0 and 1
  * @return {number} a random number between 0 and 1
  */
-o3djs.math.pseudoRandom = function() {
+o3djs.math.pseudoRandom = function () {
   var math = o3djs.math;
-  return (math.randomSeed_ = 
-          (134775813 * math.randomSeed_ + 1) % 
-          math.RANDOM_RANGE_) / math.RANDOM_RANGE_;
+  return (
+    (math.randomSeed_ =
+      (134775813 * math.randomSeed_ + 1) % math.RANDOM_RANGE_) /
+    math.RANDOM_RANGE_
+  );
 };
 
 /**
  * Resets the pseudoRandom function sequence.
  */
-o3djs.math.resetPseudoRandom = function() {
+o3djs.math.resetPseudoRandom = function () {
   o3djs.math.randomSeed_ = 0;
 };
 
@@ -230,8 +231,8 @@ o3djs.math.resetPseudoRandom = function() {
  * @param {number} degrees A value in degrees.
  * @return {number} the value in radians.
  */
-o3djs.math.degToRad = function(degrees) {
-  return degrees * Math.PI / 180;
+o3djs.math.degToRad = function (degrees) {
+  return (degrees * Math.PI) / 180;
 };
 
 /**
@@ -239,8 +240,8 @@ o3djs.math.degToRad = function(degrees) {
  * @param {number} radians A value in radians.
  * @return {number} the value in degrees.
  */
-o3djs.math.radToDeg = function(radians) {
-  return radians * 180 / Math.PI;
+o3djs.math.radToDeg = function (radians) {
+  return (radians * 180) / Math.PI;
 };
 
 /**
@@ -252,7 +253,7 @@ o3djs.math.radToDeg = function(radians) {
  * @param {number} t Interpolation coefficient.
  * @return {number} The weighted sum of a and b.
  */
-o3djs.math.lerpScalar = function(a, b, t) {
+o3djs.math.lerpScalar = function (a, b, t) {
   return (1 - t) * a + t * b;
 };
 
@@ -262,11 +263,10 @@ o3djs.math.lerpScalar = function(a, b, t) {
  * @param {!o3djs.math.Vector} b Operand vector.
  * @return {!o3djs.math.Vector} The sum of a and b.
  */
-o3djs.math.addVector = function(a, b) {
+o3djs.math.addVector = function (a, b) {
   var r = [];
   var aLength = a.length;
-  for (var i = 0; i < aLength; ++i)
-    r[i] = a[i] + b[i];
+  for (var i = 0; i < aLength; ++i) r[i] = a[i] + b[i];
   return r;
 };
 
@@ -276,11 +276,10 @@ o3djs.math.addVector = function(a, b) {
  * @param {!o3djs.math.Vector} b Operand vector.
  * @return {!o3djs.math.Vector} The difference of a and b.
  */
-o3djs.math.subVector = function(a, b) {
+o3djs.math.subVector = function (a, b) {
   var r = [];
   var aLength = a.length;
-  for (var i = 0; i < aLength; ++i)
-    r[i] = a[i] - b[i];
+  for (var i = 0; i < aLength; ++i) r[i] = a[i] - b[i];
   return r;
 };
 
@@ -293,11 +292,10 @@ o3djs.math.subVector = function(a, b) {
  * @param {number} t Interpolation coefficient.
  * @return {!o3djs.math.Vector} The weighted sum of a and b.
  */
-o3djs.math.lerpVector = function(a, b, t) {
+o3djs.math.lerpVector = function (a, b, t) {
   var r = [];
   var aLength = a.length;
-  for (var i = 0; i < aLength; ++i)
-    r[i] = (1 - t) * a[i] + t * b[i];
+  for (var i = 0; i < aLength; ++i) r[i] = (1 - t) * a[i] + t * b[i];
   return r;
 };
 
@@ -308,7 +306,7 @@ o3djs.math.lerpVector = function(a, b, t) {
  * @param {number} opt_rangeStart start of range. Default = 0.
  * @return {number} Clamp modded value.
  */
-o3djs.math.modClamp = function(v, range, opt_rangeStart) {
+o3djs.math.modClamp = function (v, range, opt_rangeStart) {
   var start = opt_rangeStart || 0;
   if (range < 0.00001) {
     return start;
@@ -332,7 +330,7 @@ o3djs.math.modClamp = function(v, range, opt_rangeStart) {
  * @param {number} range Range of circle.
  * @return {number} lerped result.
  */
-o3djs.math.lerpCircular = function(a, b, t, range) {
+o3djs.math.lerpCircular = function (a, b, t, range) {
   a = o3djs.math.modClamp(a, range);
   b = o3djs.math.modClamp(b, range);
   var delta = b - a;
@@ -353,7 +351,7 @@ o3djs.math.lerpCircular = function(a, b, t, range) {
  * @param {number} t Amount to lerp (0 to 1).
  * @return {number} lerped result.
  */
-o3djs.math.lerpRadian = function(a, b, t) {
+o3djs.math.lerpRadian = function (a, b, t) {
   return o3djs.math.lerpCircular(a, b, t, Math.PI * 2);
 };
 
@@ -363,11 +361,10 @@ o3djs.math.lerpRadian = function(a, b, t) {
  * @param {number} k The scalar.
  * @return {!o3djs.math.Vector} v The vector v divided by k.
  */
-o3djs.math.divVectorScalar = function(v, k) {
+o3djs.math.divVectorScalar = function (v, k) {
   var r = [];
   var vLength = v.length;
-  for (var i = 0; i < vLength; ++i)
-    r[i] = v[i] / k;
+  for (var i = 0; i < vLength; ++i) r[i] = v[i] / k;
   return r;
 };
 
@@ -378,11 +375,10 @@ o3djs.math.divVectorScalar = function(v, k) {
  * @param {!o3djs.math.Vector} b Operand vector.
  * @return {number} The dot product of a and b.
  */
-o3djs.math.dot = function(a, b) {
+o3djs.math.dot = function (a, b) {
   var r = 0.0;
   var aLength = a.length;
-  for (var i = 0; i < aLength; ++i)
-    r += a[i] * b[i];
+  for (var i = 0; i < aLength; ++i) r += a[i] * b[i];
   return r;
 };
 
@@ -393,10 +389,12 @@ o3djs.math.dot = function(a, b) {
  * @param {!o3djs.math.Vector} b Operand vector.
  * @return {!o3djs.math.Vector} The vector a cross b.
  */
-o3djs.math.cross = function(a, b) {
-  return [a[1] * b[2] - a[2] * b[1],
-          a[2] * b[0] - a[0] * b[2],
-          a[0] * b[1] - a[1] * b[0]];
+o3djs.math.cross = function (a, b) {
+  return [
+    a[1] * b[2] - a[2] * b[1],
+    a[2] * b[0] - a[0] * b[2],
+    a[0] * b[1] - a[1] * b[0],
+  ];
 };
 
 /**
@@ -405,11 +403,10 @@ o3djs.math.cross = function(a, b) {
  * @param {!o3djs.math.Vector} a The vector.
  * @return {number} The length of a.
  */
-o3djs.math.length = function(a) {
+o3djs.math.length = function (a) {
   var r = 0.0;
   var aLength = a.length;
-  for (var i = 0; i < aLength; ++i)
-    r += a[i] * a[i];
+  for (var i = 0; i < aLength; ++i) r += a[i] * a[i];
   return Math.sqrt(r);
 };
 
@@ -419,11 +416,10 @@ o3djs.math.length = function(a) {
  * @param {!o3djs.math.Vector} a The vector.
  * @return {number} The square of the length of a.
  */
-o3djs.math.lengthSquared = function(a) {
+o3djs.math.lengthSquared = function (a) {
   var r = 0.0;
   var aLength = a.length;
-  for (var i = 0; i < aLength; ++i)
-    r += a[i] * a[i];
+  for (var i = 0; i < aLength; ++i) r += a[i] * a[i];
   return r;
 };
 
@@ -433,7 +429,7 @@ o3djs.math.lengthSquared = function(a) {
  * @param {!o3djs.math.Vector} b A vector.
  * @return {number} The distance between a and b.
  */
-o3djs.math.distance = function(a, b) {
+o3djs.math.distance = function (a, b) {
   var r = 0.0;
   var aLength = a.length;
   for (var i = 0; i < aLength; ++i) {
@@ -449,7 +445,7 @@ o3djs.math.distance = function(a, b) {
  * @param {!o3djs.math.Vector} b A vector.
  * @return {number} The distance between a and b.
  */
-o3djs.math.distanceSquared = function(a, b) {
+o3djs.math.distanceSquared = function (a, b) {
   var r = 0.0;
   var aLength = a.length;
   for (var i = 0; i < aLength; ++i) {
@@ -464,15 +460,13 @@ o3djs.math.distanceSquared = function(a, b) {
  * @param {!o3djs.math.Vector} a The vector.
  * @return {!o3djs.math.Vector} The normalized vector.
  */
-o3djs.math.normalize = function(a) {
+o3djs.math.normalize = function (a) {
   var r = [];
   var n = 0.0;
   var aLength = a.length;
-  for (var i = 0; i < aLength; ++i)
-    n += a[i] * a[i];
+  for (var i = 0; i < aLength; ++i) n += a[i] * a[i];
   n = Math.sqrt(n);
-  for (var i = 0; i < aLength; ++i)
-    r[i] = a[i] / n;
+  for (var i = 0; i < aLength; ++i) r[i] = a[i] / n;
   return r;
 };
 
@@ -482,7 +476,7 @@ o3djs.math.normalize = function(a) {
  * @param {!o3djs.math.Matrix} b Operand matrix.
  * @return {!o3djs.math.Matrix} The sum of a and b.
  */
-o3djs.math.addMatrix = function(a, b) {
+o3djs.math.addMatrix = function (a, b) {
   var r = [];
   var aLength = a.length;
   var a0Length = a[0].length;
@@ -490,8 +484,7 @@ o3djs.math.addMatrix = function(a, b) {
     var row = [];
     var ai = a[i];
     var bi = b[i];
-    for (var j = 0; j < a0Length; ++j)
-      row[j] = ai[j] + bi[j];
+    for (var j = 0; j < a0Length; ++j) row[j] = ai[j] + bi[j];
     r[i] = row;
   }
   return r;
@@ -503,7 +496,7 @@ o3djs.math.addMatrix = function(a, b) {
  * @param {!o3djs.math.Matrix} b Operand matrix.
  * @return {!o3djs.math.Matrix} The sum of a and b.
  */
-o3djs.math.subMatrix = function(a, b) {
+o3djs.math.subMatrix = function (a, b) {
   var r = [];
   var aLength = a.length;
   var a0Length = a[0].length;
@@ -511,8 +504,7 @@ o3djs.math.subMatrix = function(a, b) {
     var row = [];
     var ai = a[i];
     var bi = b[i];
-    for (var j = 0; j < a0Length; ++j)
-      row[j] = ai[j] - bi[j];
+    for (var j = 0; j < a0Length; ++j) row[j] = ai[j] - bi[j];
     r[i] = row;
   }
   return r;
@@ -527,7 +519,7 @@ o3djs.math.subMatrix = function(a, b) {
  * @param {number} t Interpolation coefficient.
  * @return {!o3djs.math.Matrix} The weighted of a and b.
  */
-o3djs.math.lerpMatrix = function(a, b, t) {
+o3djs.math.lerpMatrix = function (a, b, t) {
   var r = [];
   var aLength = a.length;
   var a0Length = a[0].length;
@@ -535,8 +527,7 @@ o3djs.math.lerpMatrix = function(a, b, t) {
     var row = [];
     var ai = a[i];
     var bi = b[i];
-    for (var j = 0; j < a0Length; ++j)
-      row[j] = (1 - t) * ai[j] + t * bi[j];
+    for (var j = 0; j < a0Length; ++j) row[j] = (1 - t) * ai[j] + t * bi[j];
     r[i] = row;
   }
   return r;
@@ -548,14 +539,13 @@ o3djs.math.lerpMatrix = function(a, b, t) {
  * @param {number} k The scalar.
  * @return {!o3djs.math.Matrix} The matrix m divided by k.
  */
-o3djs.math.divMatrixScalar = function(m, k) {
+o3djs.math.divMatrixScalar = function (m, k) {
   var r = [];
   var mLength = m.length;
   var m0Length = m[0].length;
   for (var i = 0; i < mLength; ++i) {
     r[i] = [];
-    for (var j = 0; j < m0Length; ++j)
-      r[i][j] = m[i][j] / k;
+    for (var j = 0; j < m0Length; ++j) r[i][j] = m[i][j] / k;
   }
   return r;
 };
@@ -565,8 +555,8 @@ o3djs.math.divMatrixScalar = function(m, k) {
  * @param {number} a The scalar.
  * @return {number} -a.
  */
-o3djs.math.negativeScalar = function(a) {
- return -a;
+o3djs.math.negativeScalar = function (a) {
+  return -a;
 };
 
 /**
@@ -574,13 +564,13 @@ o3djs.math.negativeScalar = function(a) {
  * @param {!o3djs.math.Vector} v The vector.
  * @return {!o3djs.math.Vector} -v.
  */
-o3djs.math.negativeVector = function(v) {
- var r = [];
- var vLength = v.length;
- for (var i = 0; i < vLength; ++i) {
-   r[i] = -v[i];
- }
- return r;
+o3djs.math.negativeVector = function (v) {
+  var r = [];
+  var vLength = v.length;
+  for (var i = 0; i < vLength; ++i) {
+    r[i] = -v[i];
+  }
+  return r;
 };
 
 /**
@@ -588,16 +578,15 @@ o3djs.math.negativeVector = function(v) {
  * @param {!o3djs.math.Matrix} m The matrix.
  * @return {!o3djs.math.Matrix} -m.
  */
-o3djs.math.negativeMatrix = function(m) {
- var r = [];
- var mLength = m.length;
- var m0Length = m[0].length;
- for (var i = 0; i < mLength; ++i) {
-   r[i] = [];
-   for (var j = 0; j < m0Length; ++j)
-     r[i][j] = -m[i][j];
- }
- return r;
+o3djs.math.negativeMatrix = function (m) {
+  var r = [];
+  var mLength = m.length;
+  var m0Length = m[0].length;
+  for (var i = 0; i < mLength; ++i) {
+    r[i] = [];
+    for (var j = 0; j < m0Length; ++j) r[i][j] = -m[i][j];
+  }
+  return r;
 };
 
 /**
@@ -605,7 +594,7 @@ o3djs.math.negativeMatrix = function(m) {
  * @param {number} a The scalar.
  * @return {number} a.
  */
-o3djs.math.copyScalar = function(a) {
+o3djs.math.copyScalar = function (a) {
   return a;
 };
 
@@ -614,10 +603,9 @@ o3djs.math.copyScalar = function(a) {
  * @param {!o3djs.math.Vector} v The vector.
  * @return {!o3djs.math.Vector} A copy of v.
  */
-o3djs.math.copyVector = function(v) {
+o3djs.math.copyVector = function (v) {
   var r = [];
-  for (var i = 0; i < v.length; i++)
-    r[i] = v[i];
+  for (var i = 0; i < v.length; i++) r[i] = v[i];
   return r;
 };
 
@@ -626,7 +614,7 @@ o3djs.math.copyVector = function(v) {
  * @param {!o3djs.math.Matrix} m The matrix.
  * @return {!o3djs.math.Matrix} A copy of m.
  */
-o3djs.math.copyMatrix = function(m) {
+o3djs.math.copyMatrix = function (m) {
   var r = [];
   var mLength = m.length;
   for (var i = 0; i < mLength; ++i) {
@@ -645,7 +633,7 @@ o3djs.math.copyMatrix = function(m) {
  * @param {!o3djs.math.Matrix} m The matrix.
  * @return {!Array.<number>} The matrix's elements as a one-dimensional array.
  */
-o3djs.math.getMatrixElements = function(m) {
+o3djs.math.getMatrixElements = function (m) {
   var r = [];
   var mLength = m.length;
   var k = 0;
@@ -663,7 +651,7 @@ o3djs.math.getMatrixElements = function(m) {
  * @param {number} b Operand scalar.
  * @return {number} The product of a and b.
  */
-o3djs.math.mulScalarScalar = function(a, b) {
+o3djs.math.mulScalarScalar = function (a, b) {
   return a * b;
 };
 
@@ -673,7 +661,7 @@ o3djs.math.mulScalarScalar = function(a, b) {
  * @param {!o3djs.math.Vector} v The vector.
  * @return {!o3djs.math.Vector} The product of k and v.
  */
-o3djs.math.mulScalarVector = function(k, v) {
+o3djs.math.mulScalarVector = function (k, v) {
   var r = [];
   var vLength = v.length;
   for (var i = 0; i < vLength; ++i) {
@@ -688,7 +676,7 @@ o3djs.math.mulScalarVector = function(k, v) {
  * @param {number} k The scalar.
  * @return {!o3djs.math.Vector} The product of k and v.
  */
-o3djs.math.mulVectorScalar = function(v, k) {
+o3djs.math.mulVectorScalar = function (v, k) {
   return o3djs.math.mulScalarVector(k, v);
 };
 
@@ -698,14 +686,13 @@ o3djs.math.mulVectorScalar = function(v, k) {
  * @param {!o3djs.math.Matrix} m The matrix.
  * @return {!o3djs.math.Matrix} The product of m and k.
  */
-o3djs.math.mulScalarMatrix = function(k, m) {
+o3djs.math.mulScalarMatrix = function (k, m) {
   var r = [];
   var mLength = m.length;
   var m0Length = m[0].length;
   for (var i = 0; i < mLength; ++i) {
     r[i] = [];
-    for (var j = 0; j < m0Length; ++j)
-      r[i][j] = k * m[i][j];
+    for (var j = 0; j < m0Length; ++j) r[i][j] = k * m[i][j];
   }
   return r;
 };
@@ -716,7 +703,7 @@ o3djs.math.mulScalarMatrix = function(k, m) {
  * @param {number} k The scalar.
  * @return {!o3djs.math.Matrix} The product of m and k.
  */
-o3djs.math.mulMatrixScalar = function(m, k) {
+o3djs.math.mulMatrixScalar = function (m, k) {
   return o3djs.math.mulScalarMatrix(k, m);
 };
 
@@ -728,11 +715,10 @@ o3djs.math.mulMatrixScalar = function(m, k) {
  * @return {!o3djs.math.Vector} The vector of products of entries of a and
  *     b.
  */
-o3djs.math.mulVectorVector = function(a, b) {
+o3djs.math.mulVectorVector = function (a, b) {
   var r = [];
   var aLength = a.length;
-  for (var i = 0; i < aLength; ++i)
-    r[i] = a[i] * b[i];
+  for (var i = 0; i < aLength; ++i) r[i] = a[i] * b[i];
   return r;
 };
 
@@ -744,11 +730,10 @@ o3djs.math.mulVectorVector = function(a, b) {
  * @return {!o3djs.math.Vector} The vector of quotients of entries of a and
  *     b.
  */
-o3djs.math.divVectorVector = function(a, b) {
+o3djs.math.divVectorVector = function (a, b) {
   var r = [];
   var aLength = a.length;
-  for (var i = 0; i < aLength; ++i)
-    r[i] = a[i] / b[i];
+  for (var i = 0; i < aLength; ++i) r[i] = a[i] / b[i];
   return r;
 };
 
@@ -759,14 +744,13 @@ o3djs.math.divVectorVector = function(a, b) {
  * @param {!o3djs.math.Matrix} m The matrix.
  * @return {!o3djs.math.Vector} The product of v and m as a row vector.
  */
-o3djs.math.rowMajor.mulVectorMatrix = function(v, m) {
+o3djs.math.rowMajor.mulVectorMatrix = function (v, m) {
   var r = [];
   var m0Length = m[0].length;
   var vLength = v.length;
   for (var i = 0; i < m0Length; ++i) {
     r[i] = 0.0;
-    for (var j = 0; j < vLength; ++j)
-      r[i] += v[j] * m[j][i];
+    for (var j = 0; j < vLength; ++j) r[i] += v[j] * m[j][i];
   }
   return r;
 };
@@ -778,15 +762,14 @@ o3djs.math.rowMajor.mulVectorMatrix = function(v, m) {
  * @param {!o3djs.math.Matrix} m The matrix.
  * @return {!o3djs.math.Vector} The product of v and m as a row vector.
  */
-o3djs.math.columnMajor.mulVectorMatrix = function(v, m) {
+o3djs.math.columnMajor.mulVectorMatrix = function (v, m) {
   var r = [];
   var mLength = m.length;
   var vLength = v.length;
   for (var i = 0; i < mLength; ++i) {
     r[i] = 0.0;
     var column = m[i];
-    for (var j = 0; j < vLength; ++j)
-      r[i] += v[j] * column[j];
+    for (var j = 0; j < vLength; ++j) r[i] += v[j] * column[j];
   }
   return r;
 };
@@ -806,15 +789,14 @@ o3djs.math.mulVectorMatrix = null;
  * @param {!o3djs.math.Vector} v The vector.
  * @return {!o3djs.math.Vector} The product of m and v as a column vector.
  */
-o3djs.math.rowMajor.mulMatrixVector = function(m, v) {
+o3djs.math.rowMajor.mulMatrixVector = function (m, v) {
   var r = [];
   var mLength = m.length;
   var m0Length = m[0].length;
   for (var i = 0; i < mLength; ++i) {
     r[i] = 0.0;
     var row = m[i];
-    for (var j = 0; j < m0Length; ++j)
-      r[i] += row[j] * v[j];
+    for (var j = 0; j < m0Length; ++j) r[i] += row[j] * v[j];
   }
   return r;
 };
@@ -826,14 +808,13 @@ o3djs.math.rowMajor.mulMatrixVector = function(m, v) {
  * @param {!o3djs.math.Vector} v The vector.
  * @return {!o3djs.math.Vector} The product of m and v as a column vector.
  */
-o3djs.math.columnMajor.mulMatrixVector = function(m, v) {
+o3djs.math.columnMajor.mulMatrixVector = function (m, v) {
   var r = [];
   var m0Length = m[0].length;
   var vLength = v.length;
   for (var i = 0; i < m0Length; ++i) {
     r[i] = 0.0;
-    for (var j = 0; j < vLength; ++j)
-      r[i] += v[j] * m[j][i];
+    for (var j = 0; j < vLength; ++j) r[i] += v[j] * m[j][i];
   }
   return r;
 };
@@ -853,7 +834,7 @@ o3djs.math.mulMatrixVector = null;
  * @param {!o3djs.math.Matrix2} b The matrix on the right.
  * @return {!o3djs.math.Matrix2} The matrix product of a and b.
  */
-o3djs.math.rowMajor.mulMatrixMatrix2 = function(a, b) {
+o3djs.math.rowMajor.mulMatrixMatrix2 = function (a, b) {
   var a0 = a[0];
   var a1 = a[1];
   var b0 = b[0];
@@ -866,8 +847,10 @@ o3djs.math.rowMajor.mulMatrixMatrix2 = function(a, b) {
   var b01 = b0[1];
   var b10 = b1[0];
   var b11 = b1[1];
-  return [[a00 * b00 + a01 * b10, a00 * b01 + a01 * b11],
-          [a10 * b00 + a11 * b10, a10 * b01 + a11 * b11]];
+  return [
+    [a00 * b00 + a01 * b10, a00 * b01 + a01 * b11],
+    [a10 * b00 + a11 * b10, a10 * b01 + a11 * b11],
+  ];
 };
 
 /**
@@ -877,7 +860,7 @@ o3djs.math.rowMajor.mulMatrixMatrix2 = function(a, b) {
  * @param {!o3djs.math.Matrix2} b The matrix on the right.
  * @return {!o3djs.math.Matrix2} The matrix product of a and b.
  */
-o3djs.math.columnMajor.mulMatrixMatrix2 = function(a, b) {
+o3djs.math.columnMajor.mulMatrixMatrix2 = function (a, b) {
   var a0 = a[0];
   var a1 = a[1];
   var b0 = b[0];
@@ -890,8 +873,10 @@ o3djs.math.columnMajor.mulMatrixMatrix2 = function(a, b) {
   var b01 = b0[1];
   var b10 = b1[0];
   var b11 = b1[1];
-  return [[a00 * b00 + a10 * b01, a01 * b00 + a11 * b01],
-          [a00 * b10 + a10 * b11, a01 * b10 + a11 * b11]];
+  return [
+    [a00 * b00 + a10 * b01, a01 * b00 + a11 * b01],
+    [a00 * b10 + a10 * b11, a01 * b10 + a11 * b11],
+  ];
 };
 
 /**
@@ -902,7 +887,6 @@ o3djs.math.columnMajor.mulMatrixMatrix2 = function(a, b) {
  */
 o3djs.math.mulMatrixMatrix2 = null;
 
-
 /**
  * Multiplies two 3-by-3 matrices; assumes that the given matrices are 3-by-3;
  * assumes matrix entries are accessed in [row][column] fashion.
@@ -910,7 +894,7 @@ o3djs.math.mulMatrixMatrix2 = null;
  * @param {!o3djs.math.Matrix3} b The matrix on the right.
  * @return {!o3djs.math.Matrix3} The matrix product of a and b.
  */
-o3djs.math.rowMajor.mulMatrixMatrix3 = function(a, b) {
+o3djs.math.rowMajor.mulMatrixMatrix3 = function (a, b) {
   var a0 = a[0];
   var a1 = a[1];
   var a2 = a[2];
@@ -935,15 +919,23 @@ o3djs.math.rowMajor.mulMatrixMatrix3 = function(a, b) {
   var b20 = b2[0];
   var b21 = b2[1];
   var b22 = b2[2];
-  return [[a00 * b00 + a01 * b10 + a02 * b20,
-           a00 * b01 + a01 * b11 + a02 * b21,
-           a00 * b02 + a01 * b12 + a02 * b22],
-          [a10 * b00 + a11 * b10 + a12 * b20,
-           a10 * b01 + a11 * b11 + a12 * b21,
-           a10 * b02 + a11 * b12 + a12 * b22],
-          [a20 * b00 + a21 * b10 + a22 * b20,
-           a20 * b01 + a21 * b11 + a22 * b21,
-           a20 * b02 + a21 * b12 + a22 * b22]];
+  return [
+    [
+      a00 * b00 + a01 * b10 + a02 * b20,
+      a00 * b01 + a01 * b11 + a02 * b21,
+      a00 * b02 + a01 * b12 + a02 * b22,
+    ],
+    [
+      a10 * b00 + a11 * b10 + a12 * b20,
+      a10 * b01 + a11 * b11 + a12 * b21,
+      a10 * b02 + a11 * b12 + a12 * b22,
+    ],
+    [
+      a20 * b00 + a21 * b10 + a22 * b20,
+      a20 * b01 + a21 * b11 + a22 * b21,
+      a20 * b02 + a21 * b12 + a22 * b22,
+    ],
+  ];
 };
 
 /**
@@ -953,7 +945,7 @@ o3djs.math.rowMajor.mulMatrixMatrix3 = function(a, b) {
  * @param {!o3djs.math.Matrix3} b The matrix on the right.
  * @return {!o3djs.math.Matrix3} The matrix product of a and b.
  */
-o3djs.math.columnMajor.mulMatrixMatrix3 = function(a, b) {
+o3djs.math.columnMajor.mulMatrixMatrix3 = function (a, b) {
   var a0 = a[0];
   var a1 = a[1];
   var a2 = a[2];
@@ -978,15 +970,23 @@ o3djs.math.columnMajor.mulMatrixMatrix3 = function(a, b) {
   var b20 = b2[0];
   var b21 = b2[1];
   var b22 = b2[2];
-  return [[a00 * b00 + a10 * b01 + a20 * b02,
-           a01 * b00 + a11 * b01 + a21 * b02,
-           a02 * b00 + a12 * b01 + a22 * b02],
-          [a00 * b10 + a10 * b11 + a20 * b12,
-           a01 * b10 + a11 * b11 + a21 * b12,
-           a02 * b10 + a12 * b11 + a22 * b12],
-          [a00 * b20 + a10 * b21 + a20 * b22,
-           a01 * b20 + a11 * b21 + a21 * b22,
-           a02 * b20 + a12 * b21 + a22 * b22]];
+  return [
+    [
+      a00 * b00 + a10 * b01 + a20 * b02,
+      a01 * b00 + a11 * b01 + a21 * b02,
+      a02 * b00 + a12 * b01 + a22 * b02,
+    ],
+    [
+      a00 * b10 + a10 * b11 + a20 * b12,
+      a01 * b10 + a11 * b11 + a21 * b12,
+      a02 * b10 + a12 * b11 + a22 * b12,
+    ],
+    [
+      a00 * b20 + a10 * b21 + a20 * b22,
+      a01 * b20 + a11 * b21 + a21 * b22,
+      a02 * b20 + a12 * b21 + a22 * b22,
+    ],
+  ];
 };
 
 /**
@@ -1004,7 +1004,7 @@ o3djs.math.mulMatrixMatrix3 = null;
  * @param {!o3djs.math.Matrix4} b The matrix on the right.
  * @return {!o3djs.math.Matrix4} The matrix product of a and b.
  */
-o3djs.math.rowMajor.mulMatrixMatrix4 = function(a, b) {
+o3djs.math.rowMajor.mulMatrixMatrix4 = function (a, b) {
   var a0 = a[0];
   var a1 = a[1];
   var a2 = a[2];
@@ -1045,22 +1045,32 @@ o3djs.math.rowMajor.mulMatrixMatrix4 = function(a, b) {
   var b31 = b3[1];
   var b32 = b3[2];
   var b33 = b3[3];
-  return [[a00 * b00 + a01 * b10 + a02 * b20 + a03 * b30,
-           a00 * b01 + a01 * b11 + a02 * b21 + a03 * b31,
-           a00 * b02 + a01 * b12 + a02 * b22 + a03 * b32,
-           a00 * b03 + a01 * b13 + a02 * b23 + a03 * b33],
-          [a10 * b00 + a11 * b10 + a12 * b20 + a13 * b30,
-           a10 * b01 + a11 * b11 + a12 * b21 + a13 * b31,
-           a10 * b02 + a11 * b12 + a12 * b22 + a13 * b32,
-           a10 * b03 + a11 * b13 + a12 * b23 + a13 * b33],
-          [a20 * b00 + a21 * b10 + a22 * b20 + a23 * b30,
-           a20 * b01 + a21 * b11 + a22 * b21 + a23 * b31,
-           a20 * b02 + a21 * b12 + a22 * b22 + a23 * b32,
-           a20 * b03 + a21 * b13 + a22 * b23 + a23 * b33],
-          [a30 * b00 + a31 * b10 + a32 * b20 + a33 * b30,
-           a30 * b01 + a31 * b11 + a32 * b21 + a33 * b31,
-           a30 * b02 + a31 * b12 + a32 * b22 + a33 * b32,
-           a30 * b03 + a31 * b13 + a32 * b23 + a33 * b33]];
+  return [
+    [
+      a00 * b00 + a01 * b10 + a02 * b20 + a03 * b30,
+      a00 * b01 + a01 * b11 + a02 * b21 + a03 * b31,
+      a00 * b02 + a01 * b12 + a02 * b22 + a03 * b32,
+      a00 * b03 + a01 * b13 + a02 * b23 + a03 * b33,
+    ],
+    [
+      a10 * b00 + a11 * b10 + a12 * b20 + a13 * b30,
+      a10 * b01 + a11 * b11 + a12 * b21 + a13 * b31,
+      a10 * b02 + a11 * b12 + a12 * b22 + a13 * b32,
+      a10 * b03 + a11 * b13 + a12 * b23 + a13 * b33,
+    ],
+    [
+      a20 * b00 + a21 * b10 + a22 * b20 + a23 * b30,
+      a20 * b01 + a21 * b11 + a22 * b21 + a23 * b31,
+      a20 * b02 + a21 * b12 + a22 * b22 + a23 * b32,
+      a20 * b03 + a21 * b13 + a22 * b23 + a23 * b33,
+    ],
+    [
+      a30 * b00 + a31 * b10 + a32 * b20 + a33 * b30,
+      a30 * b01 + a31 * b11 + a32 * b21 + a33 * b31,
+      a30 * b02 + a31 * b12 + a32 * b22 + a33 * b32,
+      a30 * b03 + a31 * b13 + a32 * b23 + a33 * b33,
+    ],
+  ];
 };
 
 /**
@@ -1070,7 +1080,7 @@ o3djs.math.rowMajor.mulMatrixMatrix4 = function(a, b) {
  * @param {!o3djs.math.Matrix4} b The matrix on the right.
  * @return {!o3djs.math.Matrix4} The matrix product of a and b.
  */
-o3djs.math.columnMajor.mulMatrixMatrix4 = function(a, b) {
+o3djs.math.columnMajor.mulMatrixMatrix4 = function (a, b) {
   var a0 = a[0];
   var a1 = a[1];
   var a2 = a[2];
@@ -1111,22 +1121,32 @@ o3djs.math.columnMajor.mulMatrixMatrix4 = function(a, b) {
   var b31 = b3[1];
   var b32 = b3[2];
   var b33 = b3[3];
-  return [[a00 * b00 + a10 * b01 + a20 * b02 + a30 * b03,
-           a01 * b00 + a11 * b01 + a21 * b02 + a31 * b03,
-           a02 * b00 + a12 * b01 + a22 * b02 + a32 * b03,
-           a03 * b00 + a13 * b01 + a23 * b02 + a33 * b03],
-          [a00 * b10 + a10 * b11 + a20 * b12 + a30 * b13,
-           a01 * b10 + a11 * b11 + a21 * b12 + a31 * b13,
-           a02 * b10 + a12 * b11 + a22 * b12 + a32 * b13,
-           a03 * b10 + a13 * b11 + a23 * b12 + a33 * b13],
-          [a00 * b20 + a10 * b21 + a20 * b22 + a30 * b23,
-           a01 * b20 + a11 * b21 + a21 * b22 + a31 * b23,
-           a02 * b20 + a12 * b21 + a22 * b22 + a32 * b23,
-           a03 * b20 + a13 * b21 + a23 * b22 + a33 * b23],
-          [a00 * b30 + a10 * b31 + a20 * b32 + a30 * b33,
-           a01 * b30 + a11 * b31 + a21 * b32 + a31 * b33,
-           a02 * b30 + a12 * b31 + a22 * b32 + a32 * b33,
-           a03 * b30 + a13 * b31 + a23 * b32 + a33 * b33]];
+  return [
+    [
+      a00 * b00 + a10 * b01 + a20 * b02 + a30 * b03,
+      a01 * b00 + a11 * b01 + a21 * b02 + a31 * b03,
+      a02 * b00 + a12 * b01 + a22 * b02 + a32 * b03,
+      a03 * b00 + a13 * b01 + a23 * b02 + a33 * b03,
+    ],
+    [
+      a00 * b10 + a10 * b11 + a20 * b12 + a30 * b13,
+      a01 * b10 + a11 * b11 + a21 * b12 + a31 * b13,
+      a02 * b10 + a12 * b11 + a22 * b12 + a32 * b13,
+      a03 * b10 + a13 * b11 + a23 * b12 + a33 * b13,
+    ],
+    [
+      a00 * b20 + a10 * b21 + a20 * b22 + a30 * b23,
+      a01 * b20 + a11 * b21 + a21 * b22 + a31 * b23,
+      a02 * b20 + a12 * b21 + a22 * b22 + a32 * b23,
+      a03 * b20 + a13 * b21 + a23 * b22 + a33 * b23,
+    ],
+    [
+      a00 * b30 + a10 * b31 + a20 * b32 + a30 * b33,
+      a01 * b30 + a11 * b31 + a21 * b32 + a31 * b33,
+      a02 * b30 + a12 * b31 + a22 * b32 + a32 * b33,
+      a03 * b30 + a13 * b31 + a23 * b32 + a33 * b33,
+    ],
+  ];
 };
 
 /**
@@ -1145,18 +1165,17 @@ o3djs.math.mulMatrixMatrix4 = null;
  * @param {!o3djs.math.Matrix} b The matrix on the right.
  * @return {!o3djs.math.Matrix} The matrix product of a and b.
  */
-o3djs.math.rowMajor.mulMatrixMatrix = function(a, b) {
+o3djs.math.rowMajor.mulMatrixMatrix = function (a, b) {
   var r = [];
   var aRows = a.length;
   var bColumns = b[0].length;
   var bRows = b.length;
   for (var i = 0; i < aRows; ++i) {
-    var v = [];    // v becomes a row of the answer.
+    var v = []; // v becomes a row of the answer.
     var ai = a[i]; // ith row of a.
     for (var j = 0; j < bColumns; ++j) {
       v[j] = 0.0;
-      for (var k = 0; k < bRows; ++k)
-        v[j] += ai[k] * b[k][j]; // kth row, jth column.
+      for (var k = 0; k < bRows; ++k) v[j] += ai[k] * b[k][j]; // kth row, jth column.
     }
     r[i] = v;
   }
@@ -1171,18 +1190,17 @@ o3djs.math.rowMajor.mulMatrixMatrix = function(a, b) {
  * @param {!o3djs.math.Matrix} b The matrix on the right.
  * @return {!o3djs.math.Matrix} The matrix product of a and b.
  */
-o3djs.math.columnMajor.mulMatrixMatrix = function(a, b) {
+o3djs.math.columnMajor.mulMatrixMatrix = function (a, b) {
   var r = [];
   var bColumns = b.length;
   var aRows = a[0].length;
   var aColumns = a.length;
   for (var i = 0; i < bColumns; ++i) {
-    var v = [];    // v becomes a column of the answer.
+    var v = []; // v becomes a column of the answer.
     var bi = b[i]; // ith column of b.
     for (var j = 0; j < aRows; ++j) {
       v[j] = 0.0;
-      for (var k = 0; k < aColumns; ++k)
-        v[j] += bi[k] * a[k][j]; // kth column, jth row.
+      for (var k = 0; k < aColumns; ++k) v[j] += bi[k] * a[k][j]; // kth column, jth row.
     }
     r[i] = v;
   }
@@ -1205,7 +1223,7 @@ o3djs.math.mulMatrixMatrix = null;
  * @param {number} j The index of the desired column.
  * @return {!o3djs.math.Vector} The jth column of m as a vector.
  */
-o3djs.math.rowMajor.column = function(m, j) {
+o3djs.math.rowMajor.column = function (m, j) {
   var r = [];
   var mLength = m.length;
   for (var i = 0; i < mLength; ++i) {
@@ -1221,7 +1239,7 @@ o3djs.math.rowMajor.column = function(m, j) {
  * @param {number} j The index of the desired column.
  * @return {!o3djs.math.Vector} The jth column of m as a vector.
  */
-o3djs.math.columnMajor.column = function(m, j) {
+o3djs.math.columnMajor.column = function (m, j) {
   return m[j].slice();
 };
 
@@ -1240,7 +1258,7 @@ o3djs.math.column = null;
  * @param {number} i The index of the desired row.
  * @return {!o3djs.math.Vector} The ith row of m.
  */
-o3djs.math.rowMajor.row = function(m, i) {
+o3djs.math.rowMajor.row = function (m, i) {
   return m[i].slice();
 };
 
@@ -1251,7 +1269,7 @@ o3djs.math.rowMajor.row = function(m, i) {
  * @param {number} i The index of the desired row.
  * @return {!o3djs.math.Vector} The ith row of m.
  */
-o3djs.math.columnMajor.row = function(m, i) {
+o3djs.math.columnMajor.row = function (m, i) {
   var r = [];
   var mLength = m.length;
   for (var j = 0; j < mLength; ++j) {
@@ -1273,12 +1291,11 @@ o3djs.math.row = null;
  * @param {number} n The dimension of the identity matrix required.
  * @return {!o3djs.math.Matrix} An n-by-n identity matrix.
  */
-o3djs.math.identity = function(n) {
+o3djs.math.identity = function (n) {
   var r = [];
   for (var j = 0; j < n; ++j) {
     r[j] = [];
-    for (var i = 0; i < n; ++i)
-      r[j][i] = (i == j) ? 1 : 0;
+    for (var i = 0; i < n; ++i) r[j][i] = i == j ? 1 : 0;
   }
   return r;
 };
@@ -1288,14 +1305,13 @@ o3djs.math.identity = function(n) {
  * @param {!o3djs.math.Matrix} m The matrix.
  * @return {!o3djs.math.Matrix} The transpose of m.
  */
-o3djs.math.transpose = function(m) {
+o3djs.math.transpose = function (m) {
   var r = [];
   var m0Length = m[0].length;
   var mLength = m.length;
   for (var j = 0; j < m0Length; ++j) {
     r[j] = [];
-    for (var i = 0; i < mLength; ++i)
-      r[j][i] = m[i][j];
+    for (var i = 0; i < mLength; ++i) r[j][i] = m[i][j];
   }
   return r;
 };
@@ -1306,11 +1322,10 @@ o3djs.math.transpose = function(m) {
  * @param {!o3djs.math.Matrix} m The matrix.
  * @return {number} The trace of m.
  */
-o3djs.math.trace = function(m) {
+o3djs.math.trace = function (m) {
   var r = 0.0;
   var mLength = m.length;
-  for (var i = 0; i < mLength; ++i)
-    r += m[i][i];
+  for (var i = 0; i < mLength; ++i) r += m[i][i];
   return r;
 };
 
@@ -1319,7 +1334,7 @@ o3djs.math.trace = function(m) {
  * @param {!o3djs.math.Matrix1} m The matrix.
  * @return {number} The determinant of m.
  */
-o3djs.math.det1 = function(m) {
+o3djs.math.det1 = function (m) {
   return m[0][0];
 };
 
@@ -1328,7 +1343,7 @@ o3djs.math.det1 = function(m) {
  * @param {!o3djs.math.Matrix2} m The matrix.
  * @return {number} The determinant of m.
  */
-o3djs.math.det2 = function(m) {
+o3djs.math.det2 = function (m) {
   return m[0][0] * m[1][1] - m[0][1] * m[1][0];
 };
 
@@ -1337,10 +1352,12 @@ o3djs.math.det2 = function(m) {
  * @param {!o3djs.math.Matrix3} m The matrix.
  * @return {number} The determinant of m.
  */
-o3djs.math.det3 = function(m) {
-  return m[2][2] * (m[0][0] * m[1][1] - m[0][1] * m[1][0]) -
-         m[2][1] * (m[0][0] * m[1][2] - m[0][2] * m[1][0]) +
-         m[2][0] * (m[0][1] * m[1][2] - m[0][2] * m[1][1]);
+o3djs.math.det3 = function (m) {
+  return (
+    m[2][2] * (m[0][0] * m[1][1] - m[0][1] * m[1][0]) -
+    m[2][1] * (m[0][0] * m[1][2] - m[0][2] * m[1][0]) +
+    m[2][0] * (m[0][1] * m[1][2] - m[0][2] * m[1][1])
+  );
 };
 
 /**
@@ -1348,17 +1365,19 @@ o3djs.math.det3 = function(m) {
  * @param {!o3djs.math.Matrix4} m The matrix.
  * @return {number} The determinant of m.
  */
-o3djs.math.det4 = function(m) {
+o3djs.math.det4 = function (m) {
   var t01 = m[0][0] * m[1][1] - m[0][1] * m[1][0];
   var t02 = m[0][0] * m[1][2] - m[0][2] * m[1][0];
   var t03 = m[0][0] * m[1][3] - m[0][3] * m[1][0];
   var t12 = m[0][1] * m[1][2] - m[0][2] * m[1][1];
   var t13 = m[0][1] * m[1][3] - m[0][3] * m[1][1];
   var t23 = m[0][2] * m[1][3] - m[0][3] * m[1][2];
-  return m[3][3] * (m[2][2] * t01 - m[2][1] * t02 + m[2][0] * t12) -
-         m[3][2] * (m[2][3] * t01 - m[2][1] * t03 + m[2][0] * t13) +
-         m[3][1] * (m[2][3] * t02 - m[2][2] * t03 + m[2][0] * t23) -
-         m[3][0] * (m[2][3] * t12 - m[2][2] * t13 + m[2][1] * t23);
+  return (
+    m[3][3] * (m[2][2] * t01 - m[2][1] * t02 + m[2][0] * t12) -
+    m[3][2] * (m[2][3] * t01 - m[2][1] * t03 + m[2][0] * t13) +
+    m[3][1] * (m[2][3] * t02 - m[2][2] * t03 + m[2][0] * t23) -
+    m[3][0] * (m[2][3] * t12 - m[2][2] * t13 + m[2][1] * t23)
+  );
 };
 
 /**
@@ -1366,7 +1385,7 @@ o3djs.math.det4 = function(m) {
  * @param {!o3djs.math.Matrix1} m The matrix.
  * @return {!o3djs.math.Matrix1} The inverse of m.
  */
-o3djs.math.inverse1 = function(m) {
+o3djs.math.inverse1 = function (m) {
   return [[1.0 / m[0][0]]];
 };
 
@@ -1375,9 +1394,12 @@ o3djs.math.inverse1 = function(m) {
  * @param {!o3djs.math.Matrix2} m The matrix.
  * @return {!o3djs.math.Matrix2} The inverse of m.
  */
-o3djs.math.inverse2 = function(m) {
+o3djs.math.inverse2 = function (m) {
   var d = 1.0 / (m[0][0] * m[1][1] - m[0][1] * m[1][0]);
-  return [[d * m[1][1], -d * m[0][1]], [-d * m[1][0], d * m[0][0]]];
+  return [
+    [d * m[1][1], -d * m[0][1]],
+    [-d * m[1][0], d * m[0][0]],
+  ];
 };
 
 /**
@@ -1385,18 +1407,24 @@ o3djs.math.inverse2 = function(m) {
  * @param {!o3djs.math.Matrix3} m The matrix.
  * @return {!o3djs.math.Matrix3} The inverse of m.
  */
-o3djs.math.inverse3 = function(m) {
+o3djs.math.inverse3 = function (m) {
   var t00 = m[1][1] * m[2][2] - m[1][2] * m[2][1];
   var t10 = m[0][1] * m[2][2] - m[0][2] * m[2][1];
   var t20 = m[0][1] * m[1][2] - m[0][2] * m[1][1];
   var d = 1.0 / (m[0][0] * t00 - m[1][0] * t10 + m[2][0] * t20);
-  return [[d * t00, -d * t10, d * t20],
-          [-d * (m[1][0] * m[2][2] - m[1][2] * m[2][0]),
-            d * (m[0][0] * m[2][2] - m[0][2] * m[2][0]),
-           -d * (m[0][0] * m[1][2] - m[0][2] * m[1][0])],
-          [d * (m[1][0] * m[2][1] - m[1][1] * m[2][0]),
-          -d * (m[0][0] * m[2][1] - m[0][1] * m[2][0]),
-           d * (m[0][0] * m[1][1] - m[0][1] * m[1][0])]];
+  return [
+    [d * t00, -d * t10, d * t20],
+    [
+      -d * (m[1][0] * m[2][2] - m[1][2] * m[2][0]),
+      d * (m[0][0] * m[2][2] - m[0][2] * m[2][0]),
+      -d * (m[0][0] * m[1][2] - m[0][2] * m[1][0]),
+    ],
+    [
+      d * (m[1][0] * m[2][1] - m[1][1] * m[2][0]),
+      -d * (m[0][0] * m[2][1] - m[0][1] * m[2][0]),
+      d * (m[0][0] * m[1][1] - m[0][1] * m[1][0]),
+    ],
+  ];
 };
 
 /**
@@ -1404,7 +1432,7 @@ o3djs.math.inverse3 = function(m) {
  * @param {!o3djs.math.Matrix4} m The matrix.
  * @return {!o3djs.math.Matrix4} The inverse of m.
  */
-o3djs.math.inverse4 = function(m) {
+o3djs.math.inverse4 = function (m) {
   var tmp_0 = m[2][2] * m[3][3];
   var tmp_1 = m[3][2] * m[2][3];
   var tmp_2 = m[1][2] * m[3][3];
@@ -1430,42 +1458,98 @@ o3djs.math.inverse4 = function(m) {
   var tmp_22 = m[0][0] * m[1][1];
   var tmp_23 = m[1][0] * m[0][1];
 
-  var t0 = (tmp_0 * m[1][1] + tmp_3 * m[2][1] + tmp_4 * m[3][1]) -
-      (tmp_1 * m[1][1] + tmp_2 * m[2][1] + tmp_5 * m[3][1]);
-  var t1 = (tmp_1 * m[0][1] + tmp_6 * m[2][1] + tmp_9 * m[3][1]) -
-      (tmp_0 * m[0][1] + tmp_7 * m[2][1] + tmp_8 * m[3][1]);
-  var t2 = (tmp_2 * m[0][1] + tmp_7 * m[1][1] + tmp_10 * m[3][1]) -
-      (tmp_3 * m[0][1] + tmp_6 * m[1][1] + tmp_11 * m[3][1]);
-  var t3 = (tmp_5 * m[0][1] + tmp_8 * m[1][1] + tmp_11 * m[2][1]) -
-      (tmp_4 * m[0][1] + tmp_9 * m[1][1] + tmp_10 * m[2][1]);
+  var t0 =
+    tmp_0 * m[1][1] +
+    tmp_3 * m[2][1] +
+    tmp_4 * m[3][1] -
+    (tmp_1 * m[1][1] + tmp_2 * m[2][1] + tmp_5 * m[3][1]);
+  var t1 =
+    tmp_1 * m[0][1] +
+    tmp_6 * m[2][1] +
+    tmp_9 * m[3][1] -
+    (tmp_0 * m[0][1] + tmp_7 * m[2][1] + tmp_8 * m[3][1]);
+  var t2 =
+    tmp_2 * m[0][1] +
+    tmp_7 * m[1][1] +
+    tmp_10 * m[3][1] -
+    (tmp_3 * m[0][1] + tmp_6 * m[1][1] + tmp_11 * m[3][1]);
+  var t3 =
+    tmp_5 * m[0][1] +
+    tmp_8 * m[1][1] +
+    tmp_11 * m[2][1] -
+    (tmp_4 * m[0][1] + tmp_9 * m[1][1] + tmp_10 * m[2][1]);
 
   var d = 1.0 / (m[0][0] * t0 + m[1][0] * t1 + m[2][0] * t2 + m[3][0] * t3);
 
-  return [[d * t0, d * t1, d * t2, d * t3],
-      [d * ((tmp_1 * m[1][0] + tmp_2 * m[2][0] + tmp_5 * m[3][0]) -
+  return [
+    [d * t0, d * t1, d * t2, d * t3],
+    [
+      d *
+        (tmp_1 * m[1][0] +
+          tmp_2 * m[2][0] +
+          tmp_5 * m[3][0] -
           (tmp_0 * m[1][0] + tmp_3 * m[2][0] + tmp_4 * m[3][0])),
-       d * ((tmp_0 * m[0][0] + tmp_7 * m[2][0] + tmp_8 * m[3][0]) -
+      d *
+        (tmp_0 * m[0][0] +
+          tmp_7 * m[2][0] +
+          tmp_8 * m[3][0] -
           (tmp_1 * m[0][0] + tmp_6 * m[2][0] + tmp_9 * m[3][0])),
-       d * ((tmp_3 * m[0][0] + tmp_6 * m[1][0] + tmp_11 * m[3][0]) -
+      d *
+        (tmp_3 * m[0][0] +
+          tmp_6 * m[1][0] +
+          tmp_11 * m[3][0] -
           (tmp_2 * m[0][0] + tmp_7 * m[1][0] + tmp_10 * m[3][0])),
-       d * ((tmp_4 * m[0][0] + tmp_9 * m[1][0] + tmp_10 * m[2][0]) -
-          (tmp_5 * m[0][0] + tmp_8 * m[1][0] + tmp_11 * m[2][0]))],
-      [d * ((tmp_12 * m[1][3] + tmp_15 * m[2][3] + tmp_16 * m[3][3]) -
+      d *
+        (tmp_4 * m[0][0] +
+          tmp_9 * m[1][0] +
+          tmp_10 * m[2][0] -
+          (tmp_5 * m[0][0] + tmp_8 * m[1][0] + tmp_11 * m[2][0])),
+    ],
+    [
+      d *
+        (tmp_12 * m[1][3] +
+          tmp_15 * m[2][3] +
+          tmp_16 * m[3][3] -
           (tmp_13 * m[1][3] + tmp_14 * m[2][3] + tmp_17 * m[3][3])),
-       d * ((tmp_13 * m[0][3] + tmp_18 * m[2][3] + tmp_21 * m[3][3]) -
+      d *
+        (tmp_13 * m[0][3] +
+          tmp_18 * m[2][3] +
+          tmp_21 * m[3][3] -
           (tmp_12 * m[0][3] + tmp_19 * m[2][3] + tmp_20 * m[3][3])),
-       d * ((tmp_14 * m[0][3] + tmp_19 * m[1][3] + tmp_22 * m[3][3]) -
+      d *
+        (tmp_14 * m[0][3] +
+          tmp_19 * m[1][3] +
+          tmp_22 * m[3][3] -
           (tmp_15 * m[0][3] + tmp_18 * m[1][3] + tmp_23 * m[3][3])),
-       d * ((tmp_17 * m[0][3] + tmp_20 * m[1][3] + tmp_23 * m[2][3]) -
-          (tmp_16 * m[0][3] + tmp_21 * m[1][3] + tmp_22 * m[2][3]))],
-      [d * ((tmp_14 * m[2][2] + tmp_17 * m[3][2] + tmp_13 * m[1][2]) -
+      d *
+        (tmp_17 * m[0][3] +
+          tmp_20 * m[1][3] +
+          tmp_23 * m[2][3] -
+          (tmp_16 * m[0][3] + tmp_21 * m[1][3] + tmp_22 * m[2][3])),
+    ],
+    [
+      d *
+        (tmp_14 * m[2][2] +
+          tmp_17 * m[3][2] +
+          tmp_13 * m[1][2] -
           (tmp_16 * m[3][2] + tmp_12 * m[1][2] + tmp_15 * m[2][2])),
-       d * ((tmp_20 * m[3][2] + tmp_12 * m[0][2] + tmp_19 * m[2][2]) -
+      d *
+        (tmp_20 * m[3][2] +
+          tmp_12 * m[0][2] +
+          tmp_19 * m[2][2] -
           (tmp_18 * m[2][2] + tmp_21 * m[3][2] + tmp_13 * m[0][2])),
-       d * ((tmp_18 * m[1][2] + tmp_23 * m[3][2] + tmp_15 * m[0][2]) -
+      d *
+        (tmp_18 * m[1][2] +
+          tmp_23 * m[3][2] +
+          tmp_15 * m[0][2] -
           (tmp_22 * m[3][2] + tmp_14 * m[0][2] + tmp_19 * m[1][2])),
-       d * ((tmp_22 * m[2][2] + tmp_16 * m[0][2] + tmp_21 * m[1][2]) -
-          (tmp_20 * m[1][2] + tmp_23 * m[2][2] + tmp_17 * m[0][2]))]];
+      d *
+        (tmp_22 * m[2][2] +
+          tmp_16 * m[0][2] +
+          tmp_21 * m[1][2] -
+          (tmp_20 * m[1][2] + tmp_23 * m[2][2] + tmp_17 * m[0][2])),
+    ],
+  ];
 };
 
 /**
@@ -1478,18 +1562,16 @@ o3djs.math.inverse4 = function(m) {
  * @return {number} The determinant of the matrix obtained by removing
  *     row x and column y from a.
  */
-o3djs.math.codet = function(a, x, y) {
+o3djs.math.codet = function (a, x, y) {
   var size = a.length;
   var b = [];
   var ai = 0;
   for (var bi = 0; bi < size - 1; ++bi) {
-    if (ai == x)
-      ai++;
+    if (ai == x) ai++;
     b[bi] = [];
     var aj = 0;
     for (var bj = 0; bj < size - 1; ++bj) {
-      if (aj == y)
-        aj++;
+      if (aj == y) aj++;
       b[bi][bj] = a[ai][aj];
       aj++;
     }
@@ -1503,10 +1585,10 @@ o3djs.math.codet = function(a, x, y) {
  * @param {!o3djs.math.Matrix} m The matrix.
  * @return {number} the determinant of m.
  */
-o3djs.math.det = function(m) {
+o3djs.math.det = function (m) {
   var d = m.length;
   if (d <= 4) {
-    return o3djs.math['det' + d](m);
+    return o3djs.math["det" + d](m);
   }
   var r = 0.0;
   var sign = 1;
@@ -1524,10 +1606,10 @@ o3djs.math.det = function(m) {
  * @param {!o3djs.math.Matrix} m The matrix.
  * @return {!o3djs.math.Matrix} The inverse of m.
  */
-o3djs.math.inverse = function(m) {
+o3djs.math.inverse = function (m) {
   var d = m.length;
   if (d <= 4) {
-    return o3djs.math['inverse' + d](m);
+    return o3djs.math["inverse" + d](m);
   }
   var r = [];
   var size = m.length;
@@ -1549,14 +1631,16 @@ o3djs.math.inverse = function(m) {
  * @return {!o3djs.math.Matrix} A matrix whose rows are obtained from the
  *     rows of m by the Graham-Schmidt process.
  */
-o3djs.math.orthonormalize = function(m) {
+o3djs.math.orthonormalize = function (m) {
   var r = [];
   var mLength = m.length;
   for (var i = 0; i < mLength; ++i) {
     var v = m[i];
     for (var j = 0; j < i; ++j) {
-      v = o3djs.math.subVector(v, o3djs.math.mulScalarVector(
-          o3djs.math.dot(r[j], m[i]), r[j]));
+      v = o3djs.math.subVector(
+        v,
+        o3djs.math.mulScalarVector(o3djs.math.dot(r[j], m[i]), r[j])
+      );
     }
     r[i] = o3djs.math.normalize(v);
   }
@@ -1569,7 +1653,7 @@ o3djs.math.orthonormalize = function(m) {
  * @param {!o3djs.math.Matrix4} m The matrix.
  * @return {!o3djs.math.Matrix4} The inverse of m.
  */
-o3djs.math.matrix4.inverse = function(m) {
+o3djs.math.matrix4.inverse = function (m) {
   return o3djs.math.inverse4(m);
 };
 
@@ -1580,7 +1664,7 @@ o3djs.math.matrix4.inverse = function(m) {
  * @param {!o3djs.math.Matrix4} b The matrix on the right.
  * @return {!o3djs.math.Matrix4} The matrix product of a and b.
  */
-o3djs.math.matrix4.mul = function(a, b) {
+o3djs.math.matrix4.mul = function (a, b) {
   return o3djs.math.mulMatrixMatrix4(a, b);
 };
 
@@ -1590,7 +1674,7 @@ o3djs.math.matrix4.mul = function(a, b) {
  * @param {!o3djs.math.Matrix4} m The matrix.
  * @return {number} The determinant of m.
  */
-o3djs.math.matrix4.det = function(m) {
+o3djs.math.matrix4.det = function (m) {
   return o3djs.math.det4(m);
 };
 
@@ -1600,7 +1684,7 @@ o3djs.math.matrix4.det = function(m) {
  * @param {!o3djs.math.Matrix4} m The matrix.
  * @return {!o3djs.math.Matrix4} A copy of m.
  */
-o3djs.math.matrix4.copy = function(m) {
+o3djs.math.matrix4.copy = function (m) {
   return o3djs.math.copyMatrix(m);
 };
 
@@ -1611,7 +1695,7 @@ o3djs.math.matrix4.copy = function(m) {
  * @param {!o3djs.math.Matrix3} b A 3-by-3 matrix.
  * @return {!o3djs.math.Matrix4} a once modified.
  */
-o3djs.math.matrix4.setUpper3x3 = function(a, b) {
+o3djs.math.matrix4.setUpper3x3 = function (a, b) {
   var b0 = b[0];
   var b1 = b[1];
   var b2 = b[2];
@@ -1629,7 +1713,7 @@ o3djs.math.matrix4.setUpper3x3 = function(a, b) {
  * @param {!o3djs.math.Matrix4} m The matrix.
  * @return {!o3djs.math.Matrix3} The upper 3-by-3 block of m.
  */
-o3djs.math.matrix4.getUpper3x3 = function(m) {
+o3djs.math.matrix4.getUpper3x3 = function (m) {
   return [m[0].slice(0, 3), m[1].slice(0, 3), m[2].slice(0, 3)];
 };
 
@@ -1640,7 +1724,7 @@ o3djs.math.matrix4.getUpper3x3 = function(m) {
  * @param {(!o3djs.math.Vector3|!o3djs.math.Vector4)} v The vector.
  * @return {!o3djs.math.Matrix4} a once modified.
  */
-o3djs.math.matrix4.setTranslation = function(a, v) {
+o3djs.math.matrix4.setTranslation = function (a, v) {
   a[3].splice(0, 4, v[0], v[1], v[2], 1);
   return a;
 };
@@ -1651,7 +1735,7 @@ o3djs.math.matrix4.setTranslation = function(a, v) {
  * @param {!o3djs.math.Matrix4} m The matrix.
  * @return {!o3djs.math.Vector3} The translation component of m.
  */
-o3djs.math.matrix4.getTranslation = function(m) {
+o3djs.math.matrix4.getTranslation = function (m) {
   return m[3].slice(0, 3);
 };
 
@@ -1663,7 +1747,7 @@ o3djs.math.matrix4.getTranslation = function(m) {
  * @param {!o3djs.math.Vector3} v The point.
  * @return {!o3djs.math.Vector3} The transformed point.
  */
-o3djs.math.matrix4.transformPoint = function(m, v) {
+o3djs.math.matrix4.transformPoint = function (m, v) {
   var v0 = v[0];
   var v1 = v[1];
   var v2 = v[2];
@@ -1673,9 +1757,11 @@ o3djs.math.matrix4.transformPoint = function(m, v) {
   var m3 = m[3];
 
   var d = v0 * m0[3] + v1 * m1[3] + v2 * m2[3] + m3[3];
-  return [(v0 * m0[0] + v1 * m1[0] + v2 * m2[0] + m3[0]) / d,
-          (v0 * m0[1] + v1 * m1[1] + v2 * m2[1] + m3[1]) / d,
-          (v0 * m0[2] + v1 * m1[2] + v2 * m2[2] + m3[2]) / d];
+  return [
+    (v0 * m0[0] + v1 * m1[0] + v2 * m2[0] + m3[0]) / d,
+    (v0 * m0[1] + v1 * m1[1] + v2 * m2[1] + m3[1]) / d,
+    (v0 * m0[2] + v1 * m1[2] + v2 * m2[2] + m3[2]) / d,
+  ];
 };
 
 /**
@@ -1686,7 +1772,7 @@ o3djs.math.matrix4.transformPoint = function(m, v) {
  * @return {!o3djs.math.Vector4} The transformed point in homogenous
  *     coordinates.
  */
-o3djs.math.matrix4.transformVector4 = function(m, v) {
+o3djs.math.matrix4.transformVector4 = function (m, v) {
   var v0 = v[0];
   var v1 = v[1];
   var v2 = v[2];
@@ -1696,10 +1782,12 @@ o3djs.math.matrix4.transformVector4 = function(m, v) {
   var m2 = m[2];
   var m3 = m[3];
 
-  return [v0 * m0[0] + v1 * m1[0] + v2 * m2[0] + v3 * m3[0],
-          v0 * m0[1] + v1 * m1[1] + v2 * m2[1] + v3 * m3[1],
-          v0 * m0[2] + v1 * m1[2] + v2 * m2[2] + v3 * m3[2],
-          v0 * m0[3] + v1 * m1[3] + v2 * m2[3] + v3 * m3[3]];
+  return [
+    v0 * m0[0] + v1 * m1[0] + v2 * m2[0] + v3 * m3[0],
+    v0 * m0[1] + v1 * m1[1] + v2 * m2[1] + v3 * m3[1],
+    v0 * m0[2] + v1 * m1[2] + v2 * m2[2] + v3 * m3[2],
+    v0 * m0[3] + v1 * m1[3] + v2 * m2[3] + v3 * m3[3],
+  ];
 };
 
 /**
@@ -1713,7 +1801,7 @@ o3djs.math.matrix4.transformVector4 = function(m, v) {
  * @param {!o3djs.math.Vector3} v The direction.
  * @return {!o3djs.math.Vector3} The transformed direction.
  */
-o3djs.math.matrix4.transformDirection = function(m, v) {
+o3djs.math.matrix4.transformDirection = function (m, v) {
   var v0 = v[0];
   var v1 = v[1];
   var v2 = v[2];
@@ -1722,9 +1810,11 @@ o3djs.math.matrix4.transformDirection = function(m, v) {
   var m2 = m[2];
   var m3 = m[3];
 
-  return [v0 * m0[0] + v1 * m1[0] + v2 * m2[0],
-          v0 * m0[1] + v1 * m1[1] + v2 * m2[1],
-          v0 * m0[2] + v1 * m1[2] + v2 * m2[2]];
+  return [
+    v0 * m0[0] + v1 * m1[0] + v2 * m2[0],
+    v0 * m0[1] + v1 * m1[1] + v2 * m2[1],
+    v0 * m0[2] + v1 * m1[2] + v2 * m2[2],
+  ];
 };
 
 /**
@@ -1740,7 +1830,7 @@ o3djs.math.matrix4.transformDirection = function(m, v) {
  * @param {!o3djs.math.Vector3} v The normal.
  * @return {!o3djs.math.Vector3} The transformed normal.
  */
-o3djs.math.matrix4.transformNormal = function(m, v) {
+o3djs.math.matrix4.transformNormal = function (m, v) {
   var mInverse = o3djs.math.inverse4(m);
   var v0 = v[0];
   var v1 = v[1];
@@ -1750,21 +1840,23 @@ o3djs.math.matrix4.transformNormal = function(m, v) {
   var mi2 = mInverse[2];
   var mi3 = mInverse[3];
 
-  return [v0 * mi0[0] + v1 * mi0[1] + v2 * mi0[2],
-          v0 * mi1[0] + v1 * mi1[1] + v2 * mi1[2],
-          v0 * mi2[0] + v1 * mi2[1] + v2 * mi2[2]];
+  return [
+    v0 * mi0[0] + v1 * mi0[1] + v2 * mi0[2],
+    v0 * mi1[0] + v1 * mi1[1] + v2 * mi1[2],
+    v0 * mi2[0] + v1 * mi2[1] + v2 * mi2[2],
+  ];
 };
 
 /**
  * Creates a 4-by-4 identity matrix.
  * @return {!o3djs.math.Matrix4} The 4-by-4 identity.
  */
-o3djs.math.matrix4.identity = function() {
+o3djs.math.matrix4.identity = function () {
   return [
     [1, 0, 0, 0],
     [0, 1, 0, 0],
     [0, 0, 1, 0],
-    [0, 0, 0, 1]
+    [0, 0, 0, 1],
   ];
 };
 
@@ -1773,7 +1865,7 @@ o3djs.math.matrix4.identity = function() {
  * @param {!o3djs.math.Matrix4} m The matrix to set to identity.
  * @return {!o3djs.math.Matrix4} m once modified.
  */
-o3djs.math.matrix4.setIdentity = function(m) {
+o3djs.math.matrix4.setIdentity = function (m) {
   for (var i = 0; i < 4; i++) {
     for (var j = 0; j < 4; j++) {
       if (i == j) {
@@ -1805,7 +1897,7 @@ o3djs.math.matrix4.setIdentity = function(m) {
  *     of the far clipping plane.
  * @return {!o3djs.math.Matrix4} The perspective matrix.
  */
-o3djs.math.matrix4.perspective = function(angle, aspect, near, far) {
+o3djs.math.matrix4.perspective = function (angle, aspect, near, far) {
   var f = Math.tan(0.5 * (Math.PI - angle));
   var range = near - far;
 
@@ -1813,7 +1905,7 @@ o3djs.math.matrix4.perspective = function(angle, aspect, near, far) {
     [f / aspect, 0, 0, 0],
     [0, f, 0, 0],
     [0, 0, far / range, -1],
-    [0, 0, near * far / range, 0]
+    [0, 0, (near * far) / range, 0],
   ];
 };
 
@@ -1833,15 +1925,24 @@ o3djs.math.matrix4.perspective = function(angle, aspect, near, far) {
  * @param {number} far The negative z coordinate of the far plane of the box.
  * @return {!o3djs.math.Matrix4} The orthographic projection matrix.
  */
-o3djs.math.matrix4.orthographic =
-    function(left, right, bottom, top, near, far) {
+o3djs.math.matrix4.orthographic = function (
+  left,
+  right,
+  bottom,
+  top,
+  near,
+  far
+) {
   return [
     [2 / (right - left), 0, 0, 0],
     [0, 2 / (top - bottom), 0, 0],
     [0, 0, 1 / (near - far), 0],
-    [(left + right) / (left - right),
-     (bottom + top) / (bottom - top),
-     near / (near - far), 1]
+    [
+      (left + right) / (left - right),
+      (bottom + top) / (bottom - top),
+      near / (near - far),
+      1,
+    ],
   ];
 };
 
@@ -1862,15 +1963,16 @@ o3djs.math.matrix4.orthographic =
  * @param {number} far The negative z coordinate of the far plane of the box.
  * @return {!o3djs.math.Matrix4} The perspective projection matrix.
  */
-o3djs.math.matrix4.frustum = function(left, right, bottom, top, near, far) {
-  var dx = (right - left);
-  var dy = (top - bottom);
-  var dz = (near - far);
+o3djs.math.matrix4.frustum = function (left, right, bottom, top, near, far) {
+  var dx = right - left;
+  var dy = top - bottom;
+  var dz = near - far;
   return [
-    [2 * near / dx, 0, 0, 0],
-    [0, 2 * near / dy, 0, 0],
+    [(2 * near) / dx, 0, 0, 0],
+    [0, (2 * near) / dy, 0, 0],
     [(left + right) / dx, (top + bottom) / dy, far / dz, -1],
-    [0, 0, near * far / dz, 0]];
+    [0, 0, (near * far) / dz, 0],
+  ];
 };
 
 /**
@@ -1888,11 +1990,11 @@ o3djs.math.matrix4.frustum = function(left, right, bottom, top, near, far) {
  *     pointing up.
  * @return {!o3djs.math.Matrix4} The look-at matrix.
  */
-o3djs.math.matrix4.lookAt = function(eye, target, up) {
-  var vz = o3djs.math.normalize(
-      o3djs.math.subVector(eye, target).slice(0, 3)).concat(0);
-  var vx = o3djs.math.normalize(
-      o3djs.math.cross(up, vz)).concat(0);
+o3djs.math.matrix4.lookAt = function (eye, target, up) {
+  var vz = o3djs.math
+    .normalize(o3djs.math.subVector(eye, target).slice(0, 3))
+    .concat(0);
+  var vx = o3djs.math.normalize(o3djs.math.cross(up, vz)).concat(0);
   var vy = o3djs.math.cross(vz, vx).concat(0);
 
   return o3djs.math.inverse([vx, vy, vz, eye.concat(1)]);
@@ -1908,7 +2010,7 @@ o3djs.math.matrix4.lookAt = function(eye, target, up) {
  * @param {!o3djs.math.Matrix4} b A 4-by-4 matrix.
  * @return {!o3djs.math.Matrix4} the composition of a and b, b first then a.
  */
-o3djs.math.matrix4.composition = function(a, b) {
+o3djs.math.matrix4.composition = function (a, b) {
   var a0 = a[0];
   var a1 = a[1];
   var a2 = a[2];
@@ -1949,22 +2051,32 @@ o3djs.math.matrix4.composition = function(a, b) {
   var b31 = b3[1];
   var b32 = b3[2];
   var b33 = b3[3];
-  return [[a00 * b00 + a10 * b01 + a20 * b02 + a30 * b03,
-           a01 * b00 + a11 * b01 + a21 * b02 + a31 * b03,
-           a02 * b00 + a12 * b01 + a22 * b02 + a32 * b03,
-           a03 * b00 + a13 * b01 + a23 * b02 + a33 * b03],
-          [a00 * b10 + a10 * b11 + a20 * b12 + a30 * b13,
-           a01 * b10 + a11 * b11 + a21 * b12 + a31 * b13,
-           a02 * b10 + a12 * b11 + a22 * b12 + a32 * b13,
-           a03 * b10 + a13 * b11 + a23 * b12 + a33 * b13],
-          [a00 * b20 + a10 * b21 + a20 * b22 + a30 * b23,
-           a01 * b20 + a11 * b21 + a21 * b22 + a31 * b23,
-           a02 * b20 + a12 * b21 + a22 * b22 + a32 * b23,
-           a03 * b20 + a13 * b21 + a23 * b22 + a33 * b23],
-          [a00 * b30 + a10 * b31 + a20 * b32 + a30 * b33,
-           a01 * b30 + a11 * b31 + a21 * b32 + a31 * b33,
-           a02 * b30 + a12 * b31 + a22 * b32 + a32 * b33,
-           a03 * b30 + a13 * b31 + a23 * b32 + a33 * b33]];
+  return [
+    [
+      a00 * b00 + a10 * b01 + a20 * b02 + a30 * b03,
+      a01 * b00 + a11 * b01 + a21 * b02 + a31 * b03,
+      a02 * b00 + a12 * b01 + a22 * b02 + a32 * b03,
+      a03 * b00 + a13 * b01 + a23 * b02 + a33 * b03,
+    ],
+    [
+      a00 * b10 + a10 * b11 + a20 * b12 + a30 * b13,
+      a01 * b10 + a11 * b11 + a21 * b12 + a31 * b13,
+      a02 * b10 + a12 * b11 + a22 * b12 + a32 * b13,
+      a03 * b10 + a13 * b11 + a23 * b12 + a33 * b13,
+    ],
+    [
+      a00 * b20 + a10 * b21 + a20 * b22 + a30 * b23,
+      a01 * b20 + a11 * b21 + a21 * b22 + a31 * b23,
+      a02 * b20 + a12 * b21 + a22 * b22 + a32 * b23,
+      a03 * b20 + a13 * b21 + a23 * b22 + a33 * b23,
+    ],
+    [
+      a00 * b30 + a10 * b31 + a20 * b32 + a30 * b33,
+      a01 * b30 + a11 * b31 + a21 * b32 + a31 * b33,
+      a02 * b30 + a12 * b31 + a22 * b32 + a32 * b33,
+      a03 * b30 + a13 * b31 + a23 * b32 + a33 * b33,
+    ],
+  ];
 };
 
 /**
@@ -1977,7 +2089,7 @@ o3djs.math.matrix4.composition = function(a, b) {
  * @param {!o3djs.math.Matrix4} b A 4-by-4 matrix.
  * @return {!o3djs.math.Matrix4} a once modified.
  */
-o3djs.math.matrix4.compose = function(a, b) {
+o3djs.math.matrix4.compose = function (a, b) {
   var a0 = a[0];
   var a1 = a[1];
   var a2 = a[2];
@@ -2018,22 +2130,38 @@ o3djs.math.matrix4.compose = function(a, b) {
   var b31 = b3[1];
   var b32 = b3[2];
   var b33 = b3[3];
-  a[0].splice(0, 4, a00 * b00 + a10 * b01 + a20 * b02 + a30 * b03,
-                    a01 * b00 + a11 * b01 + a21 * b02 + a31 * b03,
-                    a02 * b00 + a12 * b01 + a22 * b02 + a32 * b03,
-                    a03 * b00 + a13 * b01 + a23 * b02 + a33 * b03);
-  a[1].splice(0, 4, a00 * b10 + a10 * b11 + a20 * b12 + a30 * b13,
-                    a01 * b10 + a11 * b11 + a21 * b12 + a31 * b13,
-                    a02 * b10 + a12 * b11 + a22 * b12 + a32 * b13,
-                    a03 * b10 + a13 * b11 + a23 * b12 + a33 * b13);
-  a[2].splice(0, 4, a00 * b20 + a10 * b21 + a20 * b22 + a30 * b23,
-                    a01 * b20 + a11 * b21 + a21 * b22 + a31 * b23,
-                    a02 * b20 + a12 * b21 + a22 * b22 + a32 * b23,
-                    a03 * b20 + a13 * b21 + a23 * b22 + a33 * b23),
-  a[3].splice(0, 4, a00 * b30 + a10 * b31 + a20 * b32 + a30 * b33,
-                    a01 * b30 + a11 * b31 + a21 * b32 + a31 * b33,
-                    a02 * b30 + a12 * b31 + a22 * b32 + a32 * b33,
-                    a03 * b30 + a13 * b31 + a23 * b32 + a33 * b33);
+  a[0].splice(
+    0,
+    4,
+    a00 * b00 + a10 * b01 + a20 * b02 + a30 * b03,
+    a01 * b00 + a11 * b01 + a21 * b02 + a31 * b03,
+    a02 * b00 + a12 * b01 + a22 * b02 + a32 * b03,
+    a03 * b00 + a13 * b01 + a23 * b02 + a33 * b03
+  );
+  a[1].splice(
+    0,
+    4,
+    a00 * b10 + a10 * b11 + a20 * b12 + a30 * b13,
+    a01 * b10 + a11 * b11 + a21 * b12 + a31 * b13,
+    a02 * b10 + a12 * b11 + a22 * b12 + a32 * b13,
+    a03 * b10 + a13 * b11 + a23 * b12 + a33 * b13
+  );
+  a[2].splice(
+    0,
+    4,
+    a00 * b20 + a10 * b21 + a20 * b22 + a30 * b23,
+    a01 * b20 + a11 * b21 + a21 * b22 + a31 * b23,
+    a02 * b20 + a12 * b21 + a22 * b22 + a32 * b23,
+    a03 * b20 + a13 * b21 + a23 * b22 + a33 * b23
+  ),
+    a[3].splice(
+      0,
+      4,
+      a00 * b30 + a10 * b31 + a20 * b32 + a30 * b33,
+      a01 * b30 + a11 * b31 + a21 * b32 + a31 * b33,
+      a02 * b30 + a12 * b31 + a22 * b32 + a32 * b33,
+      a03 * b30 + a13 * b31 + a23 * b32 + a33 * b33
+    );
   return a;
 };
 
@@ -2043,12 +2171,12 @@ o3djs.math.matrix4.compose = function(a, b) {
  *     which to translate.
  * @return {!o3djs.math.Matrix4} The translation matrix.
  */
-o3djs.math.matrix4.translation = function(v) {
+o3djs.math.matrix4.translation = function (v) {
   return [
     [1, 0, 0, 0],
     [0, 1, 0, 0],
     [0, 0, 1, 0],
-    [v[0], v[1], v[2], 1]
+    [v[0], v[1], v[2], 1],
   ];
 };
 
@@ -2059,7 +2187,7 @@ o3djs.math.matrix4.translation = function(v) {
  *     which to translate.
  * @return {!o3djs.math.Matrix4} m once modified.
  */
-o3djs.math.matrix4.translate = function(m, v) {
+o3djs.math.matrix4.translate = function (m, v) {
   var v0 = v[0];
   var v1 = v[1];
   var v2 = v[2];
@@ -2084,10 +2212,14 @@ o3djs.math.matrix4.translate = function(m, v) {
   var m32 = m3[2];
   var m33 = m3[3];
 
-  m3.splice(0, 4, m00 * v0 + m10 * v1 + m20 * v2 + m30,
-                  m01 * v0 + m11 * v1 + m21 * v2 + m31,
-                  m02 * v0 + m12 * v1 + m22 * v2 + m32,
-                  m03 * v0 + m13 * v1 + m23 * v2 + m33);
+  m3.splice(
+    0,
+    4,
+    m00 * v0 + m10 * v1 + m20 * v2 + m30,
+    m01 * v0 + m11 * v1 + m21 * v2 + m31,
+    m02 * v0 + m12 * v1 + m22 * v2 + m32,
+    m03 * v0 + m13 * v1 + m23 * v2 + m33
+  );
 
   return m;
 };
@@ -2100,12 +2232,12 @@ o3djs.math.matrix4.translate = function(m, v) {
  *     three entries specifying the factor by which to scale in each dimension.
  * @return {!o3djs.math.Matrix4} The scaling matrix.
  */
-o3djs.math.matrix4.scaling = function(v) {
+o3djs.math.matrix4.scaling = function (v) {
   return [
     [v[0], 0, 0, 0],
     [0, v[1], 0, 0],
     [0, 0, v[2], 0],
-    [0, 0, 0, 1]
+    [0, 0, 0, 1],
   ];
 };
 
@@ -2118,7 +2250,7 @@ o3djs.math.matrix4.scaling = function(v) {
  *     factor by which to scale in each dimension.
  * @return {!o3djs.math.Matrix4} m once modified.
  */
-o3djs.math.matrix4.scale = function(m, v) {
+o3djs.math.matrix4.scale = function (m, v) {
   var v0 = v[0];
   var v1 = v[1];
   var v2 = v[2];
@@ -2140,7 +2272,7 @@ o3djs.math.matrix4.scale = function(m, v) {
  * @param {number} angle The angle by which to rotate (in radians).
  * @return {!o3djs.math.Matrix4} The rotation matrix.
  */
-o3djs.math.matrix4.rotationX = function(angle) {
+o3djs.math.matrix4.rotationX = function (angle) {
   var c = Math.cos(angle);
   var s = Math.sin(angle);
 
@@ -2148,7 +2280,7 @@ o3djs.math.matrix4.rotationX = function(angle) {
     [1, 0, 0, 0],
     [0, c, s, 0],
     [0, -s, c, 0],
-    [0, 0, 0, 1]
+    [0, 0, 0, 1],
   ];
 };
 
@@ -2159,7 +2291,7 @@ o3djs.math.matrix4.rotationX = function(angle) {
  * @param {number} angle The angle by which to rotate (in radians).
  * @return {!o3djs.math.Matrix4} m once modified.
  */
-o3djs.math.matrix4.rotateX = function(m, angle) {
+o3djs.math.matrix4.rotateX = function (m, angle) {
   var m0 = m[0];
   var m1 = m[1];
   var m2 = m[2];
@@ -2175,14 +2307,22 @@ o3djs.math.matrix4.rotateX = function(m, angle) {
   var c = Math.cos(angle);
   var s = Math.sin(angle);
 
-  m1.splice(0, 4, c * m10 + s * m20,
-                  c * m11 + s * m21,
-                  c * m12 + s * m22,
-                  c * m13 + s * m23);
-  m2.splice(0, 4, c * m20 - s * m10,
-                  c * m21 - s * m11,
-                  c * m22 - s * m12,
-                  c * m23 - s * m13);
+  m1.splice(
+    0,
+    4,
+    c * m10 + s * m20,
+    c * m11 + s * m21,
+    c * m12 + s * m22,
+    c * m13 + s * m23
+  );
+  m2.splice(
+    0,
+    4,
+    c * m20 - s * m10,
+    c * m21 - s * m11,
+    c * m22 - s * m12,
+    c * m23 - s * m13
+  );
 
   return m;
 };
@@ -2192,7 +2332,7 @@ o3djs.math.matrix4.rotateX = function(m, angle) {
  * @param {number} angle The angle by which to rotate (in radians).
  * @return {!o3djs.math.Matrix4} The rotation matrix.
  */
-o3djs.math.matrix4.rotationY = function(angle) {
+o3djs.math.matrix4.rotationY = function (angle) {
   var c = Math.cos(angle);
   var s = Math.sin(angle);
 
@@ -2200,7 +2340,7 @@ o3djs.math.matrix4.rotationY = function(angle) {
     [c, 0, -s, 0],
     [0, 1, 0, 0],
     [s, 0, c, 0],
-    [0, 0, 0, 1]
+    [0, 0, 0, 1],
   ];
 };
 
@@ -2211,7 +2351,7 @@ o3djs.math.matrix4.rotationY = function(angle) {
  * @param {number} angle The angle by which to rotate (in radians).
  * @return {!o3djs.math.Matrix4} m once modified.
  */
-o3djs.math.matrix4.rotateY = function(m, angle) {
+o3djs.math.matrix4.rotateY = function (m, angle) {
   var m0 = m[0];
   var m1 = m[1];
   var m2 = m[2];
@@ -2227,14 +2367,22 @@ o3djs.math.matrix4.rotateY = function(m, angle) {
   var c = Math.cos(angle);
   var s = Math.sin(angle);
 
-  m0.splice(0, 4, c * m00 - s * m20,
-                  c * m01 - s * m21,
-                  c * m02 - s * m22,
-                  c * m03 - s * m23);
-  m2.splice(0, 4, c * m20 + s * m00,
-                  c * m21 + s * m01,
-                  c * m22 + s * m02,
-                  c * m23 + s * m03);
+  m0.splice(
+    0,
+    4,
+    c * m00 - s * m20,
+    c * m01 - s * m21,
+    c * m02 - s * m22,
+    c * m03 - s * m23
+  );
+  m2.splice(
+    0,
+    4,
+    c * m20 + s * m00,
+    c * m21 + s * m01,
+    c * m22 + s * m02,
+    c * m23 + s * m03
+  );
 
   return m;
 };
@@ -2244,7 +2392,7 @@ o3djs.math.matrix4.rotateY = function(m, angle) {
  * @param {number} angle The angle by which to rotate (in radians).
  * @return {!o3djs.math.Matrix4} The rotation matrix.
  */
-o3djs.math.matrix4.rotationZ = function(angle) {
+o3djs.math.matrix4.rotationZ = function (angle) {
   var c = Math.cos(angle);
   var s = Math.sin(angle);
 
@@ -2252,7 +2400,7 @@ o3djs.math.matrix4.rotationZ = function(angle) {
     [c, s, 0, 0],
     [-s, c, 0, 0],
     [0, 0, 1, 0],
-    [0, 0, 0, 1]
+    [0, 0, 0, 1],
   ];
 };
 
@@ -2263,7 +2411,7 @@ o3djs.math.matrix4.rotationZ = function(angle) {
  * @param {number} angle The angle by which to rotate (in radians).
  * @return {!o3djs.math.Matrix4} m once modified.
  */
-o3djs.math.matrix4.rotateZ = function(m, angle) {
+o3djs.math.matrix4.rotateZ = function (m, angle) {
   var m0 = m[0];
   var m1 = m[1];
   var m2 = m[2];
@@ -2279,14 +2427,22 @@ o3djs.math.matrix4.rotateZ = function(m, angle) {
   var c = Math.cos(angle);
   var s = Math.sin(angle);
 
-  m0.splice(0, 4, c * m00 + s * m10,
-                  c * m01 + s * m11,
-                  c * m02 + s * m12,
-                  c * m03 + s * m13);
-  m1.splice(0, 4, c * m10 - s * m00,
-                  c * m11 - s * m01,
-                  c * m12 - s * m02,
-                  c * m13 - s * m03);
+  m0.splice(
+    0,
+    4,
+    c * m00 + s * m10,
+    c * m01 + s * m11,
+    c * m02 + s * m12,
+    c * m03 + s * m13
+  );
+  m1.splice(
+    0,
+    4,
+    c * m10 - s * m00,
+    c * m11 - s * m01,
+    c * m12 - s * m02,
+    c * m13 - s * m03
+  );
 
   return m;
 };
@@ -2299,7 +2455,7 @@ o3djs.math.matrix4.rotateZ = function(m, angle) {
  * @param {!o3djs.math.Vector3} v A vector of angles (in radians).
  * @return {!o3djs.math.Matrix4} The rotation matrix.
  */
-o3djs.math.matrix4.rotationZYX = function(v) {
+o3djs.math.matrix4.rotationZYX = function (v) {
   var sinx = Math.sin(v[0]);
   var cosx = Math.cos(v[0]);
   var siny = Math.sin(v[1]);
@@ -2312,15 +2468,19 @@ o3djs.math.matrix4.rotationZYX = function(v) {
 
   return [
     [cosz * cosy, sinz * cosy, -siny, 0],
-    [coszsiny * sinx - sinz * cosx,
-     sinzsiny * sinx + cosz * cosx,
-     cosy * sinx,
-     0],
-    [coszsiny * cosx + sinz * sinx,
-     sinzsiny * cosx - cosz * sinx,
-     cosy * cosx,
-     0],
-    [0, 0, 0, 1]
+    [
+      coszsiny * sinx - sinz * cosx,
+      sinzsiny * sinx + cosz * cosx,
+      cosy * sinx,
+      0,
+    ],
+    [
+      coszsiny * cosx + sinz * sinx,
+      sinzsiny * cosx - cosz * sinx,
+      cosy * cosx,
+      0,
+    ],
+    [0, 0, 0, 1],
   ];
 };
 
@@ -2332,7 +2492,7 @@ o3djs.math.matrix4.rotationZYX = function(v) {
  * @param {!o3djs.math.Vector3} v A vector of angles (in radians).
  * @return {!o3djs.math.Matrix4} m once modified.
  */
-o3djs.math.matrix4.rotateZYX = function(m, v) {
+o3djs.math.matrix4.rotateZYX = function (m, v) {
   var sinX = Math.sin(v[0]);
   var cosX = Math.cos(v[0]);
   var sinY = Math.sin(v[1]);
@@ -2375,23 +2535,32 @@ o3djs.math.matrix4.rotateZYX = function(m, v) {
   var m32 = m3[2];
   var m33 = m3[3];
 
-  m0.splice(0, 4,
-      r00 * m00 + r01 * m10 + r02 * m20,
-      r00 * m01 + r01 * m11 + r02 * m21,
-      r00 * m02 + r01 * m12 + r02 * m22,
-      r00 * m03 + r01 * m13 + r02 * m23);
+  m0.splice(
+    0,
+    4,
+    r00 * m00 + r01 * m10 + r02 * m20,
+    r00 * m01 + r01 * m11 + r02 * m21,
+    r00 * m02 + r01 * m12 + r02 * m22,
+    r00 * m03 + r01 * m13 + r02 * m23
+  );
 
-  m1.splice(0, 4,
-      r10 * m00 + r11 * m10 + r12 * m20,
-      r10 * m01 + r11 * m11 + r12 * m21,
-      r10 * m02 + r11 * m12 + r12 * m22,
-      r10 * m03 + r11 * m13 + r12 * m23);
+  m1.splice(
+    0,
+    4,
+    r10 * m00 + r11 * m10 + r12 * m20,
+    r10 * m01 + r11 * m11 + r12 * m21,
+    r10 * m02 + r11 * m12 + r12 * m22,
+    r10 * m03 + r11 * m13 + r12 * m23
+  );
 
-  m2.splice(0, 4,
-      r20 * m00 + r21 * m10 + r22 * m20,
-      r20 * m01 + r21 * m11 + r22 * m21,
-      r20 * m02 + r21 * m12 + r22 * m22,
-      r20 * m03 + r21 * m13 + r22 * m23);
+  m2.splice(
+    0,
+    4,
+    r20 * m00 + r21 * m10 + r22 * m20,
+    r20 * m01 + r21 * m11 + r22 * m21,
+    r20 * m02 + r21 * m12 + r22 * m22,
+    r20 * m03 + r21 * m13 + r22 * m23
+  );
 
   return m;
 };
@@ -2405,7 +2574,7 @@ o3djs.math.matrix4.rotateZYX = function(m, v) {
  * @return {!o3djs.math.Matrix4} A matrix which rotates angle radians
  *     around the axis.
  */
-o3djs.math.matrix4.axisRotation = function(axis, angle) {
+o3djs.math.matrix4.axisRotation = function (axis, angle) {
   var x = axis[0];
   var y = axis[1];
   var z = axis[2];
@@ -2421,19 +2590,25 @@ o3djs.math.matrix4.axisRotation = function(axis, angle) {
   var oneMinusCosine = 1 - c;
 
   return [
-    [xx + (1 - xx) * c,
-     x * y * oneMinusCosine + z * s,
-     x * z * oneMinusCosine - y * s,
-     0],
-    [x * y * oneMinusCosine - z * s,
-     yy + (1 - yy) * c,
-     y * z * oneMinusCosine + x * s,
-     0],
-    [x * z * oneMinusCosine + y * s,
-     y * z * oneMinusCosine - x * s,
-     zz + (1 - zz) * c,
-     0],
-    [0, 0, 0, 1]
+    [
+      xx + (1 - xx) * c,
+      x * y * oneMinusCosine + z * s,
+      x * z * oneMinusCosine - y * s,
+      0,
+    ],
+    [
+      x * y * oneMinusCosine - z * s,
+      yy + (1 - yy) * c,
+      y * z * oneMinusCosine + x * s,
+      0,
+    ],
+    [
+      x * z * oneMinusCosine + y * s,
+      y * z * oneMinusCosine - x * s,
+      zz + (1 - zz) * c,
+      0,
+    ],
+    [0, 0, 0, 1],
   ];
 };
 
@@ -2446,7 +2621,7 @@ o3djs.math.matrix4.axisRotation = function(axis, angle) {
  * @param {number} angle The angle by which to rotate (in radians).
  * @return {!o3djs.math.Matrix4} m once modified.
  */
-o3djs.math.matrix4.axisRotate = function(m, axis, angle) {
+o3djs.math.matrix4.axisRotate = function (m, axis, angle) {
   var x = axis[0];
   var y = axis[1];
   var z = axis[2];
@@ -2493,23 +2668,32 @@ o3djs.math.matrix4.axisRotate = function(m, axis, angle) {
   var m32 = m3[2];
   var m33 = m3[3];
 
-  m0.splice(0, 4,
-      r00 * m00 + r01 * m10 + r02 * m20,
-      r00 * m01 + r01 * m11 + r02 * m21,
-      r00 * m02 + r01 * m12 + r02 * m22,
-      r00 * m03 + r01 * m13 + r02 * m23);
+  m0.splice(
+    0,
+    4,
+    r00 * m00 + r01 * m10 + r02 * m20,
+    r00 * m01 + r01 * m11 + r02 * m21,
+    r00 * m02 + r01 * m12 + r02 * m22,
+    r00 * m03 + r01 * m13 + r02 * m23
+  );
 
-  m1.splice(0, 4,
-      r10 * m00 + r11 * m10 + r12 * m20,
-      r10 * m01 + r11 * m11 + r12 * m21,
-      r10 * m02 + r11 * m12 + r12 * m22,
-      r10 * m03 + r11 * m13 + r12 * m23);
+  m1.splice(
+    0,
+    4,
+    r10 * m00 + r11 * m10 + r12 * m20,
+    r10 * m01 + r11 * m11 + r12 * m21,
+    r10 * m02 + r11 * m12 + r12 * m22,
+    r10 * m03 + r11 * m13 + r12 * m23
+  );
 
-  m2.splice(0, 4,
-      r20 * m00 + r21 * m10 + r22 * m20,
-      r20 * m01 + r21 * m11 + r22 * m21,
-      r20 * m02 + r21 * m12 + r22 * m22,
-      r20 * m03 + r21 * m13 + r22 * m23);
+  m2.splice(
+    0,
+    4,
+    r20 * m00 + r21 * m10 + r22 * m20,
+    r20 * m01 + r21 * m11 + r22 * m21,
+    r20 * m02 + r21 * m12 + r22 * m22,
+    r20 * m03 + r21 * m13 + r22 * m23
+  );
 
   return m;
 };
@@ -2520,7 +2704,7 @@ o3djs.math.matrix4.axisRotate = function(m, axis, angle) {
  * o3djs.math.rowMajor).  Call this function to establish the row major
  * convention.
  */
-o3djs.math.installRowMajorFunctions = function() {
+o3djs.math.installRowMajorFunctions = function () {
   for (var f in o3djs.math.rowMajor) {
     o3djs.math[f] = o3djs.math.rowMajor[f];
   }
@@ -2532,7 +2716,7 @@ o3djs.math.installRowMajorFunctions = function() {
  * o3djs.math.columnMajor).  Call this function to establish the column
  * major convention.
  */
-o3djs.math.installColumnMajorFunctions = function() {
+o3djs.math.installColumnMajorFunctions = function () {
   for (var f in o3djs.math.columnMajor) {
     o3djs.math[f] = o3djs.math.columnMajor[f];
   }
@@ -2543,7 +2727,7 @@ o3djs.math.installColumnMajorFunctions = function() {
  * version in o3djs.math.errorCheck (provided such a function exists in
  * o3djs.math.errorCheck).
  */
-o3djs.math.installErrorCheckFunctions = function() {
+o3djs.math.installErrorCheckFunctions = function () {
   for (var f in o3djs.math.errorCheck) {
     o3djs.math[f] = o3djs.math.errorCheck[f];
   }
@@ -2554,11 +2738,11 @@ o3djs.math.installErrorCheckFunctions = function() {
  * version in o3djs.math.errorCheckFree (provided such a function exists in
  * o3djs.math.errorCheckFree).
  */
-o3djs.math.installErrorCheckFreeFunctions = function() {
+o3djs.math.installErrorCheckFreeFunctions = function () {
   for (var f in o3djs.math.errorCheckFree) {
     o3djs.math[f] = o3djs.math.errorCheckFree[f];
   }
-}
+};
 
 // By default, install the row-major functions.
 o3djs.math.installRowMajorFunctions();

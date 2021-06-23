@@ -29,7 +29,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * RenderNode is the base of all RenderNodes in the render graph.
  * RenderNodes are rendered in order of priority.
@@ -40,7 +39,7 @@
  *     it is not.
  * @constructor
  */
-o3d.RenderNode = function(opt_priority, opt_active) {
+o3d.RenderNode = function (opt_priority, opt_active) {
   o3d.ParamObject.call(this);
 
   /**
@@ -87,49 +86,43 @@ o3d.RenderNode = function(opt_priority, opt_active) {
    */
   this.parent = null;
 };
-o3d.inherit('RenderNode','ParamObject');
+o3d.inherit("RenderNode", "ParamObject");
 
-o3d.ParamObject.setUpO3DParam_(o3d.RenderNode, 'priority', 'ParamFloat');
-o3d.ParamObject.setUpO3DParam_(o3d.RenderNode, 'active', 'ParamBoolean');
+o3d.ParamObject.setUpO3DParam_(o3d.RenderNode, "priority", "ParamFloat");
+o3d.ParamObject.setUpO3DParam_(o3d.RenderNode, "active", "ParamBoolean");
 
-o3d.RenderNode.prototype.__defineSetter__('parent',
-    function(p) {
-      if (this.parent_) {
-        this.parent_.removeChild(this);
-      }
-      this.parent_ = p;
-      if (this.parent_) {
-        if (!this.parent_.addChild) {
-          throw ('Parent of render node must be render node or null.');
-        }
-        this.parent_.addChild(this);
-      }
+o3d.RenderNode.prototype.__defineSetter__("parent", function (p) {
+  if (this.parent_) {
+    this.parent_.removeChild(this);
+  }
+  this.parent_ = p;
+  if (this.parent_) {
+    if (!this.parent_.addChild) {
+      throw "Parent of render node must be render node or null.";
     }
-);
+    this.parent_.addChild(this);
+  }
+});
 
-o3d.RenderNode.prototype.__defineGetter__('parent',
-    function(p) {
-      return this.parent_;
-    }
-);
+o3d.RenderNode.prototype.__defineGetter__("parent", function (p) {
+  return this.parent_;
+});
 
 /**
  * Adds a child node.
  * @param {o3d.RenderNode} child The child to add.
  */
-o3d.RenderNode.prototype.addChild = function(child) {
+o3d.RenderNode.prototype.addChild = function (child) {
   this.children.push(child);
 };
-
 
 /**
  * Removes a child node.
  * @param {o3d.RenderNode} child The child to add.
  */
-o3d.RenderNode.prototype.removeChild = function(child) {
+o3d.RenderNode.prototype.removeChild = function (child) {
   o3d.removeFromArray(this.children, child);
 };
-
 
 /**
  * Returns this render node and all its descendants. Note that this render node
@@ -141,12 +134,9 @@ o3d.RenderNode.prototype.removeChild = function(child) {
  *
  * An array containing all render nodes of the subtree.
  */
-o3d.RenderNode.prototype.getRenderNodesInTree =
-    function() {
+o3d.RenderNode.prototype.getRenderNodesInTree = function () {
   o3d.notImplemented();
 };
-
-
 
 /**
  * Searches for render nodes that match the given name in the hierarchy under
@@ -161,11 +151,9 @@ o3d.RenderNode.prototype.getRenderNodesInTree =
  * @return {Array.<!o3d.RenderNode>}  An array containing all nodes among
  *     this node and its decendants that have the given name.
  */
-o3d.RenderNode.prototype.getRenderNodesByNameInTree =
-    function(name) {
+o3d.RenderNode.prototype.getRenderNodesByNameInTree = function (name) {
   o3d.notImplemented();
 };
-
 
 /**
  * Searches for render nodes that match the given class name in the hierarchy
@@ -179,16 +167,16 @@ o3d.RenderNode.prototype.getRenderNodesByNameInTree =
  * @return {Array.<!o3d.RenderNode>}  An array containing all nodes among
  *     this node and its decendants whose type is class_name.
  */
-o3d.RenderNode.prototype.getRenderNodesByClassNameInTree =
-    function(class_name) {
+o3d.RenderNode.prototype.getRenderNodesByClassNameInTree = function (
+  class_name
+) {
   o3d.notImplemented();
 };
-
 
 /**
  * Recursively traverses the render graph starting at this node.
  */
-o3d.RenderNode.prototype.render = function() {
+o3d.RenderNode.prototype.render = function () {
   function compare(a, b) {
     return a.priority - b.priority;
   }
@@ -202,16 +190,12 @@ o3d.RenderNode.prototype.render = function() {
   this.after();
 };
 
-
 /**
  * Called during the rendergraph traversal before the children are rendered.
  */
-o3d.RenderNode.prototype.before = function() { };
-
+o3d.RenderNode.prototype.before = function () {};
 
 /**
  * Called during the rendergraph traversal after the children are rendered.
  */
-o3d.RenderNode.prototype.after = function() { };
-
-
+o3d.RenderNode.prototype.after = function () {};

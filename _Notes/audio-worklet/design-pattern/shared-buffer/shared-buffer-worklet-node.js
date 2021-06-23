@@ -30,7 +30,8 @@
  * @extends AudioWorkletNode
  */
 class SharedBufferWorkletNode // eslint-disable-line no-unused-vars
-    extends AudioWorkletNode {
+  extends AudioWorkletNode
+{
   /**
    * @constructor
    * @param {BaseAudioContext} context The associated BaseAudioContext.
@@ -43,14 +44,15 @@ class SharedBufferWorkletNode // eslint-disable-line no-unused-vars
    * processor.
    */
   constructor(context, options) {
-    super(context, 'shared-buffer-worklet-processor', options);
+    super(context, "shared-buffer-worklet-processor", options);
 
-    this._workerOptions = (options && options.worker)
-      ? options.worker
-      : {ringBufferLength: 3072, channelCount: 1};
+    this._workerOptions =
+      options && options.worker
+        ? options.worker
+        : { ringBufferLength: 3072, channelCount: 1 };
 
     // Worker backend.
-    this._worker = new Worker('shared-buffer-worker.js');
+    this._worker = new Worker("shared-buffer-worker.js");
 
     // This node is a messaging hub for the Worker and AWP. After the initial
     // setup, the message passing between the worker and the process are rarely
@@ -60,7 +62,7 @@ class SharedBufferWorkletNode // eslint-disable-line no-unused-vars
 
     // Initialize the worker.
     this._worker.postMessage({
-      message: 'INITIALIZE_WORKER',
+      message: "INITIALIZE_WORKER",
       options: {
         ringBufferLength: this._workerOptions.ringBufferLength,
         channelCount: this._workerOptions.channelCount,
@@ -75,23 +77,21 @@ class SharedBufferWorkletNode // eslint-disable-line no-unused-vars
    */
   _onWorkerInitialized(eventFromWorker) {
     const data = eventFromWorker.data;
-    if (data.message === 'WORKER_READY') {
+    if (data.message === "WORKER_READY") {
       // Send SharedArrayBuffers to the processor.
       this.port.postMessage(data.SharedBuffers);
       return;
     }
 
-    if (data.message === 'WORKER_ERROR') {
-      console.log('[SharedBufferWorklet] Worker Error:',
-                  data.detail);
-      if (typeof this.onError === 'function') {
+    if (data.message === "WORKER_ERROR") {
+      console.log("[SharedBufferWorklet] Worker Error:", data.detail);
+      if (typeof this.onError === "function") {
         this.onError(data);
       }
       return;
     }
 
-    console.log('[SharedBufferWorklet] Unknown message: ',
-                eventFromWorker);
+    console.log("[SharedBufferWorklet] Unknown message: ", eventFromWorker);
   }
 
   /**
@@ -101,16 +101,16 @@ class SharedBufferWorkletNode // eslint-disable-line no-unused-vars
    */
   _onProcessorInitialized(eventFromProcessor) {
     const data = eventFromProcessor.data;
-    if (data.message === 'PROCESSOR_READY' &&
-        typeof this.onInitialized === 'function') {
+    if (
+      data.message === "PROCESSOR_READY" &&
+      typeof this.onInitialized === "function"
+    ) {
       this.onInitialized();
       return;
     }
 
-    console.log('[SharedBufferWorklet] Unknown message: ',
-                eventFromProcessor);
+    console.log("[SharedBufferWorklet] Unknown message: ", eventFromProcessor);
   }
 } // class SharedBufferWorkletNode
-
 
 export default SharedBufferWorkletNode;

@@ -17,15 +17,15 @@
 // Description of shared states. See shared-buffer-worker.js for the
 // description.
 const STATE = {
-  'REQUEST_RENDER': 0,
-  'IB_FRAMES_AVAILABLE': 1,
-  'IB_READ_INDEX': 2,
-  'IB_WRITE_INDEX': 3,
-  'OB_FRAMES_AVAILABLE': 4,
-  'OB_READ_INDEX': 5,
-  'OB_WRITE_INDEX': 6,
-  'RING_BUFFER_LENGTH': 7,
-  'KERNEL_LENGTH': 8,
+  REQUEST_RENDER: 0,
+  IB_FRAMES_AVAILABLE: 1,
+  IB_READ_INDEX: 2,
+  IB_WRITE_INDEX: 3,
+  OB_FRAMES_AVAILABLE: 4,
+  OB_READ_INDEX: 5,
+  OB_WRITE_INDEX: 6,
+  RING_BUFFER_LENGTH: 7,
+  KERNEL_LENGTH: 8,
 };
 
 /**
@@ -66,7 +66,7 @@ class SharedBufferWorkletProcessor extends AudioWorkletProcessor {
 
     this._initialized = true;
     this.port.postMessage({
-      message: 'PROCESSOR_READY',
+      message: "PROCESSOR_READY",
     });
   }
 
@@ -109,7 +109,8 @@ class SharedBufferWorkletProcessor extends AudioWorkletProcessor {
 
     if (nextReadIndex < this._ringBufferLength) {
       outputChannelData.set(
-          this._outputRingBuffer[0].subarray(outputReadIndex, nextReadIndex));
+        this._outputRingBuffer[0].subarray(outputReadIndex, nextReadIndex)
+      );
       this._states[STATE.OB_READ_INDEX] += outputChannelData.length;
     } else {
       let overflow = nextReadIndex - this._ringBufferLength;
@@ -149,6 +150,7 @@ class SharedBufferWorkletProcessor extends AudioWorkletProcessor {
   }
 } // class SharedBufferWorkletProcessor
 
-
-registerProcessor('shared-buffer-worklet-processor',
-                  SharedBufferWorkletProcessor);
+registerProcessor(
+  "shared-buffer-worklet-processor",
+  SharedBufferWorkletProcessor
+);

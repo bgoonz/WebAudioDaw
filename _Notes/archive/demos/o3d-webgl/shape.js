@@ -29,19 +29,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * The Shape represents a collection of Elements. The typical example is a
  * cube with 6 faces where each face uses a different material would be
  * represented as 1 Shape with 6 Elements, one for each material.
  * @constructor
  */
-o3d.Shape = function() {
+o3d.Shape = function () {
   o3d.ParamObject.call(this);
   this.elements = [];
 };
-o3d.inherit('Shape', 'ParamObject');
-
+o3d.inherit("Shape", "ParamObject");
 
 /**
  * The elements owned by this shape.
@@ -60,7 +58,6 @@ o3d.inherit('Shape', 'ParamObject');
  */
 o3d.Shape.prototype.elements = [];
 
-
 /**
  * Creates a DrawElement for each Element owned by this Shape.
  * If an Element already has a DrawElement that uses \a material a new
@@ -71,32 +68,28 @@ o3d.Shape.prototype.elements = [];
  *     This allows you to easily setup the default (just draw as is) by
  *     passing null or setup a shadow pass by passing in a shadow material.
  */
-o3d.Shape.prototype.createDrawElements =
-    function(pack, material) {
+o3d.Shape.prototype.createDrawElements = function (pack, material) {
   var elements = this.elements;
   for (var i = 0; i < elements.length; ++i) {
     elements[i].createDrawElement(pack, material);
   }
 };
 
-
 /**
  * Adds and element to the list of elements for this shape.
  * @param {o3d.Element} element The element to add.
  */
-o3d.Shape.prototype.addElement = function(element) {
+o3d.Shape.prototype.addElement = function (element) {
   this.elements.push(element);
 };
-
 
 /**
  * Removes and element to the list of elements for this shape.
  * @param {o3d.Element} element The element to add.
  */
-o3d.Shape.prototype.removeElement = function(element) {
+o3d.Shape.prototype.removeElement = function (element) {
   o3d.removeFromArray(this.elements, element);
 };
-
 
 /**
  * Called when the tree traversal finds this shape in the transform tree.
@@ -105,8 +98,11 @@ o3d.Shape.prototype.removeElement = function(element) {
  *     drawlists and matrix info.
  * @param {o3d.math.Matrix4} world The world matrix.
  */
-o3d.Shape.prototype.writeToDrawLists =
-    function(drawListInfos, world, transform) {
+o3d.Shape.prototype.writeToDrawLists = function (
+  drawListInfos,
+  world,
+  transform
+) {
   var elements = this.elements;
 
   // Iterate through elements of this shape.
@@ -115,7 +111,7 @@ o3d.Shape.prototype.writeToDrawLists =
 
     // For each element look at the DrawElements for that element.
     for (var j = 0; j < element.drawElements.length; ++j) {
-      this.gl.client.render_stats_['drawElementsProcessed']++;
+      this.gl.client.render_stats_["drawElementsProcessed"]++;
       var drawElement = element.drawElements[j];
       var material = drawElement.material || drawElement.owner.material;
       var materialDrawList = material.drawList;
@@ -152,18 +148,16 @@ o3d.Shape.prototype.writeToDrawLists =
             viewProjection: viewProjection,
             worldViewProjection: worldViewProjection,
             transform: transform,
-            drawElement: drawElement
+            drawElement: drawElement,
           });
         }
       }
 
       if (rendered) {
-        this.gl.client.render_stats_['drawElementsRendered']++;
+        this.gl.client.render_stats_["drawElementsRendered"]++;
       } else {
-        this.gl.client.render_stats_['drawElementsCulled']++;
+        this.gl.client.render_stats_["drawElementsCulled"]++;
       }
     }
   }
 };
-
-

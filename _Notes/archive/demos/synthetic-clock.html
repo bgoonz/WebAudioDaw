@@ -29,203 +29,217 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>
-Title
-</title>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>Title</title>
 
-<link rel="stylesheet" type="text/css" href = "style/simple.css" />
+    <link rel="stylesheet" type="text/css" href="style/simple.css" />
 
-<!-- Slider stuff -->
-<script type="text/javascript" src="lib/buffer-loader.js"></script>
-<script type="text/javascript" src="lib/events.js"></script>
-<style type="text/css">
-  #slider { margin: 10px; }
-</style>
+    <!-- Slider stuff -->
+    <script type="text/javascript" src="lib/buffer-loader.js"></script>
+    <script type="text/javascript" src="lib/events.js"></script>
+    <style type="text/css">
+      #slider {
+        margin: 10px;
+      }
+    </style>
 
-<!-- Our javascript code -->
-<script type="text/javascript">
+    <!-- Our javascript code -->
+    <script type="text/javascript">
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
-window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      // init() once the page has finished loading.
+      window.onload = init;
 
-// init() once the page has finished loading.
-window.onload = init;
+      var canvas;
+      var cc;
 
-var canvas;
-var cc;
+      var backgroundColor = "rgb(0, 0, 0)";
+      var greenColor = "rgb(0, 255, 0)";
+      var gridColor = "rgb(100,100,100)";
+      var gridColor2 = "rgb(255,50,50)";
 
-var backgroundColor = "rgb(0, 0, 0)";
-var greenColor = "rgb(0, 255, 0)";
-var gridColor = "rgb(100,100,100)";
-var gridColor2 = "rgb(255,50,50)";
+      var print = true;
 
-var print = true;
+      var context;
+      var gain;
+      var delta = 0;
+      var aveDelta = -1;
 
-var context;
-var gain;
-var delta = 0;
-var aveDelta = -1;
+      var kDisplayBufferSize = 1024;
 
-var kDisplayBufferSize = 1024;
+      var index = 0;
+      var optimalBuffer = new Float32Array(kDisplayBufferSize);
+      var contextTimeBuffer = new Float32Array(kDisplayBufferSize);
+      var deviationBuffer = new Float32Array(kDisplayBufferSize);
 
-var index = 0;
-var optimalBuffer = new Float32Array(kDisplayBufferSize);
-var contextTimeBuffer = new Float32Array(kDisplayBufferSize);
-var deviationBuffer = new Float32Array(kDisplayBufferSize);
+      var halfHeightScale = 0.003; // milliseconds
 
-var halfHeightScale = 0.003; // milliseconds
+      var startTime = -1; // initialize first time
 
-var startTime = -1; // initialize first time
+      function drawCurve() {
+        var info = document.getElementById("info");
+        var width = canvas.width;
+        var height = canvas.height;
+        var halfHeight = 0.5 * height;
 
-function drawCurve() {
-    var info = document.getElementById("info");
-    var width = canvas.width;
-    var height = canvas.height;
-    var halfHeight = 0.5 * height;
+        cc.fillStyle = backgroundColor;
+        cc.fillRect(0, 0, width, height);
+        cc.lineWidth = 1;
 
-    cc.fillStyle = backgroundColor;
-    cc.fillRect(0, 0, width, height);
-    cc.lineWidth = 1;
-    
-    cc.strokeStyle = gridColor;
+        cc.strokeStyle = gridColor;
 
-    var timeToPixelScale = halfHeight / halfHeightScale;
+        var timeToPixelScale = halfHeight / halfHeightScale;
 
-    // Draw microsecond markers from -3ms to 3ms in 100us steps.
-    for (var seconds = -halfHeightScale; seconds <= halfHeightScale; seconds += 0.0001) {
+        // Draw microsecond markers from -3ms to 3ms in 100us steps.
+        for (
+          var seconds = -halfHeightScale;
+          seconds <= halfHeightScale;
+          seconds += 0.0001
+        ) {
+          cc.beginPath();
+
+          var y = halfHeight - seconds * timeToPixelScale;
+
+          cc.moveTo(40, y);
+          cc.lineTo(width, y);
+          cc.stroke();
+
+          cc.textAlign = "center";
+
+          var microseconds = seconds * 1000000;
+          cc.strokeText(microseconds.toFixed(0) + " us", 25, y + 3);
+        }
+
+        // Draw synthesized clock deviation from ideal.
         cc.beginPath();
-        
-        var y = halfHeight - seconds * timeToPixelScale;
-        
-        cc.moveTo(40, y);
-        cc.lineTo(width, y);
+        cc.strokeStyle = gridColor2;
+        cc.moveTo(0, 0);
+
+        for (var i = 0; i < kDisplayBufferSize; ++i) {
+          var value = halfHeight - timeToPixelScale * deviationBuffer[i];
+          cc.lineTo(i, value);
+        }
         cc.stroke();
-    
-        cc.textAlign = "center";
-        
-        var microseconds = seconds * 1000000;
-        cc.strokeText(microseconds.toFixed(0) + " us", 25, y + 3);
-    }
 
-    // Draw synthesized clock deviation from ideal.
-    cc.beginPath();
-    cc.strokeStyle = gridColor2;
-    cc.moveTo(0, 0);
+        cc.beginPath();
+        cc.strokeStyle = greenColor;
 
-    for (var i = 0; i < kDisplayBufferSize; ++i) {
-        var value = halfHeight - timeToPixelScale * deviationBuffer[i];
-        cc.lineTo(i, value);
-    }
-    cc.stroke();
+        cc.moveTo(0, halfHeight);
+        cc.lineTo(width, halfHeight);
 
-    cc.beginPath();
-    cc.strokeStyle = greenColor;
+        cc.stroke();
+      }
 
-    cc.moveTo(0, halfHeight);
-    cc.lineTo(width, halfHeight);
+      function discreteTimeConstantForSampleRate(timeConstant, sampleRate) {
+        return 1 - Math.exp(-1 / (sampleRate * timeConstant));
+      }
 
-    cc.stroke();
-}
+      var performanceTime;
 
-function discreteTimeConstantForSampleRate(timeConstant, sampleRate) {
-    return 1 - Math.exp(-1 / (sampleRate * timeConstant));
-}
+      var oldEstimatedTime;
+      var oldOptimalTime;
 
-var performanceTime;
+      function draw() {
+        var currentTime = context.currentTime;
+        performanceTime = context.performanceTime;
 
-var oldEstimatedTime;
-var oldOptimalTime;
+        var performanceNowInSeconds = 0.001 * performance.now(); // convert to seconds
 
-function draw() {
-    var currentTime = context.currentTime;
-    performanceTime = context.performanceTime;
+        if (startTime == -1) startTime = performanceNowInSeconds;
 
-    var performanceNowInSeconds = 0.001 * performance.now(); // convert to seconds
+        // Calculated based on adding a new .performanceTime attribute.
+        var optimalTime = context.performanceTimeToContextTime(
+          performance.now()
+        );
 
-    if (startTime == -1)
-        startTime = performanceNowInSeconds;
+        // Create a synthetic clock by averaging the difference between the performance.now() clock and the AudioContext.currentTime
+        delta = performanceNowInSeconds - currentTime;
 
-    // Calculated based on adding a new .performanceTime attribute.
-    var optimalTime = context.performanceTimeToContextTime( performance.now() );
+        // Average with a fast time constant at the beginning, but much slower and smoother once we've converged to a close value.
+        // We're averaging this about 60 times a seconds (requestAnimationFrame())
+        var convergenceTimeConstant =
+          0.5 * (performanceNowInSeconds - startTime);
+        convergenceTimeConstant = Math.min(5, convergenceTimeConstant);
+        var k = discreteTimeConstantForSampleRate(convergenceTimeConstant, 60); // sampling 60fps
 
-    // Create a synthetic clock by averaging the difference between the performance.now() clock and the AudioContext.currentTime
-    delta = performanceNowInSeconds - currentTime;
+        if (aveDelta == -1) {
+          // Initialize to first known delta.
+          aveDelta = delta;
+        } else {
+          aveDelta += (delta - aveDelta) * k;
+        }
 
-    // Average with a fast time constant at the beginning, but much slower and smoother once we've converged to a close value.
-    // We're averaging this about 60 times a seconds (requestAnimationFrame())
-    var convergenceTimeConstant = 0.5 * (performanceNowInSeconds - startTime);
-    convergenceTimeConstant = Math.min(5, convergenceTimeConstant);
-    var k = discreteTimeConstantForSampleRate(convergenceTimeConstant, 60); // sampling 60fps
+        // halfRenderBufferTime offsets the fact that the average delta is going to be about 1/2 buffer late on average.
+        var halfRenderBufferTime = (0.5 * 128) / context.sampleRate;
+        var estimatedTime =
+          performanceNowInSeconds - aveDelta + halfRenderBufferTime;
 
-    if (aveDelta == -1) {
-        // Initialize to first known delta.
-        aveDelta = delta;
-    } else {
-        aveDelta += (delta - aveDelta) * k;
-    }
+        var deviation = estimatedTime - optimalTime;
 
-    // halfRenderBufferTime offsets the fact that the average delta is going to be about 1/2 buffer late on average.
-    var halfRenderBufferTime = 0.5 * 128 / context.sampleRate;
-    var estimatedTime = performanceNowInSeconds - aveDelta + halfRenderBufferTime;
+        oldEstimatedTime = estimatedTime;
+        oldOptimalTime = optimalTime;
 
-    var deviation = estimatedTime - optimalTime;
+        optimalBuffer[index] = optimalTime;
+        contextTimeBuffer[index] = currentTime;
+        deviationBuffer[index] = deviation;
 
-    oldEstimatedTime = estimatedTime;
-    oldOptimalTime = optimalTime;
+        if (Math.abs(deviation) > 0.001) {
+          var d1 = oldEstimatedTime - estimatedTime;
+          var d2 = oldOptimalTime - optimalTime;
+          console.log(
+            "bad: " +
+              deviation +
+              " estimatedTime: " +
+              estimatedTime +
+              " optimalTime: " +
+              optimalTime +
+              " oldEstimatedTime: " +
+              d1 +
+              " oldOptimalTime: " +
+              d2
+          );
+        }
 
-    optimalBuffer[index] = optimalTime;
-    contextTimeBuffer[index] = currentTime;
-    deviationBuffer[index] = deviation;
-    
-    if (Math.abs(deviation) > 0.001) {
-        var d1 = oldEstimatedTime-estimatedTime;
-        var d2 = oldOptimalTime-optimalTime;
-        console.log("bad: " + deviation + " estimatedTime: " + estimatedTime + " optimalTime: " + optimalTime + " oldEstimatedTime: " + d1 +
-            " oldOptimalTime: " + d2);
-    }
+        index++;
+        if (index == kDisplayBufferSize) index = 0;
 
-    index++;
-    if (index == kDisplayBufferSize)
-        index = 0;
+        if (print) {
+          drawCurve();
+          window.requestAnimationFrame(draw);
+        }
+      }
 
-    if (print) {
+      function init() {
+        canvas = document.getElementById("canvasID");
+        cc = canvas.getContext("2d");
+
+        context = new AudioContext();
+        gain = context.createGain();
+        gain.connect(context.destination);
+
         drawCurve();
-        window.requestAnimationFrame(draw);
-    }
-}
+        draw();
+      }
+    </script>
+  </head>
 
-function init() {
-    canvas = document.getElementById('canvasID');
-    cc = canvas.getContext('2d');
+  <body>
+    <!-- Sliders and other controls will be added here -->
+    <div id="controls"></div>
 
-    context = new AudioContext();
-    gain = context.createGain();
-    gain.connect(context.destination);
+    <canvas
+      id="canvasID"
+      width="1024"
+      height="768"
+      style="border: 2px inset blue"
+    >
+    </canvas>
 
-    drawCurve();
-    draw();
-}
+    <div id="info"></div>
 
-</script>
-</head>
-
-<body>
-
-<!-- Sliders and other controls will be added here -->
-<div id="controls"> </div>
-
-<canvas id="canvasID" width="1024" height="768" style="border: 2px inset blue;">
-</canvas>
-
-<div id="info"> </div>
-
-<div onmousedown="print = false;">
-stop
-</div>
-
-</body>
+    <div onmousedown="print = false;">stop</div>
+  </body>
 </html>

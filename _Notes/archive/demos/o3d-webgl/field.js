@@ -29,7 +29,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * A Field is a base class that manages a set of components in a
  * Buffer of a specific type. Fields are managed by Buffers and can not be
@@ -37,10 +36,10 @@
  * Buffer the Field's buffer property will be set to null.
  * @constructor
  */
-o3d.Field = function() {
+o3d.Field = function () {
   o3d.NamedObject.call(this);
 };
-o3d.inherit('Field', 'NamedObject');
+o3d.inherit("Field", "NamedObject");
 
 /**
  * The number of components in this field.
@@ -48,13 +47,11 @@ o3d.inherit('Field', 'NamedObject');
  */
 o3d.Field.prototype.numComponents = 0;
 
-
 /**
  * The Buffer the field belongs to.
  * @type {o3d.Buffer}
  */
 o3d.Field.prototype.buffer = null;
-
 
 /**
  * The offset of this field in the Buffer.
@@ -62,13 +59,11 @@ o3d.Field.prototype.buffer = null;
  */
 o3d.Field.prototype.offset_ = 0;
 
-
 /**
  * The size of one element of this field.
  * @type {number}
  */
 o3d.Field.prototype.size = 0;
-
 
 /**
  * Sets the values of the data stored in the field.
@@ -83,21 +78,19 @@ o3d.Field.prototype.size = 0;
  * @param {!Array.<number>} values Values to be stored in the buffer starting at
  *     index.
  */
-o3d.Field.prototype.setAt =
-    function(start_index, values) {
+o3d.Field.prototype.setAt = function (start_index, values) {
   this.buffer.lock();
   var l = values.length / this.numComponents;
   for (var i = 0; i < l; ++i) {
     for (var c = 0; c < this.numComponents; ++c) {
       this.buffer.array_[
-          (start_index + i) * this.buffer.totalComponents + this.offset_ + c] =
-              values[this.numComponents * i + c];
+        (start_index + i) * this.buffer.totalComponents + this.offset_ + c
+      ] = values[this.numComponents * i + c];
     }
   }
   this.buffer.unlock();
   return true;
 };
-
 
 /**
  * Gets the values stored in the field.
@@ -106,45 +99,43 @@ o3d.Field.prototype.setAt =
  * @param {number} num_elements number of elements to read from field.
  * @return {!Array.<number>}  The values of the field.
  */
-o3d.Field.prototype.getAt =
-    function(start_index, num_elements) {
+o3d.Field.prototype.getAt = function (start_index, num_elements) {
   var values = [];
   for (var i = 0; i < num_elements; ++i) {
     for (var c = 0; c < this.numComponents; ++c) {
-      values.push(this.buffer.array_[(start_index + i) *
-          this.buffer.totalComponents + this.offset_ + c]);
+      values.push(
+        this.buffer.array_[
+          (start_index + i) * this.buffer.totalComponents + this.offset_ + c
+        ]
+      );
     }
   }
   return values;
 };
 
-
-
 /**
  * A field that contains floating point numbers.
  * @constructor
  */
-o3d.FloatField = function() {
+o3d.FloatField = function () {
   o3d.Field.call(this);
 };
-o3d.inherit('FloatField', 'Field');
+o3d.inherit("FloatField", "Field");
 
 /**
  * A field that contains unsigned integers.
  * @constructor
  */
-o3d.UInt32Field = function() {
+o3d.UInt32Field = function () {
   o3d.Field.call(this);
 };
-o3d.inherit('UInt32Field', 'Field');
+o3d.inherit("UInt32Field", "Field");
 
 /**
  * A field that contains unsigned bytes.
  * @constructor
  */
-o3d.UByteNField = function() {
+o3d.UByteNField = function () {
   o3d.Field.call(this);
 };
-o3d.inherit('UByteNField', 'Field');
-
-
+o3d.inherit("UByteNField", "Field");

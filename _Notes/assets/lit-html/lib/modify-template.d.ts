@@ -11,7 +11,7 @@
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-import { Template } from '../lit-html.js';
+import { Template } from "../lit-html.js";
 /**
  * Removes the list of nodes from a Template safely. In addition to removing
  * nodes from the Template, the Template part indices are updated to match
@@ -27,10 +27,17 @@ import { Template } from '../lit-html.js';
  *         div
  * div <-- stop removing since previous sibling is the removing node (div#1, removed 4 nodes)
  */
-export declare function removeNodesFromTemplate(template: Template, nodesToRemove: Set<Node>): void;
+export declare function removeNodesFromTemplate(
+  template: Template,
+  nodesToRemove: Set<Node>
+): void;
 /**
  * Inserts the given node into the Template, optionally before the given
  * refNode. In addition to inserting the node into the Template, the Template
  * part indices are updated to match the mutated Template DOM.
  */
-export declare function insertNodeIntoTemplate(template: Template, node: Node, refNode?: Node | null): void;
+export declare function insertNodeIntoTemplate(
+  template: Template,
+  node: Node,
+  refNode?: Node | null
+): void;

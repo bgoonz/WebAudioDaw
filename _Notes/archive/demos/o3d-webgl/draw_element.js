@@ -29,16 +29,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * A DrawElement causes an Element to be Drawn with a particular material.
  * You can override other Effect parameters by adding corresponding params to
  * the DrawElement.
- * 
+ *
  * @param {!o3d.Material} opt_material The material used to render this element.
  * @constructor
  */
-o3d.DrawElement = function(opt_material) {
+o3d.DrawElement = function (opt_material) {
   o3d.ParamObject.call(this);
 
   /**
@@ -60,7 +59,6 @@ o3d.DrawElement = function(opt_material) {
    */
   this.owner_ = null;
 };
-o3d.inherit('DrawElement', 'ParamObject');
+o3d.inherit("DrawElement", "ParamObject");
 
-o3d.ParamObject.setUpO3DParam_(o3d.DrawElement, 'material', 'ParamMaterial');
-
+o3d.ParamObject.setUpO3DParam_(o3d.DrawElement, "material", "ParamMaterial");

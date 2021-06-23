@@ -9,7 +9,6 @@
  * @extends AudioWorkletProcessor
  */
 class BypassProcessor extends AudioWorkletProcessor {
-
   // When constructor() undefined, the default constructor will be
   // implicitly used.
 
@@ -26,4 +25,4 @@ class BypassProcessor extends AudioWorkletProcessor {
   }
 }
 
-registerProcessor('bypass-processor', BypassProcessor);
+registerProcessor("bypass-processor", BypassProcessor);

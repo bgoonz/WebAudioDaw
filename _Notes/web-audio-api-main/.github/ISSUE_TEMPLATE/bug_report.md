@@ -1,10 +1,9 @@
 ---
 name: Bug Report
 about: Create a report to fix the specification.  New feature?  See https://github.com/WebAudio/web-audio-api-v2/issues
-title: ''
+title: ""
 labels: Needs WG review, Untriaged
-assignees: ''
-
+assignees: ""
 ---
 
 **Describe the issue**
@@ -20,7 +19,6 @@ If it's really an implementation bug, considering filing an issue for your brows
     * Safari (WebKit): https://bugs.webkit.org/enter_bug.cgi?product=WebKit&component=Web%20Audio (WebKit bugzilla account needed).
     * Chrome (Blink): https://new.crbug.com/ (Google account needed).
     * Firefox (Gecko): https://bugzilla.mozilla.org/enter_bug.cgi?product=Core&component=Web%20Audio (GitHub or Mozilla Bugzilla account needed).
-
 
 **Where Is It**
 

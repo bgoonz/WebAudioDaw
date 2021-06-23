@@ -1,13 +1,36 @@
-.nt, pre, .terminal, code, .prop, .esstring, .javavalue, .idlident, .idlstring, .xattr, .regex, .prod-number, .prod-lines, .prod-mid {
+.nt,
+pre,
+.terminal,
+code,
+.prop,
+.esstring,
+.javavalue,
+.idlident,
+.idlstring,
+.xattr,
+.regex,
+.prod-number,
+.prod-lines,
+.prod-mid {
   font-size: 14px;
 }
-pre code, .prod-lines .nt {
+pre code,
+.prod-lines .nt {
   font-size: 14px !important;
 }
-.ednote, .terminal, code, .prop, .esstring, .javavalue, .idlident, .idlstring, .example, .note, blockquote {
+.ednote,
+.terminal,
+code,
+.prop,
+.esstring,
+.javavalue,
+.idlident,
+.idlstring,
+.example,
+.note,
+blockquote {
   background: #d9e8ff;
 }
-
 
 td code {
   background: inherit;
@@ -26,7 +49,6 @@ table.grammar {
   background: #f8eeee;
 }
 
-
 .ednoteHeader {
   font-weight: bold;
   display: block;
@@ -40,7 +62,14 @@ table.grammar {
 .toc ul {
   margin-bottom: 0.5em;
 }
-.terminal, code, .prop, .esstring, .javavalue, .idlident, .idlstring, .input {
+.terminal,
+code,
+.prop,
+.esstring,
+.javavalue,
+.idlident,
+.idlstring,
+.input {
   font-family: /*Consolas, Monaco,*/ monospace !important;
 }
 pre.code code {
@@ -51,30 +80,48 @@ pre.code code {
 /*.prop {
   font-family: Consolas, Monaco, monospace;
 }*/
- 
+
 .xattr {
   font-family: /*Consolas, Monaco,*/ monospace;
 }
- 
-table { border-collapse:collapse; border-style:hidden hidden none hidden }
-table thead { border-bottom:solid }
-table tbody th:first-child { border-left:solid }
-table td, table th { border-left:solid; border-right:solid; border-bottom:solid thin; vertical-align:top; padding:0.2em }
- 
-.nt, .prod-lines {
+
+table {
+  border-collapse: collapse;
+  border-style: hidden hidden none hidden;
+}
+table thead {
+  border-bottom: solid;
+}
+table tbody th:first-child {
+  border-left: solid;
+}
+table td,
+table th {
+  border-left: solid;
+  border-right: solid;
+  border-bottom: solid thin;
+  vertical-align: top;
+  padding: 0.2em;
+}
+
+.nt,
+.prod-lines {
   font-family: /*Consolas, Monaco,*/ monospace;
   white-space: nowrap;
 }
-.idltype, .idlvalue {
+.idltype,
+.idlvalue {
   font-weight: bold;
 }
 .idlop {
   font-weight: bold;
 }
-.esvalue, .estype {
+.esvalue,
+.estype {
   font-weight: bold;
 }
-.javatype, .javapkg {
+.javatype,
+.javapkg {
   font-weight: bold;
 }
 .regex {
@@ -84,13 +131,15 @@ table td, table th { border-left:solid; border-right:solid; border-bottom:solid 
 .typevar {
   font-style: italic;
 }
-.example, .note {
+.example,
+.note {
   border-top: 3px solid #005a9c;
   border-bottom: 3px solid #005a9c;
   margin: 1em 2em;
   padding: 0 1em 0 1em;
 }
-.exampleHeader, .noteHeader {
+.exampleHeader,
+.noteHeader {
   font-weight: bold;
   display: block;
   color: #005a9c;
@@ -226,7 +275,7 @@ dl.switch > dt + dt {
   margin-top: 0;
 }
 dl.switch > dt:before {
-  content: '\21AA';
+  content: "\21AA";
   padding: 0 0.5em 0 0;
   display: inline-block;
   width: 1em;
@@ -246,8 +295,6 @@ iframe {
   color: #005a9c;
 }
 
- 
- 
 .matrix {
   border-collapse: collapse;
   margin-left: auto;
@@ -257,7 +304,8 @@ iframe {
   background: #d9e8ff;
   text-align: right;
 }
-.matrix td, .matrix th {
+.matrix td,
+.matrix th {
   border: 1px solid #90b8de;
   padding: 4px;
 }
@@ -272,16 +320,29 @@ iframe {
 .matrix .belowdiagonal {
   background: #ddd;
 }
- 
-ul.notes { font-size: 90%; padding-left: 0 }
-ul.notes li { list-style-type: none }
-ul.notes .note-link { vertical-align: super }
-.note-link { font-size: 90% }
- 
-.code var { color: #f44; }
- 
+
+ul.notes {
+  font-size: 90%;
+  padding-left: 0;
+}
+ul.notes li {
+  list-style-type: none;
+}
+ul.notes .note-link {
+  vertical-align: super;
+}
+.note-link {
+  font-size: 90%;
+}
+
+.code var {
+  color: #f44;
+}
+
 /* For dfn.js */
-body.dfnEnabled dfn { cursor: pointer; }
+body.dfnEnabled dfn {
+  cursor: pointer;
+}
 .dfnPanel {
   display: inline;
   position: absolute;
@@ -289,12 +350,24 @@ body.dfnEnabled dfn { cursor: pointer; }
   width: auto;
   padding: 0.5em 0.75em;
   font: small sans-serif;
-  background: #DDDDDD;
+  background: #dddddd;
   color: black;
   border: outset 0.2em;
   cursor: default;
 }
-.dfnPanel * { margin: 0; padding: 0; font: inherit; text-indent: 0; }
-.dfnPanel :link, .dfnPanel :visited { color: black; }
-.dfnPanel p { font-weight: bolder; }
-.dfnPanel li { list-style-position: inside; }
+.dfnPanel * {
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  text-indent: 0;
+}
+.dfnPanel :link,
+.dfnPanel :visited {
+  color: black;
+}
+.dfnPanel p {
+  font-weight: bolder;
+}
+.dfnPanel li {
+  list-style-position: inside;
+}

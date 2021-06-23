@@ -11,7 +11,7 @@
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-import { DirectiveFn, NodePart } from '../lit-html.js';
+import { DirectiveFn, NodePart } from "../lit-html.js";
 /**
  * Renders the result as HTML, rather than text.
  *

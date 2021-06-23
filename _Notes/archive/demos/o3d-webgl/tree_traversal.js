@@ -29,7 +29,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * A TreeTraversal has multiple DrawLists registered with it. Each DrawList has
  * a DrawContext registered with it. At render time the TreeTraversal walks the
@@ -41,7 +40,7 @@
  *     by this TreeTraveral.
  * @constructor
  */
-o3d.TreeTraversal = function(opt_transform) {
+o3d.TreeTraversal = function (opt_transform) {
   o3d.RenderNode.call(this);
 
   /**
@@ -61,10 +60,13 @@ o3d.TreeTraversal = function(opt_transform) {
    */
   this.drawListsToReset_ = [];
 };
-o3d.inherit('TreeTraversal', 'RenderNode');
+o3d.inherit("TreeTraversal", "RenderNode");
 
-o3d.ParamObject.setUpO3DParam_(o3d.TreeTraversal,
-                               'transform', 'ParamTransform');
+o3d.ParamObject.setUpO3DParam_(
+  o3d.TreeTraversal,
+  "transform",
+  "ParamTransform"
+);
 
 /**
  * Registers a DrawList with this TreeTraversal so that when this
@@ -77,16 +79,19 @@ o3d.ParamObject.setUpO3DParam_(o3d.TreeTraversal,
  * @param {boolean} reset true if you want the DrawList reset before
  *     traversing.
  */
-o3d.TreeTraversal.prototype.registerDrawList =
-    function(draw_list, draw_context, reset) {
+o3d.TreeTraversal.prototype.registerDrawList = function (
+  draw_list,
+  draw_context,
+  reset
+) {
   if (reset == undefined || reset) {
     this.drawListsToReset_.push(draw_list);
   }
   this.drawLists_.push({
-    list:draw_list,
-    context:draw_context});
+    list: draw_list,
+    context: draw_context,
+  });
 };
-
 
 /**
  * Unregisters a DrawList with this TreeTraversal.
@@ -94,18 +99,15 @@ o3d.TreeTraversal.prototype.registerDrawList =
  * @return {boolean}  true if unregistered. false if this draw_list was
  *     not registered.
  */
-o3d.TreeTraversal.prototype.unregisterDrawList =
-    function(draw_list) {
+o3d.TreeTraversal.prototype.unregisterDrawList = function (draw_list) {
   o3d.notImplemented();
 };
-
 
 /**
  * Called in the render graph traversal before the children are rendered.
  */
-o3d.TreeTraversal.prototype.before =
-    function() {
-  for(var i = 0; i < this.drawListsToReset_.length; ++i) {
+o3d.TreeTraversal.prototype.before = function () {
+  for (var i = 0; i < this.drawListsToReset_.length; ++i) {
     this.drawListsToReset_[i].list_ = [];
   }
   this.transform.traverse(this.drawLists_);

@@ -29,19 +29,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * The DrawContext defines the parameters used for a particular drawing pass.
  * It contains two 4-by-4 matrix params, view and
  * projection. These correspond to the viewing and projection transformation
  * matrices.
- * 
+ *
  * @param {!o3d.Matrix4} opt_view The view matrix for this DrawContext.
  * @param {!o3d.Matrix4} opt_projection The projection matrix
  *     for this DrawContext.
  * @constructor
  */
-o3d.DrawContext = function(opt_view, opt_projection) {
+o3d.DrawContext = function (opt_view, opt_projection) {
   o3d.ParamObject.call(this);
 
   /**
@@ -49,8 +48,12 @@ o3d.DrawContext = function(opt_view, opt_projection) {
    * take vertices from world space to view space.
    * @type {o3d.Matrix4}
    */
-  this.view = opt_view ||
-      [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]];
+  this.view = opt_view || [
+    [1, 0, 0, 0],
+    [0, 1, 0, 0],
+    [0, 0, 1, 0],
+    [0, 0, 0, 1],
+  ];
 
   /**
    * The projection matrix represents the projection transformation,
@@ -58,11 +61,14 @@ o3d.DrawContext = function(opt_view, opt_projection) {
    * matrix is usually an orthographic or perspective transformation.
    * @type {o3d.Matrix4}
    */
-  this.projection = opt_projection ||
-      [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]];
+  this.projection = opt_projection || [
+    [1, 0, 0, 0],
+    [0, 1, 0, 0],
+    [0, 0, 1, 0],
+    [0, 0, 0, 1],
+  ];
 };
-o3d.inherit('DrawContext', 'ParamObject');
+o3d.inherit("DrawContext", "ParamObject");
 
-o3d.ParamObject.setUpO3DParam_(o3d.DrawContext, 'view', 'ParamMatrix4');
-o3d.ParamObject.setUpO3DParam_(o3d.DrawContext, 'projection', 'ParamMatrix4');
-
+o3d.ParamObject.setUpO3DParam_(o3d.DrawContext, "view", "ParamMatrix4");
+o3d.ParamObject.setUpO3DParam_(o3d.DrawContext, "projection", "ParamMatrix4");

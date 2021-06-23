@@ -14,10 +14,8 @@
  * the License.
  */
 
-
-import Module from './variable-buffer-kernel.wasmmodule.js';
-import { HeapAudioBuffer, RingBuffer } from '../lib/wasm-audio-helper.js';
-
+import Module from "./variable-buffer-kernel.wasmmodule.js";
+import { HeapAudioBuffer, RingBuffer } from "../lib/wasm-audio-helper.js";
 
 /**
  * An example of AudioWorkletProcessor that uses RingBuffer inside. If your
@@ -43,16 +41,26 @@ class RingBufferWorkletProcessor extends AudioWorkletProcessor {
     this._channelCount = options.processorOptions.channelCount;
 
     // RingBuffers for input and output.
-    this._inputRingBuffer =
-        new RingBuffer(this._kernelBufferSize, this._channelCount);
-    this._outputRingBuffer =
-        new RingBuffer(this._kernelBufferSize, this._channelCount);
+    this._inputRingBuffer = new RingBuffer(
+      this._kernelBufferSize,
+      this._channelCount
+    );
+    this._outputRingBuffer = new RingBuffer(
+      this._kernelBufferSize,
+      this._channelCount
+    );
 
     // For WASM memory, also for input and output.
-    this._heapInputBuffer =
-        new HeapAudioBuffer(Module, this._kernelBufferSize, this._channelCount);
-    this._heapOutputBuffer =
-        new HeapAudioBuffer(Module, this._kernelBufferSize, this._channelCount);
+    this._heapInputBuffer = new HeapAudioBuffer(
+      Module,
+      this._kernelBufferSize,
+      this._channelCount
+    );
+    this._heapOutputBuffer = new HeapAudioBuffer(
+      Module,
+      this._kernelBufferSize,
+      this._channelCount
+    );
 
     // WASM audio processing kernel.
     this._kernel = new Module.VariableBufferKernel(this._kernelBufferSize);
@@ -85,9 +93,11 @@ class RingBufferWorkletProcessor extends AudioWorkletProcessor {
       // |onaudioprocess| callback funciton. However, if the event handler
       // touches DOM in the main scope, it needs to be translated with the
       // async messaging via MessagePort.
-      this._kernel.process(this._heapInputBuffer.getHeapAddress(),
-                           this._heapOutputBuffer.getHeapAddress(),
-                           this._channelCount);
+      this._kernel.process(
+        this._heapInputBuffer.getHeapAddress(),
+        this._heapOutputBuffer.getHeapAddress(),
+        this._channelCount
+      );
 
       // Fill the output ring buffer with the processed data.
       this._outputRingBuffer.push(this._heapOutputBuffer.getChannelData());
@@ -101,5 +111,4 @@ class RingBufferWorkletProcessor extends AudioWorkletProcessor {
   }
 }
 
-
-registerProcessor('ring-buffer-worklet-processor', RingBufferWorkletProcessor);
+registerProcessor("ring-buffer-worklet-processor", RingBufferWorkletProcessor);

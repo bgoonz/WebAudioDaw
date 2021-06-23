@@ -29,16 +29,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * A DrawPass renders a DrawList.
- * 
+ *
  * @param {o3d.DrawList} drawList The DrawList used by this DrawPass.
  * @param {o3d.DrawPass.SortMethod} sortMethod ParamInteger The method
  *     of sorting this DrawPass.
  * @constructor
  */
-o3d.DrawPass = function(opt_drawList, opt_sortMethod) {
+o3d.DrawPass = function (opt_drawList, opt_sortMethod) {
   o3d.RenderNode.call(this);
 
   /**
@@ -54,23 +53,21 @@ o3d.DrawPass = function(opt_drawList, opt_sortMethod) {
    */
   this.sortMethod = opt_sortMethod || o3d.DrawList.BY_PERFORMANCE;
 };
-o3d.inherit('DrawPass', 'RenderNode');
+o3d.inherit("DrawPass", "RenderNode");
 
 /**
  * @type {number}
  */
 o3d.DrawPass.SortMethod = goog.typedef;
 
-o3d.ParamObject.setUpO3DParam_(o3d.DrawPass, 'drawList', 'ParamDrawList');
-o3d.ParamObject.setUpO3DParam_(o3d.DrawPass, 'sortMethod', 'ParamInteger');
+o3d.ParamObject.setUpO3DParam_(o3d.DrawPass, "drawList", "ParamDrawList");
+o3d.ParamObject.setUpO3DParam_(o3d.DrawPass, "sortMethod", "ParamInteger");
 
 /**
  * Called in rendergraph traversal before children are rendered.
  */
-o3d.DrawPass.prototype.before = function() {
+o3d.DrawPass.prototype.before = function () {
   if (this.drawList) {
     this.drawList.render();
   }
 };
-
-

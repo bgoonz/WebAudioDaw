@@ -12,7 +12,7 @@
  * http://polymer.github.io/PATENTS.txt
  */
 
-import {directive, DirectiveFn, NodePart} from '../lit-html.js';
+import { directive, DirectiveFn, NodePart } from "../lit-html.js";
 
 /**
  * A directive that renders the items of an async iterable[1], appending new
@@ -32,62 +32,64 @@ import {directive, DirectiveFn, NodePart} from '../lit-html.js';
  *     value. Useful for generating templates for each item in the iterable.
  */
 export const asyncAppend = <T>(
-    value: AsyncIterable<T>, mapper?: (v: T, index?: number) => any): DirectiveFn<NodePart> =>
-    directive(async (part: NodePart) => {
-      // If we've already set up this particular iterable, we don't need
-      // to do anything.
-      if (value === part._previousValue) {
-        return;
+  value: AsyncIterable<T>,
+  mapper?: (v: T, index?: number) => any
+): DirectiveFn<NodePart> =>
+  directive(async (part: NodePart) => {
+    // If we've already set up this particular iterable, we don't need
+    // to do anything.
+    if (value === part._previousValue) {
+      return;
+    }
+    part._previousValue = value;
+
+    // We keep track of item Parts across iterations, so that we can
+    // share marker nodes between consecutive Parts.
+    let itemPart;
+    let i = 0;
+
+    for await (let v of value) {
+      // When we get the first value, clear the part. This lets the previous
+      // value display until we can replace it.
+      if (i === 0) {
+        part.clear();
       }
-      part._previousValue = value;
 
-      // We keep track of item Parts across iterations, so that we can
-      // share marker nodes between consecutive Parts.
-      let itemPart;
-      let i = 0;
-
-      for await (let v of value) {
-        // When we get the first value, clear the part. This lets the previous
-        // value display until we can replace it.
-        if (i === 0) {
-          part.clear();
-        }
-
-        // Check to make sure that value is the still the current value of
-        // the part, and if not bail because a new value owns this part
-        if (part._previousValue !== value) {
-          break;
-        }
-
-        // As a convenience, because functional-programming-style
-        // transforms of iterables and async iterables requires a library,
-        // we accept a mapper function. This is especially convenient for
-        // rendering a template for each item.
-        if (mapper !== undefined) {
-          v = mapper(v, i);
-        }
-
-        // Like with sync iterables, each item induces a Part, so we need
-        // to keep track of start and end nodes for the Part.
-        // Note: Because these Parts are not updatable like with a sync
-        // iterable (if we render a new value, we always clear), it may
-        // be possible to optimize away the Parts and just re-use the
-        // Part.setValue() logic.
-
-        let itemStartNode = part.startNode;
-
-        // Check to see if we have a previous item and Part
-        if (itemPart !== undefined) {
-          // Create a new node to separate the previous and next Parts
-          itemStartNode = document.createTextNode('');
-          // itemPart is currently the Part for the previous item. Set
-          // it's endNode to the node we'll use for the next Part's
-          // startNode.
-          itemPart.endNode = itemStartNode;
-          part.endNode.parentNode!.insertBefore(itemStartNode, part.endNode);
-        }
-        itemPart = new NodePart(part.instance, itemStartNode, part.endNode);
-        itemPart.setValue(v);
-        i++;
+      // Check to make sure that value is the still the current value of
+      // the part, and if not bail because a new value owns this part
+      if (part._previousValue !== value) {
+        break;
       }
-    });
+
+      // As a convenience, because functional-programming-style
+      // transforms of iterables and async iterables requires a library,
+      // we accept a mapper function. This is especially convenient for
+      // rendering a template for each item.
+      if (mapper !== undefined) {
+        v = mapper(v, i);
+      }
+
+      // Like with sync iterables, each item induces a Part, so we need
+      // to keep track of start and end nodes for the Part.
+      // Note: Because these Parts are not updatable like with a sync
+      // iterable (if we render a new value, we always clear), it may
+      // be possible to optimize away the Parts and just re-use the
+      // Part.setValue() logic.
+
+      let itemStartNode = part.startNode;
+
+      // Check to see if we have a previous item and Part
+      if (itemPart !== undefined) {
+        // Create a new node to separate the previous and next Parts
+        itemStartNode = document.createTextNode("");
+        // itemPart is currently the Part for the previous item. Set
+        // it's endNode to the node we'll use for the next Part's
+        // startNode.
+        itemPart.endNode = itemStartNode;
+        part.endNode.parentNode!.insertBefore(itemStartNode, part.endNode);
+      }
+      itemPart = new NodePart(part.instance, itemStartNode, part.endNode);
+      itemPart.setValue(v);
+      i++;
+    }
+  });

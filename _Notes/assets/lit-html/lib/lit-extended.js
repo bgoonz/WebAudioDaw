@@ -11,16 +11,25 @@
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-import { AttributePart, defaultPartCallback, noChange, getValue, SVGTemplateResult, TemplateResult } from '../lit-html.js';
-export { render } from '../lit-html.js';
+import {
+  AttributePart,
+  defaultPartCallback,
+  noChange,
+  getValue,
+  SVGTemplateResult,
+  TemplateResult,
+} from "../lit-html.js";
+export { render } from "../lit-html.js";
 /**
  * Interprets a template literal as a lit-extended HTML template.
  */
-export const html = (strings, ...values) => new TemplateResult(strings, values, 'html', extendedPartCallback);
+export const html = (strings, ...values) =>
+  new TemplateResult(strings, values, "html", extendedPartCallback);
 /**
  * Interprets a template literal as a lit-extended SVG template.
  */
-export const svg = (strings, ...values) => new SVGTemplateResult(strings, values, 'svg', extendedPartCallback);
+export const svg = (strings, ...values) =>
+  new SVGTemplateResult(strings, values, "svg", extendedPartCallback);
 /**
  * A PartCallback which allows templates to set properties and declarative
  * event handlers.
@@ -47,23 +56,33 @@ export const svg = (strings, ...values) => new SVGTemplateResult(strings, values
  *
  */
 export const extendedPartCallback = (instance, templatePart, node) => {
-    if (templatePart.type === 'attribute') {
-        if (templatePart.rawName.substr(0, 3) === 'on-') {
-            const eventName = templatePart.rawName.slice(3);
-            return new EventPart(instance, node, eventName);
-        }
-        const lastChar = templatePart.name.substr(templatePart.name.length - 1);
-        if (lastChar === '$') {
-            const name = templatePart.name.slice(0, -1);
-            return new AttributePart(instance, node, name, templatePart.strings);
-        }
-        if (lastChar === '?') {
-            const name = templatePart.name.slice(0, -1);
-            return new BooleanAttributePart(instance, node, name, templatePart.strings);
-        }
-        return new PropertyPart(instance, node, templatePart.rawName, templatePart.strings);
+  if (templatePart.type === "attribute") {
+    if (templatePart.rawName.substr(0, 3) === "on-") {
+      const eventName = templatePart.rawName.slice(3);
+      return new EventPart(instance, node, eventName);
     }
-    return defaultPartCallback(instance, templatePart, node);
+    const lastChar = templatePart.name.substr(templatePart.name.length - 1);
+    if (lastChar === "$") {
+      const name = templatePart.name.slice(0, -1);
+      return new AttributePart(instance, node, name, templatePart.strings);
+    }
+    if (lastChar === "?") {
+      const name = templatePart.name.slice(0, -1);
+      return new BooleanAttributePart(
+        instance,
+        node,
+        name,
+        templatePart.strings
+      );
+    }
+    return new PropertyPart(
+      instance,
+      node,
+      templatePart.rawName,
+      templatePart.strings
+    );
+  }
+  return defaultPartCallback(instance, templatePart, node);
 };
 /**
  * Implements a boolean attribute, roughly as defined in the HTML
@@ -73,73 +92,70 @@ export const extendedPartCallback = (instance, templatePart, node) => {
  * ''. If the value is falsey, the attribute is removed.
  */
 export class BooleanAttributePart extends AttributePart {
-    setValue(values, startIndex) {
-        const s = this.strings;
-        if (s.length === 2 && s[0] === '' && s[1] === '') {
-            const value = getValue(this, values[startIndex]);
-            if (value === noChange) {
-                return;
-            }
-            if (value) {
-                this.element.setAttribute(this.name, '');
-            }
-            else {
-                this.element.removeAttribute(this.name);
-            }
-        }
-        else {
-            throw new Error('boolean attributes can only contain a single expression');
-        }
+  setValue(values, startIndex) {
+    const s = this.strings;
+    if (s.length === 2 && s[0] === "" && s[1] === "") {
+      const value = getValue(this, values[startIndex]);
+      if (value === noChange) {
+        return;
+      }
+      if (value) {
+        this.element.setAttribute(this.name, "");
+      } else {
+        this.element.removeAttribute(this.name);
+      }
+    } else {
+      throw new Error(
+        "boolean attributes can only contain a single expression"
+      );
     }
+  }
 }
 export class PropertyPart extends AttributePart {
-    setValue(values, startIndex) {
-        const s = this.strings;
-        let value;
-        if (this._equalToPreviousValues(values, startIndex)) {
-            return;
-        }
-        if (s.length === 2 && s[0] === '' && s[1] === '') {
-            // An expression that occupies the whole attribute value will leave
-            // leading and trailing empty strings.
-            value = getValue(this, values[startIndex]);
-        }
-        else {
-            // Interpolation, so interpolate
-            value = this._interpolate(values, startIndex);
-        }
-        if (value !== noChange) {
-            this.element[this.name] = value;
-        }
-        this._previousValues = values;
+  setValue(values, startIndex) {
+    const s = this.strings;
+    let value;
+    if (this._equalToPreviousValues(values, startIndex)) {
+      return;
     }
+    if (s.length === 2 && s[0] === "" && s[1] === "") {
+      // An expression that occupies the whole attribute value will leave
+      // leading and trailing empty strings.
+      value = getValue(this, values[startIndex]);
+    } else {
+      // Interpolation, so interpolate
+      value = this._interpolate(values, startIndex);
+    }
+    if (value !== noChange) {
+      this.element[this.name] = value;
+    }
+    this._previousValues = values;
+  }
 }
 export class EventPart {
-    constructor(instance, element, eventName) {
-        this.instance = instance;
-        this.element = element;
-        this.eventName = eventName;
+  constructor(instance, element, eventName) {
+    this.instance = instance;
+    this.element = element;
+    this.eventName = eventName;
+  }
+  setValue(value) {
+    const listener = getValue(this, value);
+    if (listener === this._listener) {
+      return;
     }
-    setValue(value) {
-        const listener = getValue(this, value);
-        if (listener === this._listener) {
-            return;
-        }
-        if (listener == null) {
-            this.element.removeEventListener(this.eventName, this);
-        }
-        else if (this._listener == null) {
-            this.element.addEventListener(this.eventName, this);
-        }
-        this._listener = listener;
+    if (listener == null) {
+      this.element.removeEventListener(this.eventName, this);
+    } else if (this._listener == null) {
+      this.element.addEventListener(this.eventName, this);
     }
-    handleEvent(event) {
-        if (typeof this._listener === 'function') {
-            this._listener.call(this.element, event);
-        }
-        else if (typeof this._listener.handleEvent === 'function') {
-            this._listener.handleEvent(event);
-        }
+    this._listener = listener;
+  }
+  handleEvent(event) {
+    if (typeof this._listener === "function") {
+      this._listener.call(this.element, event);
+    } else if (typeof this._listener.handleEvent === "function") {
+      this._listener.handleEvent(event);
     }
+  }
 }
 //# sourceMappingURL=lit-extended.js.map

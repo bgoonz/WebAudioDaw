@@ -1,216 +1,210 @@
-
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>
-</title>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title> </title>
 
-<!-- Slider stuff -->
-<script type="text/javascript" src="lib/events.js"></script>
-<style type="text/css">
-  #slider { margin: 10px; }
-</style>
+    <!-- Slider stuff -->
+    <script type="text/javascript" src="lib/events.js"></script>
+    <style type="text/css">
+      #slider {
+        margin: 10px;
+      }
+    </style>
 
-<link rel="stylesheet" type="text/css" href = "style/simple.css" />
+    <link rel="stylesheet" type="text/css" href="style/simple.css" />
 
+    <!-- Our javascript code -->
+    <script type="text/javascript">
+      // Events
+      // init() once the page has finished loading.
+      window.onload = init;
 
-<!-- Our javascript code -->
-<script type="text/javascript">
+      var canvas;
+      var canvasContext;
+      var canvasWidth = 0;
+      var canvasHeight = 0;
 
-// Events
-// init() once the page has finished loading.
-window.onload = init;
+      var backgroundColor = "rgb(0, 0, 0)";
+      var curveColor = "rgb(192,192,192)";
+      var gridColor = "rgb(200,200,200)";
 
-var canvas;
-var canvasContext;
-var canvasWidth = 0;
-var canvasHeight = 0;
+      var sampleRate = 44100.0;
+      var nyquist = 0.5 * sampleRate;
 
-var backgroundColor = "rgb(0, 0, 0)";
-var curveColor = "rgb(192,192,192)";
-var gridColor = "rgb(200,200,200)";
+      var threshold = 60.0 * (0.6 - 1.0);
+      var headroom = 0.7 * 30.0;
 
-var sampleRate = 44100.0;
-var nyquist = 0.5 * sampleRate;
+      var maxOutputDb = 6;
+      var minOutputDb = -36;
 
-var threshold = 60.0 * (0.6 - 1.0);
-var headroom = 0.7 * 30.0;
+      function xpixelToDb(x) {
+        // This is right even though it looks like we should scale by width.
+        // We want the same pixel/dB scale for both.
+        var k = x / canvas.height;
+        var db = minOutputDb + k * (maxOutputDb - minOutputDb);
+        return db;
+      }
 
-var maxOutputDb = 6;
-var minOutputDb = -36;
+      function dBToXPixel(db) {
+        var k = (db - minOutputDb) / (maxOutputDb - minOutputDb);
+        var x = k * canvas.height;
+        return x;
+      }
 
-function xpixelToDb(x) {
-    // This is right even though it looks like we should scale by width.
-    // We want the same pixel/dB scale for both.
-    var k = x / canvas.height;
-    var db = minOutputDb + k * (maxOutputDb - minOutputDb);
-    return db;
-}
+      function ypixelToDb(y) {
+        var k = y / canvas.height;
+        var db = maxOutputDb - k * (maxOutputDb - minOutputDb);
+        return db;
+      }
 
-function dBToXPixel(db) {
-    var k = (db - minOutputDb) / (maxOutputDb - minOutputDb);
-    var x = k * canvas.height;
-    return x;
-}
+      function dBToYPixel(db) {
+        var k = (maxOutputDb - db) / (maxOutputDb - minOutputDb);
+        var y = k * canvas.height;
+        return y;
+      }
 
-function ypixelToDb(y) {
-    var k = y / canvas.height;
-    var db = maxOutputDb - k * (maxOutputDb - minOutputDb);
-    return db;
-}
+      function dBToLinear(db) {
+        return Math.pow(10.0, 0.05 * db);
+      }
 
-function dBToYPixel(db) {
-    var k = (maxOutputDb - db) / (maxOutputDb - minOutputDb);
-    var y = k * canvas.height;
-    return y;
-}
+      function linearToDb(x) {
+        return (20.0 * Math.log(x)) / Math.LN10;
+      }
 
-function dBToLinear(db) {
-    return Math.pow(10.0, 0.05 * db);
-}
+      function e4(x, k) {
+        return 1.0 - Math.exp(-k * x);
+      }
 
-function linearToDb(x) {
-    return 20.0 * Math.log(x) / Math.LN10;
-}
+      function shape(x) {
+        var linearThreshold = dBToLinear(threshold);
+        var linearHeadroom = dBToLinear(headroom);
 
-function e4(x, k)
-{
-    return 1.0 - Math.exp(-k * x);
-}
+        var maximum = 1.05 * linearHeadroom * linearThreshold;
+        var kk = maximum - linearThreshold;
 
-function shape(x) {
-    var linearThreshold = dBToLinear(threshold);
-    var linearHeadroom = dBToLinear(headroom);
-    
-    var maximum = 1.05 * linearHeadroom * linearThreshold;
-    var kk = (maximum - linearThreshold);
-    
-    var shapedInput = x < linearThreshold ? x : linearThreshold + kk * e4(x - linearThreshold, 1.0 / kk);
-    
-    return shapedInput;
-}
+        var shapedInput =
+          x < linearThreshold
+            ? x
+            : linearThreshold + kk * e4(x - linearThreshold, 1.0 / kk);
 
-function drawCurve() {
-    var info = document.getElementById("info");
-    
-    
-    // draw center
-    var width = canvas.width;
-    var height = canvas.height;
+        return shapedInput;
+      }
 
-    canvasContext.fillStyle = backgroundColor;
-    canvasContext.fillRect(0, 0, width, height);
+      function drawCurve() {
+        var info = document.getElementById("info");
 
-    // Draw linear response.
-    canvasContext.strokeStyle = gridColor;
-    canvasContext.lineWidth = 1;
-    canvasContext.beginPath();
-    canvasContext.moveTo(dBToXPixel(minOutputDb), dBToYPixel(minOutputDb));
-    canvasContext.lineTo(dBToXPixel(maxOutputDb), dBToYPixel(maxOutputDb));
-    canvasContext.stroke();    
+        // draw center
+        var width = canvas.width;
+        var height = canvas.height;
 
-    // Draw 0dBFS output levels from 0dBFS down to -36dBFS
-    for (var dbFS = 0; dbFS >= -36; dbFS -= 6) {
+        canvasContext.fillStyle = backgroundColor;
+        canvasContext.fillRect(0, 0, width, height);
+
+        // Draw linear response.
+        canvasContext.strokeStyle = gridColor;
+        canvasContext.lineWidth = 1;
         canvasContext.beginPath();
-        
-        var y = dBToYPixel(dbFS);
-        canvasContext.moveTo(0, y);
-        canvasContext.lineTo(width, y);
+        canvasContext.moveTo(dBToXPixel(minOutputDb), dBToYPixel(minOutputDb));
+        canvasContext.lineTo(dBToXPixel(maxOutputDb), dBToYPixel(maxOutputDb));
         canvasContext.stroke();
 
-        canvasContext.textAlign = "center";
-        canvasContext.strokeText(dbFS.toFixed(0) + " dBFS", 25, y - 5);
-    }
-    
-    // Draw 0dBFS input line
-    canvasContext.beginPath();
-    canvasContext.moveTo(dBToXPixel(0), 0);
-    canvasContext.lineTo(dBToXPixel(0), height);
-    canvasContext.stroke();
-    
+        // Draw 0dBFS output levels from 0dBFS down to -36dBFS
+        for (var dbFS = 0; dbFS >= -36; dbFS -= 6) {
+          canvasContext.beginPath();
 
+          var y = dBToYPixel(dbFS);
+          canvasContext.moveTo(0, y);
+          canvasContext.lineTo(width, y);
+          canvasContext.stroke();
 
-    canvasContext.strokeStyle = curveColor;
-    canvasContext.lineWidth = 3;
+          canvasContext.textAlign = "center";
+          canvasContext.strokeText(dbFS.toFixed(0) + " dBFS", 25, y - 5);
+        }
 
-    canvasContext.beginPath();
-    canvasContext.moveTo(0, 0);
+        // Draw 0dBFS input line
+        canvasContext.beginPath();
+        canvasContext.moveTo(dBToXPixel(0), 0);
+        canvasContext.lineTo(dBToXPixel(0), height);
+        canvasContext.stroke();
 
-    var pixelsPerDb = (0.5 * height) / 40.0;
-    
-    var noctaves = 8;
-    
-    
-    for (var x = 0; x < width; ++x) {
-        var inputDb = xpixelToDb(x);
-        var inputLinear = dBToLinear(inputDb);
-        var outputLinear = shape(inputLinear);
-        var outputDb = linearToDb(outputLinear);
-        var y = dBToYPixel(outputDb);
-                
-        canvasContext.lineTo(x, y);
-        
-        // info.innerHTML += info.innerHTML + "<br>" + x + ", " + y;
-    }
-    canvasContext.stroke();    
-}
+        canvasContext.strokeStyle = curveColor;
+        canvasContext.lineWidth = 3;
 
-function thresholdHandler(event, ui) {
-  threshold = ui.value;
-  drawCurve();
-  
-  var info = document.getElementById("threshold-value");
-  info.innerHTML = "threshold = " + threshold;
-}
+        canvasContext.beginPath();
+        canvasContext.moveTo(0, 0);
 
-function headroomHandler(event, ui) {
-  headroom = ui.value;
-  drawCurve();
-  
-  var info = document.getElementById("headroom-value");
-  info.innerHTML = "headroom = " + headroom;
-}
+        var pixelsPerDb = (0.5 * height) / 40.0;
 
-function init() {
-    canvas = document.getElementById('canvasID');
-    canvasContext = canvas.getContext('2d');
+        var noctaves = 8;
 
-    canvasWidth = parseFloat(window.getComputedStyle(canvas, null).width);
-    canvasHeight = parseFloat(window.getComputedStyle(canvas, null).height);    
-    
-    addSlider("threshold");
-    addSlider("headroom");
-    configureSlider("threshold", threshold, -36.0, 0, thresholdHandler);
-    configureSlider("headroom", headroom, 0.0, 30.0, headroomHandler);
-        
-    drawCurve();
-}
+        for (var x = 0; x < width; ++x) {
+          var inputDb = xpixelToDb(x);
+          var inputLinear = dBToLinear(inputDb);
+          var outputLinear = shape(inputLinear);
+          var outputDb = linearToDb(outputLinear);
+          var y = dBToYPixel(outputDb);
 
-</script>
-</head>
+          canvasContext.lineTo(x, y);
 
-<body>
+          // info.innerHTML += info.innerHTML + "<br>" + x + ", " + y;
+        }
+        canvasContext.stroke();
+      }
 
-<h1>Static Compression Curve</h1>
+      function thresholdHandler(event, ui) {
+        threshold = ui.value;
+        drawCurve();
 
-<div id="info">
-</div>
+        var info = document.getElementById("threshold-value");
+        info.innerHTML = "threshold = " + threshold;
+      }
 
-<canvas id="canvasID" width="1024" height="768" style="border: 2px inset blue;">
-</canvas>
+      function headroomHandler(event, ui) {
+        headroom = ui.value;
+        drawCurve();
 
-<br><br>
+        var info = document.getElementById("headroom-value");
+        info.innerHTML = "headroom = " + headroom;
+      }
 
-<!-- Sliders and other controls will be added here -->
-<div id="controls"> </div>
+      function init() {
+        canvas = document.getElementById("canvasID");
+        canvasContext = canvas.getContext("2d");
 
-<div id="info"> </div>
+        canvasWidth = parseFloat(window.getComputedStyle(canvas, null).width);
+        canvasHeight = parseFloat(window.getComputedStyle(canvas, null).height);
 
-<div id="kits">
-</div>
+        addSlider("threshold");
+        addSlider("headroom");
+        configureSlider("threshold", threshold, -36.0, 0, thresholdHandler);
+        configureSlider("headroom", headroom, 0.0, 30.0, headroomHandler);
 
-</body>
+        drawCurve();
+      }
+    </script>
+  </head>
+
+  <body>
+    <h1>Static Compression Curve</h1>
+
+    <div id="info"></div>
+
+    <canvas
+      id="canvasID"
+      width="1024"
+      height="768"
+      style="border: 2px inset blue"
+    >
+    </canvas>
+
+    <br /><br />
+
+    <!-- Sliders and other controls will be added here -->
+    <div id="controls"></div>
+
+    <div id="info"></div>
+
+    <div id="kits"></div>
+  </body>
 </html>

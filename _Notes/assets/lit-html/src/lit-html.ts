@@ -15,22 +15,24 @@
 // The first argument to JS template tags retain identity across multiple
 // calls to a tag for the same literal, so we can cache work done per literal
 // in a Map.
-export const templateCaches =
-    new Map<string, Map<TemplateStringsArray, Template>>();
+export const templateCaches = new Map<
+  string,
+  Map<TemplateStringsArray, Template>
+>();
 
 /**
  * Interprets a template literal as an HTML template that can efficiently
  * render to and update a container.
  */
 export const html = (strings: TemplateStringsArray, ...values: any[]) =>
-    new TemplateResult(strings, values, 'html');
+  new TemplateResult(strings, values, "html");
 
 /**
  * Interprets a template literal as an SVG template that can efficiently
  * render to and update a container.
  */
 export const svg = (strings: TemplateStringsArray, ...values: any[]) =>
-    new SVGTemplateResult(strings, values, 'svg');
+  new SVGTemplateResult(strings, values, "svg");
 
 /**
  * The return type of `html`, which holds a Template and the values from
@@ -43,8 +45,11 @@ export class TemplateResult {
   partCallback: PartCallback;
 
   constructor(
-      strings: TemplateStringsArray, values: any[], type: string,
-      partCallback: PartCallback = defaultPartCallback) {
+    strings: TemplateStringsArray,
+    values: any[],
+    type: string,
+    partCallback: PartCallback = defaultPartCallback
+  ) {
     this.strings = strings;
     this.values = values;
     this.type = type;
@@ -56,7 +61,7 @@ export class TemplateResult {
    */
   getHTML(): string {
     const l = this.strings.length - 1;
-    let html = '';
+    let html = "";
     let isTextBinding = true;
     for (let i = 0; i < l; i++) {
       const s = this.strings[i];
@@ -73,7 +78,7 @@ export class TemplateResult {
   }
 
   getTemplateElement(): HTMLTemplateElement {
-    const template = document.createElement('template');
+    const template = document.createElement("template");
     template.innerHTML = this.getHTML();
     return template;
   }
@@ -140,7 +145,7 @@ export function defaultTemplateFactory(result: TemplateResult) {
   return template;
 }
 
-export type TemplateContainer = (Element|DocumentFragment)&{
+export type TemplateContainer = (Element | DocumentFragment) & {
   __templateInstance?: TemplateInstance;
 };
 
@@ -159,23 +164,29 @@ export type TemplateContainer = (Element|DocumentFragment)&{
  *     cache.
  */
 export function render(
-    result: TemplateResult,
-    container: Element|DocumentFragment,
-    templateFactory: TemplateFactory = defaultTemplateFactory
-  ) {
+  result: TemplateResult,
+  container: Element | DocumentFragment,
+  templateFactory: TemplateFactory = defaultTemplateFactory
+) {
   const template = templateFactory(result);
   let instance = (container as TemplateContainer).__templateInstance;
 
   // Repeat render, just call update()
-  if (instance !== undefined && instance.template === template &&
-      instance._partCallback === result.partCallback) {
+  if (
+    instance !== undefined &&
+    instance.template === template &&
+    instance._partCallback === result.partCallback
+  ) {
     instance.update(result.values);
     return;
   }
 
   // First render, create a new TemplateInstance and append it
-  instance =
-      new TemplateInstance(template, result.partCallback, templateFactory);
+  instance = new TemplateInstance(
+    template,
+    result.partCallback,
+    templateFactory
+  );
   (container as TemplateContainer).__templateInstance = instance;
 
   const fragment = instance._clone();
@@ -225,7 +236,7 @@ const markerRegex = new RegExp(`${marker}|${nodeMarker}`);
  *    * (') then any non-(')
  */
 const lastAttributeNameRegex =
-    /[ \x09\x0a\x0c\x0d]([^\0-\x1F\x7F-\x9F \x09\x0a\x0c\x0d"'>=/]+)[ \x09\x0a\x0c\x0d]*=[ \x09\x0a\x0c\x0d]*(?:[^ \x09\x0a\x0c\x0d"'`<>=]*|"[^"]*|'[^']*)$/;
+  /[ \x09\x0a\x0c\x0d]([^\0-\x1F\x7F-\x9F \x09\x0a\x0c\x0d"'>=/]+)[ \x09\x0a\x0c\x0d]*=[ \x09\x0a\x0c\x0d]*(?:[^ \x09\x0a\x0c\x0d"'`<>=]*|"[^"]*|'[^']*)$/;
 
 /**
  * Finds the closing index of the last closed HTML tag.
@@ -235,8 +246,8 @@ const lastAttributeNameRegex =
  *   - Some positive number < str.length, meaning the index of the closing '>'.
  */
 function findTagClose(str: string): number {
-  const close = str.lastIndexOf('>');
-  const open = str.indexOf('<', close + 1);
+  const close = str.lastIndexOf(">");
+  const open = str.indexOf("<", close + 1);
   return open > -1 ? str.length : close;
 }
 
@@ -258,9 +269,12 @@ function findTagClose(str: string): number {
  */
 export class TemplatePart {
   constructor(
-      public type: string, public index: number, public name?: string,
-      public rawName?: string, public strings?: string[]) {
-  }
+    public type: string,
+    public index: number,
+    public name?: string,
+    public rawName?: string,
+    public strings?: string[]
+  ) {}
 }
 
 export const isTemplatePartActive = (part: TemplatePart) => part.index !== -1;
@@ -277,26 +291,26 @@ export class Template {
     const content = this.element.content;
     // Edge needs all 4 parameters present; IE11 needs 3rd parameter to be null
     const walker = document.createTreeWalker(
-        content,
-        133 /* NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT |
-               NodeFilter.SHOW_TEXT */
-        ,
-        null as any,
-        false);
+      content,
+      133 /* NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT |
+               NodeFilter.SHOW_TEXT */,
+      null as any,
+      false
+    );
     let index = -1;
     let partIndex = 0;
     const nodesToRemove: Node[] = [];
 
     // The actual previous node, accounting for removals: if a node is removed
     // it will never be the previousNode.
-    let previousNode: Node|undefined;
+    let previousNode: Node | undefined;
     // Used to set previousNode at the top of the loop.
-    let currentNode: Node|undefined;
+    let currentNode: Node | undefined;
 
     while (walker.nextNode()) {
       index++;
       previousNode = currentNode;
-      const node = currentNode = walker.currentNode as Element;
+      const node = (currentNode = walker.currentNode as Element);
       if (node.nodeType === 1 /* Node.ELEMENT_NODE */) {
         if (!node.hasAttributes()) {
           continue;
@@ -318,17 +332,20 @@ export class Template {
           const stringForPart = result.strings[partIndex];
           // Find the attribute name
           const attributeNameInPart =
-              lastAttributeNameRegex.exec(stringForPart)![1];
+            lastAttributeNameRegex.exec(stringForPart)![1];
           // Find the corresponding attribute
           // TODO(justinfagnani): remove non-null assertion
           const attribute = attributes.getNamedItem(attributeNameInPart)!;
           const stringsForAttributeValue = attribute.value.split(markerRegex);
-          this.parts.push(new TemplatePart(
-              'attribute',
+          this.parts.push(
+            new TemplatePart(
+              "attribute",
               index,
               attribute.name,
               attributeNameInPart,
-              stringsForAttributeValue));
+              stringsForAttributeValue
+            )
+          );
           node.removeAttribute(attribute.name);
           partIndex += stringsForAttributeValue.length - 1;
         }
@@ -349,21 +366,24 @@ export class Template {
         // These nodes are also used as the markers for node parts
         for (let i = 0; i < lastIndex; i++) {
           parent.insertBefore(
-              (strings[i] === '')
-                  ? document.createComment('')
-                  : document.createTextNode(strings[i]),
-              node);
-          this.parts.push(new TemplatePart('node', index++));
+            strings[i] === ""
+              ? document.createComment("")
+              : document.createTextNode(strings[i]),
+            node
+          );
+          this.parts.push(new TemplatePart("node", index++));
         }
         parent.insertBefore(
-            strings[lastIndex] === '' ?
-                document.createComment('') :
-                document.createTextNode(strings[lastIndex]),
-            node);
+          strings[lastIndex] === ""
+            ? document.createComment("")
+            : document.createTextNode(strings[lastIndex]),
+          node
+        );
         nodesToRemove.push(node);
       } else if (
-          node.nodeType === 8 /* Node.COMMENT_NODE */ &&
-          node.nodeValue === marker) {
+        node.nodeType === 8 /* Node.COMMENT_NODE */ &&
+        node.nodeValue === marker
+      ) {
         const parent = node.parentNode!;
         // Add a new marker node to be the startNode of the Part if any of the
         // following are true:
@@ -376,19 +396,22 @@ export class Template {
         // as the marker node and reduce the number of extra nodes we add to a
         // template. See https://github.com/PolymerLabs/lit-html/issues/147
         const previousSibling = node.previousSibling;
-        if (previousSibling === null || previousSibling !== previousNode ||
-            previousSibling.nodeType !== Node.TEXT_NODE) {
-          parent.insertBefore(document.createComment(''), node);
+        if (
+          previousSibling === null ||
+          previousSibling !== previousNode ||
+          previousSibling.nodeType !== Node.TEXT_NODE
+        ) {
+          parent.insertBefore(document.createComment(""), node);
         } else {
           index--;
         }
-        this.parts.push(new TemplatePart('node', index++));
+        this.parts.push(new TemplatePart("node", index++));
         nodesToRemove.push(node);
         // If we don't have a nextSibling add a marker node.
         // We don't have to check if the next node is going to be removed,
         // because that node will induce a new marker if so.
         if (node.nextSibling === null) {
-          parent.insertBefore(document.createComment(''), node);
+          parent.insertBefore(document.createComment(""), node);
         } else {
           index--;
         }
@@ -421,18 +444,18 @@ export const getValue = (part: Part, value: any) => {
   return value === null ? undefined : value;
 };
 
-export interface DirectiveFn<P= Part> {
+export interface DirectiveFn<P = Part> {
   (part: P): void;
   __litDirective?: true;
 }
 
-export const directive = <P= Part>(f: DirectiveFn<P>): DirectiveFn<P> => {
+export const directive = <P = Part>(f: DirectiveFn<P>): DirectiveFn<P> => {
   f.__litDirective = true;
   return f;
 };
 
 const isDirective = (o: any) =>
-    typeof o === 'function' && o.__litDirective === true;
+  typeof o === "function" && o.__litDirective === true;
 
 /**
  * A sentinel value that signals that a value was handled by a directive and
@@ -445,15 +468,17 @@ export const noChange = {};
  */
 export { noChange as directiveValue };
 
-const isPrimitiveValue = (value: any) => value === null ||
-    !(typeof value === 'object' || typeof value === 'function');
+const isPrimitiveValue = (value: any) =>
+  value === null || !(typeof value === "object" || typeof value === "function");
 
 export interface Part {
   instance: TemplateInstance;
   size?: number;
 }
 
-export interface SinglePart extends Part { setValue(value: any): void; }
+export interface SinglePart extends Part {
+  setValue(value: any): void;
+}
 
 export interface MultiPart extends Part {
   setValue(values: any[], startIndex: number): void;
@@ -468,8 +493,11 @@ export class AttributePart implements MultiPart {
   _previousValues: any;
 
   constructor(
-      instance: TemplateInstance, element: Element, name: string,
-      strings: string[]) {
+    instance: TemplateInstance,
+    element: Element,
+    name: string,
+    strings: string[]
+  ) {
     this.instance = instance;
     this.element = element;
     this.name = name;
@@ -482,13 +510,16 @@ export class AttributePart implements MultiPart {
   protected _interpolate(values: any[], startIndex: number) {
     const strings = this.strings;
     const l = strings.length - 1;
-    let text = '';
+    let text = "";
 
     for (let i = 0; i < l; i++) {
       text += strings[i];
       const v = getValue(this, values[startIndex + i]);
-      if (v && v !== noChange &&
-          (Array.isArray(v) || typeof v !== 'string' && v[Symbol.iterator])) {
+      if (
+        v &&
+        v !== noChange &&
+        (Array.isArray(v) || (typeof v !== "string" && v[Symbol.iterator]))
+      ) {
         for (const t of v) {
           // TODO: we need to recursively call getValue into iterables...
           text += t;
@@ -502,8 +533,10 @@ export class AttributePart implements MultiPart {
 
   protected _equalToPreviousValues(values: any[], startIndex: number) {
     for (let i = startIndex; i < startIndex + this.size; i++) {
-      if (this._previousValues[i] !== values[i] ||
-          !isPrimitiveValue(values[i])) {
+      if (
+        this._previousValues[i] !== values[i] ||
+        !isPrimitiveValue(values[i])
+      ) {
         return false;
       }
     }
@@ -516,12 +549,12 @@ export class AttributePart implements MultiPart {
     }
     const s = this.strings;
     let value: any;
-    if (s.length === 2 && s[0] === '' && s[1] === '') {
+    if (s.length === 2 && s[0] === "" && s[1] === "") {
       // An expression that occupies the whole attribute value will leave
       // leading and trailing empty strings.
       value = getValue(this, values[startIndex]);
       if (Array.isArray(value)) {
-        value = value.join('');
+        value = value.join("");
       }
     } else {
       value = this._interpolate(values, startIndex);
@@ -587,9 +620,11 @@ export class NodePart implements SinglePart {
 
   private _setText(value: string): void {
     const node = this.startNode.nextSibling!;
-    value = value === undefined ? '' : value;
-    if (node === this.endNode.previousSibling &&
-        node.nodeType === Node.TEXT_NODE) {
+    value = value === undefined ? "" : value;
+    if (
+      node === this.endNode.previousSibling &&
+      node.nodeType === Node.TEXT_NODE
+    ) {
       // If we only have a single text node between the markers, we can just
       // set its value, rather than replacing it.
       // TODO(justinfagnani): Can we just check if _previousValue is
@@ -608,7 +643,10 @@ export class NodePart implements SinglePart {
       instance = this._previousValue;
     } else {
       instance = new TemplateInstance(
-          template, this.instance._partCallback, this.instance._getTemplate);
+        template,
+        this.instance._partCallback,
+        this.instance._getTemplate
+      );
       this._setNode(instance._clone());
       this._previousValue = instance;
     }
@@ -650,7 +688,7 @@ export class NodePart implements SinglePart {
         // node, and fix up the previous part's endNode to point to it
         if (partIndex > 0) {
           const previousPart = itemParts[partIndex - 1];
-          itemStart = previousPart.endNode = document.createTextNode('');
+          itemStart = previousPart.endNode = document.createTextNode("");
           this._insert(itemStart);
         }
         itemPart = new NodePart(this.instance, itemStart, this.endNode);
@@ -683,42 +721,52 @@ export class NodePart implements SinglePart {
 
   clear(startNode: Node = this.startNode) {
     removeNodes(
-        this.startNode.parentNode!, startNode.nextSibling!, this.endNode);
+      this.startNode.parentNode!,
+      startNode.nextSibling!,
+      this.endNode
+    );
   }
 }
 
-export type PartCallback =
-    (instance: TemplateInstance, templatePart: TemplatePart, node: Node) =>
-        Part;
+export type PartCallback = (
+  instance: TemplateInstance,
+  templatePart: TemplatePart,
+  node: Node
+) => Part;
 
-export const defaultPartCallback =
-    (instance: TemplateInstance,
-     templatePart: TemplatePart,
-     node: Node): Part => {
-      if (templatePart.type === 'attribute') {
-        return new AttributePart(
-            instance, node as Element, templatePart.name!, templatePart.strings!
-        );
-      } else if (templatePart.type === 'node') {
-        return new NodePart(instance, node, node.nextSibling!);
-      }
-      throw new Error(`Unknown part type ${templatePart.type}`);
-    };
-
+export const defaultPartCallback = (
+  instance: TemplateInstance,
+  templatePart: TemplatePart,
+  node: Node
+): Part => {
+  if (templatePart.type === "attribute") {
+    return new AttributePart(
+      instance,
+      node as Element,
+      templatePart.name!,
+      templatePart.strings!
+    );
+  } else if (templatePart.type === "node") {
+    return new NodePart(instance, node, node.nextSibling!);
+  }
+  throw new Error(`Unknown part type ${templatePart.type}`);
+};
 
 /**
  * An instance of a `Template` that can be attached to the DOM and updated
  * with new values.
  */
 export class TemplateInstance {
-  _parts: Array<Part|undefined> = [];
+  _parts: Array<Part | undefined> = [];
   _partCallback: PartCallback;
   _getTemplate: TemplateFactory;
   template: Template;
 
   constructor(
-      template: Template, partCallback: PartCallback,
-      getTemplate: TemplateFactory) {
+    template: Template,
+    partCallback: PartCallback,
+    getTemplate: TemplateFactory
+  ) {
     this.template = template;
     this._partCallback = partCallback;
     this._getTemplate = getTemplate;
@@ -743,19 +791,21 @@ export class TemplateInstance {
     // Clone the node, rather than importing it, to keep the fragment in the
     // template's document. This leaves the fragment inert so custom elements
     // won't upgrade until after the main document adopts the node.
-    const fragment = this.template.element.content.cloneNode(true) as DocumentFragment;
+    const fragment = this.template.element.content.cloneNode(
+      true
+    ) as DocumentFragment;
     const parts = this.template.parts;
 
     if (parts.length > 0) {
       // Edge needs all 4 parameters present; IE11 needs 3rd parameter to be
       // null
       const walker = document.createTreeWalker(
-          fragment,
-          133 /* NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT |
-                 NodeFilter.SHOW_TEXT */
-          ,
-          null as any,
-          false);
+        fragment,
+        133 /* NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT |
+                 NodeFilter.SHOW_TEXT */,
+        null as any,
+        false
+      );
 
       let index = -1;
       for (let i = 0; i < parts.length; i++) {
@@ -768,7 +818,11 @@ export class TemplateInstance {
             walker.nextNode();
           }
         }
-        this._parts.push(partActive ? this._partCallback(this, part, walker.currentNode) : undefined);
+        this._parts.push(
+          partActive
+            ? this._partCallback(this, part, walker.currentNode)
+            : undefined
+        );
       }
     }
     return fragment;
@@ -781,30 +835,33 @@ export class TemplateInstance {
  * `beforeNode`. If `beforeNode` is null, it appends the nodes to the
  * container.
  */
-export const reparentNodes =
-    (container: Node,
-     start: Node | null,
-     end: Node | null = null,
-     before: Node | null = null): void => {
-      let node = start;
-      while (node !== end) {
-        const n = node!.nextSibling;
-        container.insertBefore(node!, before as Node);
-        node = n;
-      }
-    };
+export const reparentNodes = (
+  container: Node,
+  start: Node | null,
+  end: Node | null = null,
+  before: Node | null = null
+): void => {
+  let node = start;
+  while (node !== end) {
+    const n = node!.nextSibling;
+    container.insertBefore(node!, before as Node);
+    node = n;
+  }
+};
 
 /**
  * Removes nodes, starting from `startNode` (inclusive) to `endNode`
  * (exclusive), from `container`.
  */
-export const removeNodes =
-    (container: Node, startNode: Node | null, endNode: Node | null = null):
-        void => {
-          let node = startNode;
-          while (node !== endNode) {
-            const n = node!.nextSibling;
-            container.removeChild(node!);
-            node = n;
-          }
-        };
+export const removeNodes = (
+  container: Node,
+  startNode: Node | null,
+  endNode: Node | null = null
+): void => {
+  let node = startNode;
+  while (node !== endNode) {
+    const n = node!.nextSibling;
+    container.removeChild(node!);
+    node = n;
+  }
+};

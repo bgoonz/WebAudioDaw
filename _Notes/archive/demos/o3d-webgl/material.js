@@ -29,20 +29,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * A Material holds the various uniform parameters an Effect needs to render.
  * For example a Lambert effect might need "diffuse", "ambient", "emissive".
  * The parameters needed on a Material will vary depending its Effect.
  * Note that a material MUST have its drawList set in order for objects using it
  * to render.
- * 
+ *
  * @param {!o3d.State} opt_state The State used by this material.
  * @param {!o3d.Effect} opt_effect The Effect used by this material.
  * @param {!o3d.DrawList} opt_draw_list The the DrawList used by this material.
  * @constructor
  */
-o3d.Material = function(opt_state, opt_effect, opt_draw_list) {
+o3d.Material = function (opt_state, opt_effect, opt_draw_list) {
   o3d.ParamObject.call(this);
   /**
    * The State for this material.
@@ -62,9 +61,8 @@ o3d.Material = function(opt_state, opt_effect, opt_draw_list) {
    */
   this.drawList = opt_draw_list || null;
 };
-o3d.inherit('Material', 'ParamObject');
+o3d.inherit("Material", "ParamObject");
 
-o3d.ParamObject.setUpO3DParam_(o3d.Material, 'effect', 'ParamEffect');
-o3d.ParamObject.setUpO3DParam_(o3d.Material, 'state', 'ParamState');
-o3d.ParamObject.setUpO3DParam_(o3d.Material, 'drawList', 'ParamDrawList');
-
+o3d.ParamObject.setUpO3DParam_(o3d.Material, "effect", "ParamEffect");
+o3d.ParamObject.setUpO3DParam_(o3d.Material, "state", "ParamState");
+o3d.ParamObject.setUpO3DParam_(o3d.Material, "drawList", "ParamDrawList");

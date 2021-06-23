@@ -7,13 +7,13 @@ see https://github.com/w3c/transitions/issues/89
 Web Audio API
 
 Latest published version:
-   http://www.w3.org/TR/webaudio/
-   
+http://www.w3.org/TR/webaudio/
+
 Latest editor's draft:
-   https://webaudio.github.io/web-audio-api/
-   
+https://webaudio.github.io/web-audio-api/
+
 Date:
-  first Tuesday or Thursday after a sucessful transition meeting
+first Tuesday or Thursday after a sucessful transition meeting
 
 ## Abstract
 
@@ -28,14 +28,13 @@ See https://www.w3.org/TR/webaudio/#sotd (as WD)
 [12:12] <mdjp> Agreement on transition request https://github.com/WebAudio/web-audio-api/blob/master/webaudio-CR-transition.md
 
 [12:13] <mdjp> All in favour
-   
-[6 Sept 2018 telcon](https://www.w3.org/2018/09/06-audio-irc#T16-13-12-53).
 
+[6 Sept 2018 telcon](https://www.w3.org/2018/09/06-audio-irc#T16-13-12-53).
 
 ## Changes
 
-The Working Draft of 8 December 2015 introduced a substantive 
-change: the deprecation of the old extensibility point, ScriptProcessorNode and its replacement 
+The Working Draft of 8 December 2015 introduced a substantive
+change: the deprecation of the old extensibility point, ScriptProcessorNode and its replacement
 with AudioWorker.
 
 Since then, substantial effort has gone into fleshing out details of the AudioWorklet interface
@@ -55,6 +54,7 @@ and will be added to a separate changes subsection
 The remainder of Web Audio API is stable, has multiple implementations, and is widely used.
 
 ## Requirements satisfied
+
 There is a requirements document
 
 https://www.w3.org/TR/webaudio-usecases/
@@ -63,8 +63,8 @@ the majority of the use cases listed there are met by Web Audio API. Speed chang
 
 ## Dependencies met (or not)
 
-This specification depends on on the [Worklets Working Draft](https://www.w3.org/TR/worklets-1/) and [WebRTC](https://www.w3.org/TR/webrtc/). 
-Worklets is being implemented in Blink and in Firefox, and is believed stable. 
+This specification depends on on the [Worklets Working Draft](https://www.w3.org/TR/worklets-1/) and [WebRTC](https://www.w3.org/TR/webrtc/).
+Worklets is being implemented in Blink and in Firefox, and is believed stable.
 Web Audio tests for AudioWorklet will help test Worklet as well.
 
 ## Wide Review
@@ -72,10 +72,10 @@ Web Audio tests for AudioWorklet will help test Worklet as well.
 The most recent Working Draft was published on 19 June 2018
 https://www.w3.org/TR/2018/WD-webaudio-20180619/
 
-The specification has received wide review, including presentation and active discussion 
+The specification has received wide review, including presentation and active discussion
 at three sucessful Web Audio conferences (fourth conference to take place September 2018)
-and uptake by an enthusiastic developer community. 
-These conferences have included public plenary sessions with the working group. 
+and uptake by an enthusiastic developer community.
+These conferences have included public plenary sessions with the working group.
 
 [WAC 2015 http://wac.ircam.fr/](http://wac.ircam.fr/)
 
@@ -85,19 +85,16 @@ These conferences have included public plenary sessions with the working group.
 
 [WAC 2018 https://webaudioconf.com/](https://webaudioconf.com/)
 
-
-
 The specification was developed on GitHub, see the issues list
 
 https://github.com/WebAudio/web-audio-api/issues
 
-
 ### Security and Privacy:
 
 There is a security and privacy appendix
-  https://webaudio.github.io/web-audio-api/#Security-Privacy-Considerations
+https://webaudio.github.io/web-audio-api/#Security-Privacy-Considerations
 This benefitted from review and contributions of the Privacy Interest Group.
-  
+
 ### Accessibility:
 
 This JavaScript API does not expose any user media controls, so although the constraints in Media Accessibility User Requirements
@@ -107,13 +104,13 @@ were considered, they do not apply to this API.
 
 ### Internationalization:
 
-Web Audio API was discussed at TPAC 2016 with the I18n Core chair, who confirmed that JavaScript APIs 
-which do not expose human-readable text strings or take natural-language input do not constitute 
+Web Audio API was discussed at TPAC 2016 with the I18n Core chair, who confirmed that JavaScript APIs
+which do not expose human-readable text strings or take natural-language input do not constitute
 a problem for Internationalization.
 
 ### TAG:
 
-This specification benefitted from extensive review by the TAG. Domenic Denicola was the lead 
+This specification benefitted from extensive review by the TAG. Domenic Denicola was the lead
 reviewer. Changes were made in response to this review, and the TAG appeared satisfied.
 
 To verify this, a [second round of TAG review](https://github.com/w3ctag/design-reviews/issues/212)  
@@ -125,7 +122,7 @@ The issues list is on GitHub:
 
 https://github.com/WebAudio/web-audio-api/issues
 
-There are currently 80 open issues and 978 closed. 
+There are currently 80 open issues and 978 closed.
 
 Of those, 95 were feature requests that were [deferred to the next version](https://github.com/WebAudio/web-audio-api/milestone/2)
 
@@ -137,8 +134,8 @@ None
 
 ## Implementation
 
-There are implementations of Web Audio API in Safari, in Blink-based browsers such as Chrome, in 
-Firefox, and in Microsoft Edge. This includes mobile implementations in Safari for iOS and 
+There are implementations of Web Audio API in Safari, in Blink-based browsers such as Chrome, in
+Firefox, and in Microsoft Edge. This includes mobile implementations in Safari for iOS and
 Chrome and Firefox for Android.
 
 A draft implementation report is available:
@@ -148,13 +145,13 @@ https://webaudio.github.io/web-audio-api/implementation-report.html
 There are no features at risk.
 
 A test suite is in progress and available at
- https://github.com/web-platform-tests/wpt/tree/master/webaudio
- 
+https://github.com/web-platform-tests/wpt/tree/master/webaudio
+
 WPT.fy results are available (with the usual caveats regarding browser versions, etc)
-  https://wpt.fyi/results/webaudio/the-audio-api
+https://wpt.fyi/results/webaudio/the-audio-api
 
 Mojitests from Mozilla are being converted to WPT format and will be pushed upstream to the WPR repo. These are all upstream reviewed.
-Google also has extensive tests; these have now all been converted to WPT format, and have been pushed to WPT. These are all upstream reviewed. The tracking issue for test migration is 
+Google also has extensive tests; these have now all been converted to WPT format, and have been pushed to WPT. These are all upstream reviewed. The tracking issue for test migration is
 https://github.com/WebAudio/web-audio-api/issues/1388
 
 During the CR period, the WG expects to remove any test duplication and look for any untested areas.
@@ -166,4 +163,3 @@ Recommendation phase.
 ## Patent disclosures
 
 https://www.w3.org/2004/01/pp-impl/46884/status
-

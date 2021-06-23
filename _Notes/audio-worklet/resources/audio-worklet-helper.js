@@ -2,11 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-const AudioWorkletHelper = (function() {
+const AudioWorkletHelper = (function () {
   const landingPageLocation =
-      'https://googlechromelabs.github.io/web-audio-samples/audio-worklet/';
+    "https://googlechromelabs.github.io/web-audio-samples/audio-worklet/";
   const sourceLocationBase =
-      'https://github.com/GoogleChromeLabs/web-audio-samples/blob/gh-pages/';
+    "https://github.com/GoogleChromeLabs/web-audio-samples/blob/gh-pages/";
 
   let isAudioWorkletAvailable_ = false;
   let demoFunction_ = null;
@@ -18,8 +18,9 @@ const AudioWorkletHelper = (function() {
   function detectAudioWorklet() {
     let context = new OfflineAudioContext(1, 1, 44100);
     return Boolean(
-        context.audioWorklet &&
-        typeof context.audioWorklet.addModule === 'function');
+      context.audioWorklet &&
+        typeof context.audioWorklet.addModule === "function"
+    );
   }
 
   /**
@@ -27,27 +28,26 @@ const AudioWorkletHelper = (function() {
    * @param {boolean} featureDetected A flag for AudioWorklet feature detection.
    */
   function updateFeatureIndicator(featureDetected) {
-    const workletIndicatorDiv =
-        document.querySelector('#div-worklet-indicator');
-    const warningMessageDiv =
-        document.querySelector('#div-warning-message');
+    const workletIndicatorDiv = document.querySelector(
+      "#div-worklet-indicator"
+    );
+    const warningMessageDiv = document.querySelector("#div-warning-message");
     if (workletIndicatorDiv) {
       if (featureDetected) {
-        workletIndicatorDiv.textContent = 'AudioWorklet Ready';
-        workletIndicatorDiv.className = 'worklet-status-found';
+        workletIndicatorDiv.textContent = "AudioWorklet Ready";
+        workletIndicatorDiv.className = "worklet-status-found";
       } else {
-        workletIndicatorDiv.textContent = 'No AudioWorklet';
-        workletIndicatorDiv.className = 'worklet-status-missing';
+        workletIndicatorDiv.textContent = "No AudioWorklet";
+        workletIndicatorDiv.className = "worklet-status-missing";
       }
     } else {
       console.error('"#div-worklet-indicator" div is not present.');
     }
 
     if (warningMessageDiv) {
-      warningMessageDiv.style.display = featureDetected ? 'none' : 'block';
+      warningMessageDiv.style.display = featureDetected ? "none" : "block";
       if (!featureDetected) {
-        warningMessageDiv.innerHTML =
-            `AudioWorklet is not available in your browser. Follow
+        warningMessageDiv.innerHTML = `AudioWorklet is not available in your browser. Follow
             <a href="${landingPageLocation}"> the instruction</a> to enable the
             feature.`;
       }
@@ -60,14 +60,14 @@ const AudioWorkletHelper = (function() {
    * function below.
    */
   function buildPageContent(demoData) {
-    const titleNavBarSpan = document.querySelector('#title-navbar');
-    const titleHeading = document.querySelector('#title-header');
-    const description = document.querySelector('#demo-description');
-    const htmlSource = document.querySelector('#link-html-source');
-    const jsSource = document.querySelector('#link-js-source');
+    const titleNavBarSpan = document.querySelector("#title-navbar");
+    const titleHeading = document.querySelector("#title-header");
+    const description = document.querySelector("#demo-description");
+    const htmlSource = document.querySelector("#link-html-source");
+    const jsSource = document.querySelector("#link-js-source");
 
     document.title =
-        demoData.title + ' | AudioWorklet | Chrome WebAudio Samples';
+      demoData.title + " | AudioWorklet | Chrome WebAudio Samples";
     if (titleNavBarSpan) {
       titleNavBarSpan.textContent = demoData.title;
     }
@@ -91,7 +91,7 @@ const AudioWorkletHelper = (function() {
    * @private
    */
   function enableRunDemoButton() {
-    const runDemoButton = document.querySelector('#btn-run-demo');
+    const runDemoButton = document.querySelector("#btn-run-demo");
     if (!runDemoButton) {
       console.error('"#btn-run-demo" button is not present.');
     }
@@ -99,7 +99,7 @@ const AudioWorkletHelper = (function() {
     if (isAudioWorkletAvailable_ && demoFunction_) {
       runDemoButton.disabled = false;
       runDemoButton.onclick = () => {
-        runDemoButton.textContent = 'Started';
+        runDemoButton.textContent = "Started";
         runDemoButton.disabled = true;
         demoFunction_();
       };
@@ -116,14 +116,14 @@ const AudioWorkletHelper = (function() {
     updateFeatureIndicator(isAudioWorkletAvailable_);
 
     if (demoData) {
-      if (demoData && typeof demoData.demoFunction === 'function') {
+      if (demoData && typeof demoData.demoFunction === "function") {
         demoFunction_ = demoData.demoFunction;
       } else {
         console.error('The "demoFunction" must be a function.');
       }
 
       buildPageContent(demoData);
-      enableRunDemoButton();  
+      enableRunDemoButton();
     }
   }
 
@@ -137,7 +137,7 @@ const AudioWorkletHelper = (function() {
      * @param {string} demoData.jsSource The link to the script file.
      */
     initializeDemo: (demoData) => {
-      window.addEventListener('load', () => initializeCallback(demoData));
+      window.addEventListener("load", () => initializeCallback(demoData));
     },
 
     /**

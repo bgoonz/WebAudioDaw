@@ -23,7 +23,6 @@ const MAX_CHANNEL_COUNT = 32;
 // WebAudio's render quantum size.
 const RENDER_QUANTUM_FRAMES = 128;
 
-
 /**
  * A WASM HEAP wrapper for AudioBuffer class. This breaks down the AudioBuffer
  * into an Array of Float32Array for the convinient WASM opearion.
@@ -46,8 +45,8 @@ class HeapAudioBuffer {
     this._module = wasmModule;
     this._length = length;
     this._maxChannelCount = maxChannelCount
-        ? Math.min(maxChannelCount, MAX_CHANNEL_COUNT)
-        : channelCount;
+      ? Math.min(maxChannelCount, MAX_CHANNEL_COUNT)
+      : channelCount;
     this._channelCount = channelCount;
     this._allocateHeap();
     this._isInitialized = true;
@@ -67,8 +66,10 @@ class HeapAudioBuffer {
       // convert pointer to HEAPF32 index
       let startOffset = this._dataPtr / BYTES_PER_SAMPLE + i * this._length;
       let endOffset = startOffset + this._length;
-      this._channelData[i] =
-          this._module.HEAPF32.subarray(startOffset, endOffset);
+      this._channelData[i] = this._module.HEAPF32.subarray(
+        startOffset,
+        endOffset
+      );
     }
   }
 
@@ -124,8 +125,9 @@ class HeapAudioBuffer {
       return null;
     }
 
-    return typeof channelIndex === 'undefined'
-        ? this._channelData : this._channelData[channelIndex];
+    return typeof channelIndex === "undefined"
+      ? this._channelData
+      : this._channelData[channelIndex];
   }
 
   /**
@@ -147,7 +149,6 @@ class HeapAudioBuffer {
     this._channelData = null;
   }
 } // class HeapAudioBuffer
-
 
 /**
  * A JS FIFO implementation for the AudioWorklet. 3 assumptions for the
@@ -255,7 +256,6 @@ class RingBuffer {
     }
   }
 } // class RingBuffer
-
 
 export {
   MAX_CHANNEL_COUNT,

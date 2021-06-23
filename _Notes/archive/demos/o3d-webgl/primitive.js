@@ -29,7 +29,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * A Primitive is a type of Element that is made from a list of points,
  * lines or triangles that use a single material.
@@ -38,7 +37,7 @@
  *     Primitive.
  * @constructor
  */
-o3d.Primitive = function(opt_streamBank) {
+o3d.Primitive = function (opt_streamBank) {
   o3d.Element.call(this);
   /**
    * The stream bank this primitive uses for vertices.
@@ -82,10 +81,8 @@ o3d.Primitive = function(opt_streamBank) {
    * @type {o3d.IndexBuffer}
    */
   this.indexBuffer = null;
-
 };
-o3d.inherit('Primitive', 'Element');
-
+o3d.inherit("Primitive", "Element");
 
 /**
  * @type {number}
@@ -102,25 +99,29 @@ o3d.Primitive.TRIANGLELIST = 4;
 o3d.Primitive.TRIANGLESTRIP = 5;
 o3d.Primitive.TRIANGLEFAN = 6;
 
-o3d.ParamObject.setUpO3DParam_(o3d.Primitive, 'streamBank', 'ParamStreamBank');
+o3d.ParamObject.setUpO3DParam_(o3d.Primitive, "streamBank", "ParamStreamBank");
 
 /**
  * Binds the vertex and index streams required to draw the shape.
  */
-o3d.Primitive.prototype.render = function() {
+o3d.Primitive.prototype.render = function () {
   var streamBank = this.streamBank;
   var indexBuffer = this.indexBuffer;
 
   var enabled_attribs = [];
 
-  for (var semantic = 0;
-       semantic < streamBank.vertexStreams.length;
-       ++semantic) {
+  for (
+    var semantic = 0;
+    semantic < streamBank.vertexStreams.length;
+    ++semantic
+  ) {
     var streams = streamBank.vertexStreams[semantic];
     if (streams && streams.length) {
-      for (var semantic_index = 0;
-           semantic_index < streams.length;
-           ++semantic_index) {
+      for (
+        var semantic_index = 0;
+        semantic_index < streams.length;
+        ++semantic_index
+      ) {
         var gl_index = semantic + semantic_index - 1;
         var stream = streams[semantic_index];
         var field = stream.field;
@@ -132,26 +133,32 @@ o3d.Primitive.prototype.render = function() {
 
         // TODO(petersont): Change that hard-coded 4 down there.
         this.gl.vertexAttribPointer(
-            gl_index, field.numComponents, this.gl.FLOAT, false,
-            buffer.totalComponents * 4, field.offset_ * 4);
+          gl_index,
+          field.numComponents,
+          this.gl.FLOAT,
+          false,
+          buffer.totalComponents * 4,
+          field.offset_ * 4
+        );
       }
     }
   }
 
-  this.gl.client.render_stats_['primitivesRendered'] += this.numberPrimitives;
+  this.gl.client.render_stats_["primitivesRendered"] += this.numberPrimitives;
 
   // TODO(petersont): Change the hard-coded 3 and triangles too.
   this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexBuffer.gl_buffer_);
-  this.gl.drawElements(this.gl.TRIANGLES,
-                       this.numberPrimitives * 3,
-                       this.gl.UNSIGNED_SHORT,
-                       0);
+  this.gl.drawElements(
+    this.gl.TRIANGLES,
+    this.numberPrimitives * 3,
+    this.gl.UNSIGNED_SHORT,
+    0
+  );
 
   for (var i = 0; i < enabled_attribs.length; ++i) {
     this.gl.disableVertexAttribArray(enabled_attribs[i]);
   }
 };
-
 
 /**
  * Computes the bounding box in same coordinate system as the specified
@@ -159,8 +166,7 @@ o3d.Primitive.prototype.render = function() {
  * @param {number} position_stream_index Index of POSITION stream.
  * @return {!o3d.BoundingBox}  The boundingbox for this element in local space.
  */
-o3d.Primitive.prototype.getBoundingBox =
-    function(position_stream_index) {
+o3d.Primitive.prototype.getBoundingBox = function (position_stream_index) {
   var streamBank = this.streamBank;
   var indexBuffer = this.indexBuffer;
   var stream =
@@ -184,6 +190,3 @@ o3d.Primitive.prototype.getBoundingBox =
   o3d.BoundingBox.fitBoxToPoints_(points, this.boundingBox);
   return this.boundingBox;
 };
-
-
-

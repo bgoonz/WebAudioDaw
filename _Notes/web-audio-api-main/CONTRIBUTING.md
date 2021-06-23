@@ -23,7 +23,8 @@ To use it via the HTTP API, run:
 curl https://api.csswg.org/bikeshed/ -F file=@index.bs -F force=1 -F output=err -o err && cat err | sed -E 's/\\033\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g' | diff -u - expected-errs.txt
 ```
 
-and preview your changes by doing: 
+and preview your changes by doing:
+
 ```
 curl https://api.csswg.org/bikeshed/ -F file=@index.bs -F force=1 > index.html
 ```
@@ -35,4 +36,3 @@ instructions](https://tabatkins.github.io/bikeshed/#installing).
 
 Then, `bikeshed serve` will run a web server [locally on port
 8000](http://localhost:8000).
-

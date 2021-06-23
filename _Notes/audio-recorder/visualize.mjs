@@ -42,7 +42,7 @@ class OutlineLoudnessIndicator {
 
   /** Hides the loudness outline. */
   hide() {
-    this.element.style.boxShadow = 'none';
+    this.element.style.boxShadow = "none";
   }
 }
 
@@ -53,14 +53,14 @@ class WaveformIndicator {
    */
   constructor(canvas) {
     this.canvas = canvas;
-    this.context = canvas.getContext('2d');
+    this.context = canvas.getContext("2d");
     // Horizontal position in the canvas for drawing the waveform.
     this.x = 0;
   }
 
   /** Draws a horizontal, dashed line in the center of the canvas. */
   drawCenterLine() {
-    this.context.fillStyle = '#263238';
+    this.context.fillStyle = "#263238";
     this.context.setLineDash([2, 5]);
     this.context.beginPath();
     this.context.moveTo(0, this.canvas.height / 2);
@@ -77,10 +77,10 @@ class WaveformIndicator {
     // Append a vertical line on the right of the waveform, that indicates the
     // loudness.
     this.context.fillRect(
-        this.x,
-        ((1 - loudness) * this.canvas.height) / 2,
-        1,
-        loudness * this.canvas.height,
+      this.x,
+      ((1 - loudness) * this.canvas.height) / 2,
+      1,
+      loudness * this.canvas.height
     );
 
     if (this.x < this.canvas.width - 1) {
@@ -88,11 +88,11 @@ class WaveformIndicator {
     } else {
       // If the waveform fills the canvas, move it by one pixel to the left to
       // make room.
-      this.context.globalCompositeOperation = 'copy';
+      this.context.globalCompositeOperation = "copy";
       this.context.drawImage(this.canvas, -1, 0);
-      this.context.globalCompositeOperation = 'source-over';
+      this.context.globalCompositeOperation = "source-over";
     }
   }
 }
 
-export {calculateLoudness, OutlineLoudnessIndicator, WaveformIndicator};
+export { calculateLoudness, OutlineLoudnessIndicator, WaveformIndicator };

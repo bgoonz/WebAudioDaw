@@ -1,14 +1,13 @@
 ---
 name: Administrative Issues
 about: Issues with the repository itself
-title: ''
+title: ""
 labels: Admin
-assignees: ''
-
+assignees: ""
 ---
 
 **Describe the Issue**
-Briefly describe the issue with this site.  This includes all issues not related to the spec itself and includes things like the issue tracker not working, wiki pages that are incorrect, and so on.
+Briefly describe the issue with this site. This includes all issues not related to the spec itself and includes things like the issue tracker not working, wiki pages that are incorrect, and so on.
 
 **Expected Result**
 Describe what should have happened

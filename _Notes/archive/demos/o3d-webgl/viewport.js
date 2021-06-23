@@ -29,7 +29,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * A Viewport is a render node that sets the render viewport and depth range
  * for its children.  It uses an array in the format [left, top, width, height]
@@ -38,12 +37,12 @@
  * area. The depth range is represented by an array in the format
  * [min Z, max Z]. The depth range provides the mapping of the clip space
  * coordinates into normalized z buffer coordinates.
- * 
+ *
  * @param {o3d.math.Float4} viewport The viewport setting.
  * @param {o3d.math.Float2} depthRange ParamFloat2 The depth range setting.
  * @constructor
  */
-o3d.Viewport = function(opt_viewport, opt_depthRange) {
+o3d.Viewport = function (opt_viewport, opt_depthRange) {
   o3d.RenderNode.call(this);
 
   /**
@@ -69,16 +68,16 @@ o3d.Viewport = function(opt_viewport, opt_depthRange) {
    */
   this.depthRange = opt_depthRange || [0.0, 1.0];
 };
-o3d.inherit('Viewport', 'RenderNode');
+o3d.inherit("Viewport", "RenderNode");
 
-o3d.ParamObject.setUpO3DParam_(o3d.Viewport, 'viewport', 'ParamFloat4');
-o3d.ParamObject.setUpO3DParam_(o3d.Viewport, 'depthRange', 'ParamFloat2');
+o3d.ParamObject.setUpO3DParam_(o3d.Viewport, "viewport", "ParamFloat4");
+o3d.ParamObject.setUpO3DParam_(o3d.Viewport, "depthRange", "ParamFloat2");
 
 /**
  * Called before the children are rendered.  Sets up a viewport and
  * scissor region in gl.
  */
-o3d.Viewport.prototype.before = function() {
+o3d.Viewport.prototype.before = function () {
   var x = this.viewport[0] * this.gl.displayInfo.width;
   var y = this.viewport[1] * this.gl.displayInfo.height;
   var width = this.viewport[2] * this.gl.displayInfo.width;
@@ -89,7 +88,6 @@ o3d.Viewport.prototype.before = function() {
     this.gl.enable(this.gl.SCISSOR_TEST);
     this.gl.scissor(x, y, width, height);
   } else {
-     this.gl.disable(this.gl.SCISSOR_TEST);
+    this.gl.disable(this.gl.SCISSOR_TEST);
   }
 };
-

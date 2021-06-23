@@ -29,14 +29,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * A ClearBuffer is a render node that clears the color buffer, zbuffer and/or
  * stencil buffer of the current render target.
- * 
+ *
  * @constructor
  */
-o3d.ClearBuffer = function() {
+o3d.ClearBuffer = function () {
   o3d.RenderNode.call(this);
   /**
    * The color to clear the buffer in RGBA Float4 format.
@@ -77,44 +76,47 @@ o3d.ClearBuffer = function() {
    */
   this.clearStencilFlag = true;
 };
-o3d.inherit('ClearBuffer', 'RenderNode');
+o3d.inherit("ClearBuffer", "RenderNode");
 
-o3d.ParamObject.setUpO3DParam_(o3d.ClearBuffer, 'clearColor', 'ParamFloat4');
-o3d.ParamObject.setUpO3DParam_(o3d.ClearBuffer,
-                               'clearColorFlag', 'ParamBoolean');
-o3d.ParamObject.setUpO3DParam_(o3d.ClearBuffer, 'clearDepth', 'ParamFloat');
-o3d.ParamObject.setUpO3DParam_(o3d.ClearBuffer,
-                               'clearDepthFlag', 'ParamBoolean');
-o3d.ParamObject.setUpO3DParam_(o3d.ClearBuffer,
-                               'clearStencil', 'ParamInteger');
-o3d.ParamObject.setUpO3DParam_(o3d.ClearBuffer,
-                               'clearStencilFlag', 'ParamBoolean');
+o3d.ParamObject.setUpO3DParam_(o3d.ClearBuffer, "clearColor", "ParamFloat4");
+o3d.ParamObject.setUpO3DParam_(
+  o3d.ClearBuffer,
+  "clearColorFlag",
+  "ParamBoolean"
+);
+o3d.ParamObject.setUpO3DParam_(o3d.ClearBuffer, "clearDepth", "ParamFloat");
+o3d.ParamObject.setUpO3DParam_(
+  o3d.ClearBuffer,
+  "clearDepthFlag",
+  "ParamBoolean"
+);
+o3d.ParamObject.setUpO3DParam_(o3d.ClearBuffer, "clearStencil", "ParamInteger");
+o3d.ParamObject.setUpO3DParam_(
+  o3d.ClearBuffer,
+  "clearStencilFlag",
+  "ParamBoolean"
+);
 
 /**
  * Function called in the render graph traversal before the children are
  * rendered.
  */
-o3d.ClearBuffer.prototype.before = function() {
+o3d.ClearBuffer.prototype.before = function () {
   var flags = 0;
 
   this.gl.clearColor(
-      this.clearColor[0],
-      this.clearColor[1],
-      this.clearColor[2],
-      this.clearColor[3]);
+    this.clearColor[0],
+    this.clearColor[1],
+    this.clearColor[2],
+    this.clearColor[3]
+  );
 
   this.gl.clearDepth(this.clearDepth);
   this.gl.clearStencil(this.clearStencil);
 
-  if (this.clearColorFlag)
-    flags = flags | this.gl.COLOR_BUFFER_BIT;
-  if (this.clearDepthFlag)
-    flags = flags | this.gl.DEPTH_BUFFER_BIT;
-  if (this.clearStencilFlag)
-    flags = flags | this.gl.STENCIL_BUFFER_BIT;
+  if (this.clearColorFlag) flags = flags | this.gl.COLOR_BUFFER_BIT;
+  if (this.clearDepthFlag) flags = flags | this.gl.DEPTH_BUFFER_BIT;
+  if (this.clearStencilFlag) flags = flags | this.gl.STENCIL_BUFFER_BIT;
 
   this.gl.clear(flags);
 };
-
-
-

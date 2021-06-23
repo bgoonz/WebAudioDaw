@@ -4,7 +4,6 @@
  */
 demos.top = {};
 
-
 /**
  * [createBall description]
  * @param  {[type]} world [description]
@@ -14,17 +13,16 @@ demos.top = {};
  * @param  {[type]} fixed [description]
  * @return {[type]}       [description]
  */
-demos.top.createBall = function(world, x, y, rad, fixed) {
+demos.top.createBall = function (world, x, y, rad, fixed) {
   var ballSd = new b2CircleDef();
   if (!fixed) ballSd.density = 1.0;
   ballSd.radius = rad || 10;
   ballSd.restitution = 0.2;
   var ballBd = new b2BodyDef();
   ballBd.AddShape(ballSd);
-  ballBd.position.Set(x,y);
+  ballBd.position.Set(x, y);
   return world.CreateBody(ballBd);
 };
-
 
 /**
  * [createPoly description]
@@ -35,7 +33,7 @@ demos.top.createBall = function(world, x, y, rad, fixed) {
  * @param  {[type]} fixed  [description]
  * @return {[type]}        [description]
  */
-demos.top.createPoly = function(world, x, y, points, fixed) {
+demos.top.createPoly = function (world, x, y, points, fixed) {
   var polySd = new b2PolyDef();
   if (!fixed) polySd.density = 1.0;
   polySd.vertexCount = points.length;
@@ -44,20 +42,39 @@ demos.top.createPoly = function(world, x, y, points, fixed) {
   }
   var polyBd = new b2BodyDef();
   polyBd.AddShape(polySd);
-  polyBd.position.Set(x,y);
-  return world.CreateBody(polyBd)
+  polyBd.position.Set(x, y);
+  return world.CreateBody(polyBd);
 };
-
 
 /**
  * [initWorld description]
  * @param  {[type]} world [description]
  * @return {[type]}       [description]
  */
-demos.top.initWorld = function(world) {
+demos.top.initWorld = function (world) {
   demos.top.createBall(world, 350, 100, 50, true);
-  demos.top.createPoly(world, 100, 100, [[0, 0], [10, 30], [-10, 30]], true);
-  demos.top.createPoly(world, 150, 150, [[0, 0], [10, 30], [-10, 30]], true);
+  demos.top.createPoly(
+    world,
+    100,
+    100,
+    [
+      [0, 0],
+      [10, 30],
+      [-10, 30],
+    ],
+    true
+  );
+  demos.top.createPoly(
+    world,
+    150,
+    150,
+    [
+      [0, 0],
+      [10, 30],
+      [-10, 30],
+    ],
+    true
+  );
   var pendulum = createBox(world, 150, 100, 20, 20, false);
   var jointDef = new b2RevoluteJointDef();
   jointDef.body1 = pendulum;
@@ -65,13 +82,15 @@ demos.top.initWorld = function(world) {
   jointDef.anchorPoint = pendulum.GetCenterPosition();
   world.CreateJoint(jointDef);
 
-  var seesaw = demos.top.createPoly(world, 300, 200,
-                                    [[0, 0], [100, 30], [-100, 30]]);
+  var seesaw = demos.top.createPoly(world, 300, 200, [
+    [0, 0],
+    [100, 30],
+    [-100, 30],
+  ]);
   jointDef.body1 = seesaw;
   jointDef.anchorPoint = seesaw.GetCenterPosition();
   world.CreateJoint(jointDef);
 };
-
 
 /**
  *

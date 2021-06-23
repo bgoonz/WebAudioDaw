@@ -29,20 +29,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * Base class for all objects that can have their name set.
  * @constructor
  */
-o3d.NamedObject = function() {
+o3d.NamedObject = function () {
   o3d.NamedObjectBase.call(this);
 };
-o3d.inherit('NamedObject', 'NamedObjectBase');
-
+o3d.inherit("NamedObject", "NamedObjectBase");
 
 /**
  * The object's name.
- * 
+ *
  * Setting this has no meaning to O3D, but is useful for debugging and for
  * the functions Client.getObjects, Pack.getObject,
  * RenderNode.getRenderNodesByNameInTree and
@@ -50,6 +48,4 @@ o3d.inherit('NamedObject', 'NamedObjectBase');
  * which search for objects by name.
  * @type {string}
  */
-o3d.NamedObject.prototype.name = '';
-
-
+o3d.NamedObject.prototype.name = "";

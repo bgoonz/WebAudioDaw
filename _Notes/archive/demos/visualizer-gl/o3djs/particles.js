@@ -29,17 +29,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * @fileoverview This file contains various functions and classes for rendering
  * gpu based particles.
  */
 
-o3djs.provide('o3djs.particles');
+o3djs.provide("o3djs.particles");
 
-o3djs.require('o3djs.math');
+o3djs.require("o3djs.math");
 
-o3djs.require('o3djs.shader');
+o3djs.require("o3djs.shader");
 
 /**
  * Enum for pre-made particle states.
@@ -51,7 +50,8 @@ o3djs.particles.ParticleStateIds = {
   BLEND_PREMULTIPLY: 2,
   BLEND_NO_ALPHA: 3,
   SUBTRACT: 4,
-  INVERSE: 5};
+  INVERSE: 5,
+};
 
 /**
  * Vertex and fragment program strings for 2D and 3D particles.
@@ -60,183 +60,183 @@ o3djs.particles.ParticleStateIds = {
  */
 o3djs.particles.SHADER_STRINGS = [
   // 3D (oriented) vertex shader
-  'uniform mat4 worldViewProjection;\n' +
-  'uniform mat4 world;\n' +
-  'uniform vec3 worldVelocity;\n' +
-  'uniform vec3 worldAcceleration;\n' +
-  'uniform float timeRange;\n' +
-  'uniform float time;\n' +
-  'uniform float timeOffset;\n' +
-  'uniform float frameDuration;\n' +
-  'uniform float numFrames;\n' +
-  '\n' +
-  '// Incoming vertex attributes\n' +
-  'attribute vec4 uvLifeTimeFrameStart; // uv, lifeTime, frameStart\n' +
-  'attribute vec4 positionStartTime;    // position.xyz, startTime\n' +
-  'attribute vec4 velocityStartSize;    // velocity.xyz, startSize\n' +
-  'attribute vec4 accelerationEndSize;  // acceleration.xyz, endSize\n' +
-  'attribute vec4 spinStartSpinSpeed;   // spinStart.x, spinSpeed.y\n' +
-  'attribute vec4 orientation;          // orientation quaternion\n' +
-  'attribute vec4 colorMult;            // multiplies color and ramp textures\n' +
-  '\n' +
-  '// Outgoing variables to fragment shader\n' +
-  'varying vec2 outputTexcoord;\n' +
-  'varying float outputPercentLife;\n' +
-  'varying vec4 outputColorMult;\n' +
-  '\n' +
-  'void main() {\n' +
-  '  vec2 uv = uvLifeTimeFrameStart.xy;\n' +
-  '  float lifeTime = uvLifeTimeFrameStart.z;\n' +
-  '  float frameStart = uvLifeTimeFrameStart.w;\n' +
-  '  vec3 position = positionStartTime.xyz;\n' +
-  '  float startTime = positionStartTime.w;\n' +
-  '  vec3 velocity = (world * vec4(velocityStartSize.xyz,\n' +
-  '                                0.)).xyz + worldVelocity;\n' +
-  '  float startSize = velocityStartSize.w;\n' +
-  '  vec3 acceleration = (world * vec4(accelerationEndSize.xyz,\n' +
-  '                                    0)).xyz + worldAcceleration;\n' +
-  '  float endSize = accelerationEndSize.w;\n' +
-  '  float spinStart = spinStartSpinSpeed.x;\n' +
-  '  float spinSpeed = spinStartSpinSpeed.y;\n' +
-  '\n' +
-  '  float localTime = mod((time - timeOffset - startTime), timeRange);\n' +
-  '  float percentLife = localTime / lifeTime;\n' +
-  '\n' +
-  '  float frame = mod(floor(localTime / frameDuration + frameStart),\n' +
-  '                    numFrames);\n' +
-  '  float uOffset = frame / numFrames;\n' +
-  '  float u = uOffset + (uv.x + 0.5) * (1. / numFrames);\n' +
-  '\n' +
-  '  outputTexcoord = vec2(u, uv.y + 0.5);\n' +
-  '  outputColorMult = colorMult;\n' +
-  '\n' +
-  '  float size = mix(startSize, endSize, percentLife);\n' +
-  '  size = (percentLife < 0. || percentLife > 1.) ? 0. : size;\n' +
-  '  float s = sin(spinStart + spinSpeed * localTime);\n' +
-  '  float c = cos(spinStart + spinSpeed * localTime);\n' +
-  '\n' +
-  '  vec4 rotatedPoint = vec4((uv.x * c + uv.y * s) * size, 0., \n' +
-  '                           (uv.x * s - uv.y * c) * size, 1.);\n' +
-  '  vec3 center = velocity * localTime +\n' +
-  '                acceleration * localTime * localTime + \n' +
-  '                position;\n' +
-  '\n' +
-  '  vec4 q2 = orientation + orientation;\n' +
-  '  vec4 qx = orientation.xxxw * q2.xyzx;\n' +
-  '  vec4 qy = orientation.xyyw * q2.xyzy;\n' +
-  '  vec4 qz = orientation.xxzw * q2.xxzz;\n' +
-  '\n' +
-  '  mat4 localMatrix = mat4(\n' +
-  '      (1.0 - qy.y) - qz.z, \n' +
-  '      qx.y + qz.w, \n' +
-  '      qx.z - qy.w,\n' +
-  '      0,\n' +
-  '\n' +
-  '      qx.y - qz.w, \n' +
-  '      (1.0 - qx.x) - qz.z, \n' +
-  '      qy.z + qx.w,\n' +
-  '      0,\n' +
-  '\n' +
-  '      qx.z + qy.w, \n' +
-  '      qy.z - qx.w, \n' +
-  '      (1.0 - qx.x) - qy.y,\n' +
-  '      0,\n' +
-  '\n' +
-  '      center.x, center.y, center.z, 1);\n' +
-  '  rotatedPoint = localMatrix * rotatedPoint;\n' +
-  '  outputPercentLife = percentLife;\n' +
-  '  gl_Position = worldViewProjection * rotatedPoint;\n' +
-  '}\n',
+  "uniform mat4 worldViewProjection;\n" +
+    "uniform mat4 world;\n" +
+    "uniform vec3 worldVelocity;\n" +
+    "uniform vec3 worldAcceleration;\n" +
+    "uniform float timeRange;\n" +
+    "uniform float time;\n" +
+    "uniform float timeOffset;\n" +
+    "uniform float frameDuration;\n" +
+    "uniform float numFrames;\n" +
+    "\n" +
+    "// Incoming vertex attributes\n" +
+    "attribute vec4 uvLifeTimeFrameStart; // uv, lifeTime, frameStart\n" +
+    "attribute vec4 positionStartTime;    // position.xyz, startTime\n" +
+    "attribute vec4 velocityStartSize;    // velocity.xyz, startSize\n" +
+    "attribute vec4 accelerationEndSize;  // acceleration.xyz, endSize\n" +
+    "attribute vec4 spinStartSpinSpeed;   // spinStart.x, spinSpeed.y\n" +
+    "attribute vec4 orientation;          // orientation quaternion\n" +
+    "attribute vec4 colorMult;            // multiplies color and ramp textures\n" +
+    "\n" +
+    "// Outgoing variables to fragment shader\n" +
+    "varying vec2 outputTexcoord;\n" +
+    "varying float outputPercentLife;\n" +
+    "varying vec4 outputColorMult;\n" +
+    "\n" +
+    "void main() {\n" +
+    "  vec2 uv = uvLifeTimeFrameStart.xy;\n" +
+    "  float lifeTime = uvLifeTimeFrameStart.z;\n" +
+    "  float frameStart = uvLifeTimeFrameStart.w;\n" +
+    "  vec3 position = positionStartTime.xyz;\n" +
+    "  float startTime = positionStartTime.w;\n" +
+    "  vec3 velocity = (world * vec4(velocityStartSize.xyz,\n" +
+    "                                0.)).xyz + worldVelocity;\n" +
+    "  float startSize = velocityStartSize.w;\n" +
+    "  vec3 acceleration = (world * vec4(accelerationEndSize.xyz,\n" +
+    "                                    0)).xyz + worldAcceleration;\n" +
+    "  float endSize = accelerationEndSize.w;\n" +
+    "  float spinStart = spinStartSpinSpeed.x;\n" +
+    "  float spinSpeed = spinStartSpinSpeed.y;\n" +
+    "\n" +
+    "  float localTime = mod((time - timeOffset - startTime), timeRange);\n" +
+    "  float percentLife = localTime / lifeTime;\n" +
+    "\n" +
+    "  float frame = mod(floor(localTime / frameDuration + frameStart),\n" +
+    "                    numFrames);\n" +
+    "  float uOffset = frame / numFrames;\n" +
+    "  float u = uOffset + (uv.x + 0.5) * (1. / numFrames);\n" +
+    "\n" +
+    "  outputTexcoord = vec2(u, uv.y + 0.5);\n" +
+    "  outputColorMult = colorMult;\n" +
+    "\n" +
+    "  float size = mix(startSize, endSize, percentLife);\n" +
+    "  size = (percentLife < 0. || percentLife > 1.) ? 0. : size;\n" +
+    "  float s = sin(spinStart + spinSpeed * localTime);\n" +
+    "  float c = cos(spinStart + spinSpeed * localTime);\n" +
+    "\n" +
+    "  vec4 rotatedPoint = vec4((uv.x * c + uv.y * s) * size, 0., \n" +
+    "                           (uv.x * s - uv.y * c) * size, 1.);\n" +
+    "  vec3 center = velocity * localTime +\n" +
+    "                acceleration * localTime * localTime + \n" +
+    "                position;\n" +
+    "\n" +
+    "  vec4 q2 = orientation + orientation;\n" +
+    "  vec4 qx = orientation.xxxw * q2.xyzx;\n" +
+    "  vec4 qy = orientation.xyyw * q2.xyzy;\n" +
+    "  vec4 qz = orientation.xxzw * q2.xxzz;\n" +
+    "\n" +
+    "  mat4 localMatrix = mat4(\n" +
+    "      (1.0 - qy.y) - qz.z, \n" +
+    "      qx.y + qz.w, \n" +
+    "      qx.z - qy.w,\n" +
+    "      0,\n" +
+    "\n" +
+    "      qx.y - qz.w, \n" +
+    "      (1.0 - qx.x) - qz.z, \n" +
+    "      qy.z + qx.w,\n" +
+    "      0,\n" +
+    "\n" +
+    "      qx.z + qy.w, \n" +
+    "      qy.z - qx.w, \n" +
+    "      (1.0 - qx.x) - qy.y,\n" +
+    "      0,\n" +
+    "\n" +
+    "      center.x, center.y, center.z, 1);\n" +
+    "  rotatedPoint = localMatrix * rotatedPoint;\n" +
+    "  outputPercentLife = percentLife;\n" +
+    "  gl_Position = worldViewProjection * rotatedPoint;\n" +
+    "}\n",
 
   // 2D (billboarded) vertex shader
-  'uniform mat4 viewProjection;\n' +
-  'uniform mat4 world;\n' +
-  'uniform mat4 viewInverse;\n' +
-  'uniform vec3 worldVelocity;\n' +
-  'uniform vec3 worldAcceleration;\n' +
-  'uniform float timeRange;\n' +
-  'uniform float time;\n' +
-  'uniform float timeOffset;\n' +
-  'uniform float frameDuration;\n' +
-  'uniform float numFrames;\n' +
-  '\n' +
-  '// Incoming vertex attributes\n' +
-  'attribute vec4 uvLifeTimeFrameStart; // uv, lifeTime, frameStart\n' +
-  'attribute vec4 positionStartTime;    // position.xyz, startTime\n' +
-  'attribute vec4 velocityStartSize;    // velocity.xyz, startSize\n' +
-  'attribute vec4 accelerationEndSize;  // acceleration.xyz, endSize\n' +
-  'attribute vec4 spinStartSpinSpeed;   // spinStart.x, spinSpeed.y\n' +
-  'attribute vec4 colorMult;            // multiplies color and ramp textures\n' +
-  '\n' +
-  '// Outgoing variables to fragment shader\n' +
-  'varying vec2 outputTexcoord;\n' +
-  'varying float outputPercentLife;\n' +
-  'varying vec4 outputColorMult;\n' +
-  '\n' +
-  'void main() {\n' +
-  '  vec2 uv = uvLifeTimeFrameStart.xy;\n' +
-  '  float lifeTime = uvLifeTimeFrameStart.z;\n' +
-  '  float frameStart = uvLifeTimeFrameStart.w;\n' +
-  '  vec3 position = positionStartTime.xyz;\n' +
-  '  float startTime = positionStartTime.w;\n' +
-  '  vec3 velocity = (world * vec4(velocityStartSize.xyz,\n' +
-  '                                0.)).xyz + worldVelocity;\n' +
-  '  float startSize = velocityStartSize.w;\n' +
-  '  vec3 acceleration = (world * vec4(accelerationEndSize.xyz,\n' +
-  '                                    0)).xyz + worldAcceleration;\n' +
-  '  float endSize = accelerationEndSize.w;\n' +
-  '  float spinStart = spinStartSpinSpeed.x;\n' +
-  '  float spinSpeed = spinStartSpinSpeed.y;\n' +
-  '\n' +
-  '  float localTime = mod((time - timeOffset - startTime), timeRange);\n' +
-  '  float percentLife = localTime / lifeTime;\n' +
-  '\n' +
-  '  float frame = mod(floor(localTime / frameDuration + frameStart),\n' +
-  '                    numFrames);\n' +
-  '  float uOffset = frame / numFrames;\n' +
-  '  float u = uOffset + (uv.x + 0.5) * (1. / numFrames);\n' +
-  '\n' +
-  '  outputTexcoord = vec2(u, uv.y + 0.5);\n' +
-  '  outputColorMult = colorMult;\n' +
-  '\n' +
-  '  vec3 basisX = viewInverse[0].xyz;\n' +
-  '  vec3 basisZ = viewInverse[1].xyz;\n' +
-  '\n' +
-  '  float size = mix(startSize, endSize, percentLife);\n' +
-  '  size = (percentLife < 0. || percentLife > 1.) ? 0. : size;\n' +
-  '  float s = sin(spinStart + spinSpeed * localTime);\n' +
-  '  float c = cos(spinStart + spinSpeed * localTime);\n' +
-  '\n' +
-  '  vec2 rotatedPoint = vec2(uv.x * c + uv.y * s, \n' +
-  '                           -uv.x * s + uv.y * c);\n' +
-  '  vec3 localPosition = vec3(basisX * rotatedPoint.x +\n' +
-  '                            basisZ * rotatedPoint.y) * size +\n' +
-  '                       velocity * localTime +\n' +
-  '                       acceleration * localTime * localTime + \n' +
-  '                       position;\n' +
-  '\n' +
-  '  outputPercentLife = percentLife;\n' +
-  '  gl_Position = viewProjection * vec4(localPosition + world[3].xyz, 1.);\n' +
-  '}\n',
+  "uniform mat4 viewProjection;\n" +
+    "uniform mat4 world;\n" +
+    "uniform mat4 viewInverse;\n" +
+    "uniform vec3 worldVelocity;\n" +
+    "uniform vec3 worldAcceleration;\n" +
+    "uniform float timeRange;\n" +
+    "uniform float time;\n" +
+    "uniform float timeOffset;\n" +
+    "uniform float frameDuration;\n" +
+    "uniform float numFrames;\n" +
+    "\n" +
+    "// Incoming vertex attributes\n" +
+    "attribute vec4 uvLifeTimeFrameStart; // uv, lifeTime, frameStart\n" +
+    "attribute vec4 positionStartTime;    // position.xyz, startTime\n" +
+    "attribute vec4 velocityStartSize;    // velocity.xyz, startSize\n" +
+    "attribute vec4 accelerationEndSize;  // acceleration.xyz, endSize\n" +
+    "attribute vec4 spinStartSpinSpeed;   // spinStart.x, spinSpeed.y\n" +
+    "attribute vec4 colorMult;            // multiplies color and ramp textures\n" +
+    "\n" +
+    "// Outgoing variables to fragment shader\n" +
+    "varying vec2 outputTexcoord;\n" +
+    "varying float outputPercentLife;\n" +
+    "varying vec4 outputColorMult;\n" +
+    "\n" +
+    "void main() {\n" +
+    "  vec2 uv = uvLifeTimeFrameStart.xy;\n" +
+    "  float lifeTime = uvLifeTimeFrameStart.z;\n" +
+    "  float frameStart = uvLifeTimeFrameStart.w;\n" +
+    "  vec3 position = positionStartTime.xyz;\n" +
+    "  float startTime = positionStartTime.w;\n" +
+    "  vec3 velocity = (world * vec4(velocityStartSize.xyz,\n" +
+    "                                0.)).xyz + worldVelocity;\n" +
+    "  float startSize = velocityStartSize.w;\n" +
+    "  vec3 acceleration = (world * vec4(accelerationEndSize.xyz,\n" +
+    "                                    0)).xyz + worldAcceleration;\n" +
+    "  float endSize = accelerationEndSize.w;\n" +
+    "  float spinStart = spinStartSpinSpeed.x;\n" +
+    "  float spinSpeed = spinStartSpinSpeed.y;\n" +
+    "\n" +
+    "  float localTime = mod((time - timeOffset - startTime), timeRange);\n" +
+    "  float percentLife = localTime / lifeTime;\n" +
+    "\n" +
+    "  float frame = mod(floor(localTime / frameDuration + frameStart),\n" +
+    "                    numFrames);\n" +
+    "  float uOffset = frame / numFrames;\n" +
+    "  float u = uOffset + (uv.x + 0.5) * (1. / numFrames);\n" +
+    "\n" +
+    "  outputTexcoord = vec2(u, uv.y + 0.5);\n" +
+    "  outputColorMult = colorMult;\n" +
+    "\n" +
+    "  vec3 basisX = viewInverse[0].xyz;\n" +
+    "  vec3 basisZ = viewInverse[1].xyz;\n" +
+    "\n" +
+    "  float size = mix(startSize, endSize, percentLife);\n" +
+    "  size = (percentLife < 0. || percentLife > 1.) ? 0. : size;\n" +
+    "  float s = sin(spinStart + spinSpeed * localTime);\n" +
+    "  float c = cos(spinStart + spinSpeed * localTime);\n" +
+    "\n" +
+    "  vec2 rotatedPoint = vec2(uv.x * c + uv.y * s, \n" +
+    "                           -uv.x * s + uv.y * c);\n" +
+    "  vec3 localPosition = vec3(basisX * rotatedPoint.x +\n" +
+    "                            basisZ * rotatedPoint.y) * size +\n" +
+    "                       velocity * localTime +\n" +
+    "                       acceleration * localTime * localTime + \n" +
+    "                       position;\n" +
+    "\n" +
+    "  outputPercentLife = percentLife;\n" +
+    "  gl_Position = viewProjection * vec4(localPosition + world[3].xyz, 1.);\n" +
+    "}\n",
 
   // Fragment shader used by both 2D and 3D vertex shaders
-  'uniform sampler2D rampSampler;\n' +
-  'uniform sampler2D colorSampler;\n' +
-  '\n' +
-  '// Incoming variables from vertex shader\n' +
-  'varying vec2 outputTexcoord;\n' +
-  'varying float outputPercentLife;\n' +
-  'varying vec4 outputColorMult;\n' +
-  '\n' +
-  'void main() {\n' +
-  '  vec4 colorMult = texture2D(rampSampler, \n' +
-  '                             vec2(outputPercentLife, 0.5)) *\n' +
-  '                   outputColorMult;\n' +
-  '  gl_FragColor = texture2D(colorSampler, outputTexcoord) * colorMult;\n' +
-  // For debugging: requires setup of some uniforms and vertex
-  // attributes to be commented out to avoid GL errors
-  //  '  gl_FragColor = vec4(1., 0., 0., 1.);\n' +
-  '}\n'
+  "uniform sampler2D rampSampler;\n" +
+    "uniform sampler2D colorSampler;\n" +
+    "\n" +
+    "// Incoming variables from vertex shader\n" +
+    "varying vec2 outputTexcoord;\n" +
+    "varying float outputPercentLife;\n" +
+    "varying vec4 outputColorMult;\n" +
+    "\n" +
+    "void main() {\n" +
+    "  vec4 colorMult = texture2D(rampSampler, \n" +
+    "                             vec2(outputPercentLife, 0.5)) *\n" +
+    "                   outputColorMult;\n" +
+    "  gl_FragColor = texture2D(colorSampler, outputTexcoord) * colorMult;\n" +
+    // For debugging: requires setup of some uniforms and vertex
+    // attributes to be commented out to avoid GL errors
+    //  '  gl_FragColor = vec4(1., 0., 0., 1.);\n' +
+    "}\n",
 ];
 
 /**
@@ -248,7 +248,8 @@ o3djs.particles.CORNERS_ = [
   [-0.5, -0.5],
   [+0.5, -0.5],
   [+0.5, +0.5],
-  [-0.5, +0.5]];
+  [-0.5, +0.5],
+];
 
 /**
  * Creates a particle system.
@@ -265,51 +266,57 @@ o3djs.particles.CORNERS_ = [
  *     a random number between 0.0 and 1.0. This allows you to pass in a
  *     pseudo random function if you need particles that are reproducible.
  */
-o3djs.particles.ParticleSystem = function(gl,
-                                          opt_clock,
-                                          opt_randomFunction) {
+o3djs.particles.ParticleSystem = function (gl, opt_clock, opt_randomFunction) {
   this.gl = gl;
 
   // Entities which can be drawn -- emitters or OneShots
   this.drawables_ = [];
 
   var shaders = [];
-  shaders.push(new o3djs.shader.Shader(gl,
-                                       o3djs.particles.SHADER_STRINGS[0],
-                                       o3djs.particles.SHADER_STRINGS[2]));
-  shaders.push(new o3djs.shader.Shader(gl,
-                                       o3djs.particles.SHADER_STRINGS[1],
-                                       o3djs.particles.SHADER_STRINGS[2]));
+  shaders.push(
+    new o3djs.shader.Shader(
+      gl,
+      o3djs.particles.SHADER_STRINGS[0],
+      o3djs.particles.SHADER_STRINGS[2]
+    )
+  );
+  shaders.push(
+    new o3djs.shader.Shader(
+      gl,
+      o3djs.particles.SHADER_STRINGS[1],
+      o3djs.particles.SHADER_STRINGS[2]
+    )
+  );
 
   var blendFuncs = {};
   blendFuncs[o3djs.particles.ParticleStateIds.BLEND] = {
-    src:  gl.SRC_ALPHA,
-    dest: gl.ONE_MINUS_SRC_ALPHA
+    src: gl.SRC_ALPHA,
+    dest: gl.ONE_MINUS_SRC_ALPHA,
   };
   blendFuncs[o3djs.particles.ParticleStateIds.ADD] = {
-    src:  gl.SRC_ALPHA,
-    dest: gl.ONE
+    src: gl.SRC_ALPHA,
+    dest: gl.ONE,
   };
   blendFuncs[o3djs.particles.ParticleStateIds.BLEND_PREMULTIPLY] = {
-    src:  gl.ONE,
-    dest: gl.ONE_MINUS_SRC_ALPHA
+    src: gl.ONE,
+    dest: gl.ONE_MINUS_SRC_ALPHA,
   };
   blendFuncs[o3djs.particles.ParticleStateIds.BLEND_NO_ALPHA] = {
-    src:  gl.SRC_COLOR,
-    dest: gl.ONE_MINUS_SRC_COLOR
+    src: gl.SRC_COLOR,
+    dest: gl.ONE_MINUS_SRC_COLOR,
   };
   blendFuncs[o3djs.particles.ParticleStateIds.SUBTRACT] = {
-    src:  gl.SRC_ALPHA,
+    src: gl.SRC_ALPHA,
     dest: gl.ONE_MINUS_SRC_ALPHA,
-    eq:   gl.FUNC_REVERSE_SUBTRACT
+    eq: gl.FUNC_REVERSE_SUBTRACT,
   };
   blendFuncs[o3djs.particles.ParticleStateIds.INVERSE] = {
-    src:  gl.ONE_MINUS_DST_COLOR,
-    dest: gl.ONE_MINUS_SRC_COLOR
+    src: gl.ONE_MINUS_DST_COLOR,
+    dest: gl.ONE_MINUS_SRC_COLOR,
   };
   this.blendFuncs_ = blendFuncs;
 
-  var pixelBase = [0, 0.20, 0.70, 1, 0.70, 0.20, 0, 0];
+  var pixelBase = [0, 0.2, 0.7, 1, 0.7, 0.2, 0, 0];
   var pixels = [];
   for (var yy = 0; yy < 8; ++yy) {
     for (var xx = 0; xx < 8; ++xx) {
@@ -320,8 +327,11 @@ o3djs.particles.ParticleSystem = function(gl,
   var colorTexture = this.createTextureFromFloats(8, 8, pixels);
   // Note difference in texture size from O3D sample to avoid NPOT
   // texture creation
-  var rampTexture = this.createTextureFromFloats(2, 1, [1, 1, 1, 1,
-                                                        1, 1, 1, 0]);
+  var rampTexture = this.createTextureFromFloats(
+    2,
+    1,
+    [1, 1, 1, 1, 1, 1, 1, 0]
+  );
 
   this.now_ = new Date();
   this.timeBase_ = new Date();
@@ -331,9 +341,11 @@ o3djs.particles.ParticleSystem = function(gl,
     this.timeSource_ = o3djs.particles.createDefaultClock_(this);
   }
 
-  this.randomFunction_ = opt_randomFunction || function() {
-        return Math.random();
-      };
+  this.randomFunction_ =
+    opt_randomFunction ||
+    function () {
+      return Math.random();
+    };
 
   // This WebGLFloatArray is used to store a single particle's data
   // in the VBO. As of this writing there wasn't a way to store less
@@ -359,19 +371,24 @@ o3djs.particles.ParticleSystem = function(gl,
   this.defaultRampTexture = rampTexture;
 };
 
-o3djs.particles.createDefaultClock_ = function(particleSystem) {
-  return function() {
+o3djs.particles.createDefaultClock_ = function (particleSystem) {
+  return function () {
     var now = particleSystem.now_;
     var base = particleSystem.timeBase_;
     return (now.getTime() - base.getTime()) / 1000.0;
-  }
-}
+  };
+};
 
 /**
  * Creates an OpenGL texture from an array of floating point values.
  * @private
  */
-o3djs.particles.ParticleSystem.prototype.createTextureFromFloats = function(width, height, pixels, opt_texture) {
+o3djs.particles.ParticleSystem.prototype.createTextureFromFloats = function (
+  width,
+  height,
+  pixels,
+  opt_texture
+) {
   var gl = this.gl;
   var texture = null;
   if (opt_texture != null) {
@@ -391,12 +408,22 @@ o3djs.particles.ParticleSystem.prototype.createTextureFromFloats = function(widt
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
   var data = new WebGLUnsignedByteArray(pixels.length);
   for (var i = 0; i < pixels.length; i++) {
-    var t = pixels[i] * 255.;
+    var t = pixels[i] * 255;
     data[i] = t;
   }
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, data);
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    width,
+    height,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    data
+  );
   return texture;
-}
+};
 
 /**
  * A ParticleSpec specifies how to emit particles.
@@ -434,7 +461,7 @@ o3djs.particles.ParticleSystem.prototype.createTextureFromFloats = function(widt
  *
  * @constructor
  */
-o3djs.particles.ParticleSpec = function() {
+o3djs.particles.ParticleSpec = function () {
   /**
    * The number of particles to emit.
    * @type {number}
@@ -624,9 +651,15 @@ o3djs.particles.ParticleSpec = function() {
  *     the emitter.
  * @return {!o3djs.particles.ParticleEmitter} The new emitter.
  */
-o3djs.particles.ParticleSystem.prototype.createParticleEmitter =
-    function(opt_texture, opt_clock) {
-  var emitter = new o3djs.particles.ParticleEmitter(this, opt_texture, opt_clock);
+o3djs.particles.ParticleSystem.prototype.createParticleEmitter = function (
+  opt_texture,
+  opt_clock
+) {
+  var emitter = new o3djs.particles.ParticleEmitter(
+    this,
+    opt_texture,
+    opt_clock
+  );
   this.drawables_.push(emitter);
   return emitter;
 };
@@ -650,19 +683,21 @@ o3djs.particles.ParticleSystem.prototype.createParticleEmitter =
  *     the emitter.
  * @return {!o3djs.particles.Trail} A Trail object.
  */
-o3djs.particles.ParticleSystem.prototype.createTrail = function(
+o3djs.particles.ParticleSystem.prototype.createTrail = function (
+  maxParticles,
+  parameters,
+  opt_texture,
+  opt_perParticleParamSetter,
+  opt_clock
+) {
+  var trail = new o3djs.particles.Trail(
+    this,
     maxParticles,
     parameters,
     opt_texture,
     opt_perParticleParamSetter,
-    opt_clock) {
-  var trail = new o3djs.particles.Trail(
-      this,
-      maxParticles,
-      parameters,
-      opt_texture,
-      opt_perParticleParamSetter,
-      opt_clock);
+    opt_clock
+  );
   this.drawables_.push(trail);
   return trail;
 };
@@ -677,7 +712,11 @@ o3djs.particles.ParticleSystem.prototype.createTrail = function(
  * @param {!Matrix4x4} world The world matrix.
  * @param {!Matrix4x4} viewInverse The viewInverse matrix.
  */
-o3djs.particles.ParticleSystem.prototype.draw = function(viewProjection, world, viewInverse) {
+o3djs.particles.ParticleSystem.prototype.draw = function (
+  viewProjection,
+  world,
+  viewInverse
+) {
   // Update notion of current time
   this.now_ = new Date();
   // Set up global state
@@ -687,12 +726,16 @@ o3djs.particles.ParticleSystem.prototype.draw = function(viewProjection, world, 
   // Set up certain uniforms once per shader per draw.
   var shader = this.shaders[1];
   shader.bind();
-  gl.uniformMatrix4fv(shader.viewProjectionLoc,
-                      false,
-                      o3djs.math.getMatrixElements(viewProjection));
-  gl.uniformMatrix4fv(shader.viewInverseLoc,
-                      false,
-                      o3djs.math.getMatrixElements(viewInverse));
+  gl.uniformMatrix4fv(
+    shader.viewProjectionLoc,
+    false,
+    o3djs.math.getMatrixElements(viewProjection)
+  );
+  gl.uniformMatrix4fv(
+    shader.viewInverseLoc,
+    false,
+    o3djs.math.getMatrixElements(viewInverse)
+  );
   // Draw all emitters
   // FIXME: this is missing O3D's z-sorting logic from the
   // zOrderedDrawList
@@ -726,9 +769,11 @@ o3djs.particles.LAST_IDX = 28;
  A function, returning
  *     seconds elapsed, to be the time source for the emitter.
  */
-o3djs.particles.ParticleEmitter = function(particleSystem,
-                                           opt_texture,
-                                           opt_clock) {
+o3djs.particles.ParticleEmitter = function (
+  particleSystem,
+  opt_texture,
+  opt_clock
+) {
   opt_clock = opt_clock || particleSystem.timeSource_;
 
   this.gl = particleSystem.gl;
@@ -782,7 +827,7 @@ o3djs.particles.ParticleEmitter = function(particleSystem,
  * Sets the world translation for this ParticleEmitter.
  * @param {!o3djs.math.Vector3} translation The translation for this emitter.
  */
-o3djs.particles.ParticleEmitter.prototype.setTranslation = function(x, y, z) {
+o3djs.particles.ParticleEmitter.prototype.setTranslation = function (x, y, z) {
   this.translation_[0] = x;
   this.translation_[1] = y;
   this.translation_[2] = z;
@@ -793,7 +838,7 @@ o3djs.particles.ParticleEmitter.prototype.setTranslation = function(x, y, z) {
  * You can use this to set the emitter to draw with BLEND, ADD, SUBTRACT, etc.
  * @param {ParticleStateIds} stateId The state you want.
  */
-o3djs.particles.ParticleEmitter.prototype.setState = function(stateId) {
+o3djs.particles.ParticleEmitter.prototype.setState = function (stateId) {
   this.blendFunc_ = this.particleSystem.blendFuncs_[stateId];
 };
 
@@ -816,10 +861,10 @@ o3djs.particles.ParticleEmitter.prototype.setState = function(stateId) {
  * @param {!Array.<number>} colorRamp An array of color values in
  *     the form RGBA.
  */
-o3djs.particles.ParticleEmitter.prototype.setColorRamp = function(colorRamp) {
+o3djs.particles.ParticleEmitter.prototype.setColorRamp = function (colorRamp) {
   var width = colorRamp.length / 4;
   if (width % 1 != 0) {
-    throw 'colorRamp must have multiple of 4 entries';
+    throw "colorRamp must have multiple of 4 entries";
   }
 
   var gl = this.gl;
@@ -828,23 +873,29 @@ o3djs.particles.ParticleEmitter.prototype.setColorRamp = function(colorRamp) {
     this.rampTexture_ = null;
   }
 
-  this.rampTexture_ = this.particleSystem.createTextureFromFloats(width, 1, colorRamp, this.rampTexture_);
+  this.rampTexture_ = this.particleSystem.createTextureFromFloats(
+    width,
+    1,
+    colorRamp,
+    this.rampTexture_
+  );
 };
 
 /**
  * Validates and adds missing particle parameters.
  * @param {!o3djs.particles.ParticleSpec} parameters The parameters to validate.
  */
-o3djs.particles.ParticleEmitter.prototype.validateParameters = function(
-    parameters) {
+o3djs.particles.ParticleEmitter.prototype.validateParameters = function (
+  parameters
+) {
   var defaults = new o3djs.particles.ParticleSpec();
   for (var key in parameters) {
-    if (typeof defaults[key] === 'undefined') {
+    if (typeof defaults[key] === "undefined") {
       throw 'unknown particle parameter "' + key + '"';
     }
   }
   for (var key in defaults) {
-    if (typeof parameters[key] === 'undefined') {
+    if (typeof parameters[key] === "undefined") {
       parameters[key] = defaults[key];
     }
   }
@@ -864,11 +915,12 @@ o3djs.particles.ParticleEmitter.prototype.validateParameters = function(
  *     20 this value will be 0 to 19. The ParticleSpec is a spec for this
  *     particular particle. You can set any per particle value before returning.
  */
-o3djs.particles.ParticleEmitter.prototype.createParticles_ = function(
-    firstParticleIndex,
-    numParticles,
-    parameters,
-    opt_perParticleParamSetter) {
+o3djs.particles.ParticleEmitter.prototype.createParticles_ = function (
+  firstParticleIndex,
+  numParticles,
+  parameters,
+  opt_perParticleParamSetter
+) {
   var singleParticleArray = this.particleSystem.singleParticleArray_;
   var gl = this.gl;
 
@@ -877,21 +929,25 @@ o3djs.particles.ParticleEmitter.prototype.createParticles_ = function(
   this.timeRange_ = parameters.timeRange;
   this.numFrames_ = parameters.numFrames;
   this.frameDuration_ = parameters.frameDuration;
-  this.worldVelocity_ = [ parameters.worldVelocity[0],
-                          parameters.worldVelocity[1],
-                          parameters.worldVelocity[2] ];
-  this.worldAcceleration_ = [ parameters.worldAcceleration[0],
-                              parameters.worldAcceleration[1],
-                              parameters.worldAcceleration[2] ];
+  this.worldVelocity_ = [
+    parameters.worldVelocity[0],
+    parameters.worldVelocity[1],
+    parameters.worldVelocity[2],
+  ];
+  this.worldAcceleration_ = [
+    parameters.worldAcceleration[0],
+    parameters.worldAcceleration[1],
+    parameters.worldAcceleration[2],
+  ];
 
   var random = this.particleSystem.randomFunction_;
 
-  var plusMinus = function(range) {
+  var plusMinus = function (range) {
     return (random() - 0.5) * range * 2;
   };
 
   // TODO: change to not allocate.
-  var plusMinusVector = function(range) {
+  var plusMinusVector = function (range) {
     var v = [];
     for (var ii = 0; ii < range.length; ++ii) {
       v.push(plusMinus(range[ii]));
@@ -906,25 +962,34 @@ o3djs.particles.ParticleEmitter.prototype.createParticles_ = function(
       opt_perParticleParamSetter(ii, parameters);
     }
     var pLifeTime = parameters.lifeTime;
-    var pStartTime = (parameters.startTime === null) ?
-        (ii * parameters.lifeTime / numParticles) : parameters.startTime;
+    var pStartTime =
+      parameters.startTime === null
+        ? (ii * parameters.lifeTime) / numParticles
+        : parameters.startTime;
     var pFrameStart =
-        parameters.frameStart + plusMinus(parameters.frameStartRange);
+      parameters.frameStart + plusMinus(parameters.frameStartRange);
     var pPosition = o3djs.math.addVector(
-        parameters.position, plusMinusVector(parameters.positionRange));
+      parameters.position,
+      plusMinusVector(parameters.positionRange)
+    );
     var pVelocity = o3djs.math.addVector(
-        parameters.velocity, plusMinusVector(parameters.velocityRange));
+      parameters.velocity,
+      plusMinusVector(parameters.velocityRange)
+    );
     var pAcceleration = o3djs.math.addVector(
-        parameters.acceleration,
-        plusMinusVector(parameters.accelerationRange));
+      parameters.acceleration,
+      plusMinusVector(parameters.accelerationRange)
+    );
     var pColorMult = o3djs.math.addVector(
-        parameters.colorMult, plusMinusVector(parameters.colorMultRange));
+      parameters.colorMult,
+      plusMinusVector(parameters.colorMultRange)
+    );
     var pSpinStart =
-        parameters.spinStart + plusMinus(parameters.spinStartRange);
+      parameters.spinStart + plusMinus(parameters.spinStartRange);
     var pSpinSpeed =
-        parameters.spinSpeed + plusMinus(parameters.spinSpeedRange);
+      parameters.spinSpeed + plusMinus(parameters.spinSpeedRange);
     var pStartSize =
-        parameters.startSize + plusMinus(parameters.startSizeRange);
+      parameters.startSize + plusMinus(parameters.startSizeRange);
     var pEndSize = parameters.endSize + plusMinus(parameters.endSizeRange);
     var pOrientation = parameters.orientation;
 
@@ -935,47 +1000,83 @@ o3djs.particles.ParticleEmitter.prototype.createParticles_ = function(
       var offset2 = offset0 + 2;
       var offset3 = offset0 + 3;
 
-      singleParticleArray[o3djs.particles.UV_LIFE_TIME_FRAME_START_IDX + offset0] = o3djs.particles.CORNERS_[jj][0];
-      singleParticleArray[o3djs.particles.UV_LIFE_TIME_FRAME_START_IDX + offset1] = o3djs.particles.CORNERS_[jj][1];
-      singleParticleArray[o3djs.particles.UV_LIFE_TIME_FRAME_START_IDX + offset2] = pLifeTime;
-      singleParticleArray[o3djs.particles.UV_LIFE_TIME_FRAME_START_IDX + offset3] = pFrameStart;
+      singleParticleArray[
+        o3djs.particles.UV_LIFE_TIME_FRAME_START_IDX + offset0
+      ] = o3djs.particles.CORNERS_[jj][0];
+      singleParticleArray[
+        o3djs.particles.UV_LIFE_TIME_FRAME_START_IDX + offset1
+      ] = o3djs.particles.CORNERS_[jj][1];
+      singleParticleArray[
+        o3djs.particles.UV_LIFE_TIME_FRAME_START_IDX + offset2
+      ] = pLifeTime;
+      singleParticleArray[
+        o3djs.particles.UV_LIFE_TIME_FRAME_START_IDX + offset3
+      ] = pFrameStart;
 
-      singleParticleArray[o3djs.particles.POSITION_START_TIME_IDX + offset0] = pPosition[0];
-      singleParticleArray[o3djs.particles.POSITION_START_TIME_IDX + offset1] = pPosition[1];
-      singleParticleArray[o3djs.particles.POSITION_START_TIME_IDX + offset2] = pPosition[2];
-      singleParticleArray[o3djs.particles.POSITION_START_TIME_IDX + offset3] = pStartTime;
+      singleParticleArray[o3djs.particles.POSITION_START_TIME_IDX + offset0] =
+        pPosition[0];
+      singleParticleArray[o3djs.particles.POSITION_START_TIME_IDX + offset1] =
+        pPosition[1];
+      singleParticleArray[o3djs.particles.POSITION_START_TIME_IDX + offset2] =
+        pPosition[2];
+      singleParticleArray[o3djs.particles.POSITION_START_TIME_IDX + offset3] =
+        pStartTime;
 
-      singleParticleArray[o3djs.particles.VELOCITY_START_SIZE_IDX + offset0] = pVelocity[0];
-      singleParticleArray[o3djs.particles.VELOCITY_START_SIZE_IDX + offset1] = pVelocity[1];
-      singleParticleArray[o3djs.particles.VELOCITY_START_SIZE_IDX + offset2] = pVelocity[2];
-      singleParticleArray[o3djs.particles.VELOCITY_START_SIZE_IDX + offset3] = pStartSize;
+      singleParticleArray[o3djs.particles.VELOCITY_START_SIZE_IDX + offset0] =
+        pVelocity[0];
+      singleParticleArray[o3djs.particles.VELOCITY_START_SIZE_IDX + offset1] =
+        pVelocity[1];
+      singleParticleArray[o3djs.particles.VELOCITY_START_SIZE_IDX + offset2] =
+        pVelocity[2];
+      singleParticleArray[o3djs.particles.VELOCITY_START_SIZE_IDX + offset3] =
+        pStartSize;
 
-      singleParticleArray[o3djs.particles.ACCELERATION_END_SIZE_IDX + offset0] = pAcceleration[0];
-      singleParticleArray[o3djs.particles.ACCELERATION_END_SIZE_IDX + offset1] = pAcceleration[1];
-      singleParticleArray[o3djs.particles.ACCELERATION_END_SIZE_IDX + offset2] = pAcceleration[2];
-      singleParticleArray[o3djs.particles.ACCELERATION_END_SIZE_IDX + offset3] = pEndSize;
+      singleParticleArray[o3djs.particles.ACCELERATION_END_SIZE_IDX + offset0] =
+        pAcceleration[0];
+      singleParticleArray[o3djs.particles.ACCELERATION_END_SIZE_IDX + offset1] =
+        pAcceleration[1];
+      singleParticleArray[o3djs.particles.ACCELERATION_END_SIZE_IDX + offset2] =
+        pAcceleration[2];
+      singleParticleArray[o3djs.particles.ACCELERATION_END_SIZE_IDX + offset3] =
+        pEndSize;
 
-      singleParticleArray[o3djs.particles.SPIN_START_SPIN_SPEED_IDX + offset0] = pSpinStart;
-      singleParticleArray[o3djs.particles.SPIN_START_SPIN_SPEED_IDX + offset1] = pSpinSpeed;
-      singleParticleArray[o3djs.particles.SPIN_START_SPIN_SPEED_IDX + offset2] = 0;
-      singleParticleArray[o3djs.particles.SPIN_START_SPIN_SPEED_IDX + offset3] = 0;
+      singleParticleArray[o3djs.particles.SPIN_START_SPIN_SPEED_IDX + offset0] =
+        pSpinStart;
+      singleParticleArray[o3djs.particles.SPIN_START_SPIN_SPEED_IDX + offset1] =
+        pSpinSpeed;
+      singleParticleArray[
+        o3djs.particles.SPIN_START_SPIN_SPEED_IDX + offset2
+      ] = 0;
+      singleParticleArray[
+        o3djs.particles.SPIN_START_SPIN_SPEED_IDX + offset3
+      ] = 0;
 
-      singleParticleArray[o3djs.particles.ORIENTATION_IDX + offset0] = pOrientation[0];
-      singleParticleArray[o3djs.particles.ORIENTATION_IDX + offset1] = pOrientation[1];
-      singleParticleArray[o3djs.particles.ORIENTATION_IDX + offset2] = pOrientation[2];
-      singleParticleArray[o3djs.particles.ORIENTATION_IDX + offset3] = pOrientation[3];
+      singleParticleArray[o3djs.particles.ORIENTATION_IDX + offset0] =
+        pOrientation[0];
+      singleParticleArray[o3djs.particles.ORIENTATION_IDX + offset1] =
+        pOrientation[1];
+      singleParticleArray[o3djs.particles.ORIENTATION_IDX + offset2] =
+        pOrientation[2];
+      singleParticleArray[o3djs.particles.ORIENTATION_IDX + offset3] =
+        pOrientation[3];
 
-      singleParticleArray[o3djs.particles.COLOR_MULT_IDX + offset0] = pColorMult[0];
-      singleParticleArray[o3djs.particles.COLOR_MULT_IDX + offset1] = pColorMult[1];
-      singleParticleArray[o3djs.particles.COLOR_MULT_IDX + offset2] = pColorMult[2];
-      singleParticleArray[o3djs.particles.COLOR_MULT_IDX + offset3] = pColorMult[3];
+      singleParticleArray[o3djs.particles.COLOR_MULT_IDX + offset0] =
+        pColorMult[0];
+      singleParticleArray[o3djs.particles.COLOR_MULT_IDX + offset1] =
+        pColorMult[1];
+      singleParticleArray[o3djs.particles.COLOR_MULT_IDX + offset2] =
+        pColorMult[2];
+      singleParticleArray[o3djs.particles.COLOR_MULT_IDX + offset3] =
+        pColorMult[3];
     }
 
     // Upload this particle's information into the VBO.
     // FIXME: probably want to make fewer bufferSubData calls
-    gl.bufferSubData(gl.ARRAY_BUFFER,
-                       singleParticleArray.byteLength * (ii + firstParticleIndex),
-                       singleParticleArray);
+    gl.bufferSubData(
+      gl.ARRAY_BUFFER,
+      singleParticleArray.byteLength * (ii + firstParticleIndex),
+      singleParticleArray
+    );
   }
 
   this.createdParticles_ = true;
@@ -986,15 +1087,18 @@ o3djs.particles.ParticleEmitter.prototype.createParticles_ = function(
  * @private
  * @param {number} numParticles Number of particles to allocate.
  */
-o3djs.particles.ParticleEmitter.prototype.allocateParticles_ = function(
-    numParticles) {
+o3djs.particles.ParticleEmitter.prototype.allocateParticles_ = function (
+  numParticles
+) {
   if (this.numParticles_ != numParticles) {
     var gl = this.gl;
     gl.bindBuffer(gl.ARRAY_BUFFER, this.particleBuffer_);
     // FIXME: (numParticles + 1) is a workaround for https://bugs.webkit.org/show_bug.cgi?id=31891
-    gl.bufferData(gl.ARRAY_BUFFER,
-                  (numParticles + 1) * this.particleSystem.singleParticleArray_.byteLength,
-                  gl.DYNAMIC_DRAW);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      (numParticles + 1) * this.particleSystem.singleParticleArray_.byteLength,
+      gl.DYNAMIC_DRAW
+    );
     // TODO(kbr): assumption of <= 65536 particles
     var indices = new WebGLUnsignedShortArray(6 * numParticles);
     var idx = 0;
@@ -1008,11 +1112,8 @@ o3djs.particles.ParticleEmitter.prototype.allocateParticles_ = function(
       indices[idx++] = startIndex + 2;
       indices[idx++] = startIndex + 3;
     }
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,
-                    this.indexBuffer_);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,
-                    indices,
-                    gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer_);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
     this.numParticles_ = numParticles;
   }
 };
@@ -1044,22 +1145,28 @@ o3djs.particles.ParticleEmitter.prototype.allocateParticles_ = function(
  *     20 this value will be 0 to 19. The ParticleSpec is a spec for this
  *     particular particle. You can set any per particle value before returning.
  */
-o3djs.particles.ParticleEmitter.prototype.setParameters = function(
-    parameters,
-    opt_perParticleParamSetter) {
+o3djs.particles.ParticleEmitter.prototype.setParameters = function (
+  parameters,
+  opt_perParticleParamSetter
+) {
   this.validateParameters(parameters);
 
   var numParticles = parameters.numParticles;
 
   this.allocateParticles_(numParticles);
   this.createParticles_(
-      0,
-      numParticles,
-      parameters,
-      opt_perParticleParamSetter);
+    0,
+    numParticles,
+    parameters,
+    opt_perParticleParamSetter
+  );
 };
 
-o3djs.particles.ParticleEmitter.prototype.draw = function(world, viewProjection, timeOffset) {
+o3djs.particles.ParticleEmitter.prototype.draw = function (
+  world,
+  viewProjection,
+  timeOffset
+) {
   if (!this.createdParticles_) {
     return;
   }
@@ -1080,24 +1187,35 @@ o3djs.particles.ParticleEmitter.prototype.draw = function(world, viewProjection,
   shader.bind();
   var tmpWorld = o3djs.math.matrix4.copy(world);
   o3djs.math.matrix4.translate(tmpWorld, this.translation_);
-  gl.uniformMatrix4fv(shader.worldLoc,
-                      false,
-                      o3djs.math.getMatrixElements(tmpWorld));
+  gl.uniformMatrix4fv(
+    shader.worldLoc,
+    false,
+    o3djs.math.getMatrixElements(tmpWorld)
+  );
   if (!this.billboard_) {
-    var worldViewProjection = o3djs.math.mulMatrixMatrix4(tmpWorld, viewProjection);
-    gl.uniformMatrix4fv(shader.worldViewProjectionLoc,
-                        false,
-                        o3djs.math.getMatrixElements(worldViewProjection));
+    var worldViewProjection = o3djs.math.mulMatrixMatrix4(
+      tmpWorld,
+      viewProjection
+    );
+    gl.uniformMatrix4fv(
+      shader.worldViewProjectionLoc,
+      false,
+      o3djs.math.getMatrixElements(worldViewProjection)
+    );
   }
 
-  gl.uniform3f(shader.worldVelocityLoc,
-               this.worldVelocity_[0],
-               this.worldVelocity_[1],
-               this.worldVelocity_[2]);
-  gl.uniform3f(shader.worldAccelerationLoc,
-               this.worldAcceleration_[0],
-               this.worldAcceleration_[1],
-               this.worldAcceleration_[2]);
+  gl.uniform3f(
+    shader.worldVelocityLoc,
+    this.worldVelocity_[0],
+    this.worldVelocity_[1],
+    this.worldVelocity_[2]
+  );
+  gl.uniform3f(
+    shader.worldAccelerationLoc,
+    this.worldAcceleration_[0],
+    this.worldAcceleration_[1],
+    this.worldAcceleration_[2]
+  );
   gl.uniform1f(shader.timeRangeLoc, this.timeRange_);
   gl.uniform1f(shader.numFramesLoc, this.numFrames_);
   gl.uniform1f(shader.frameDurationLoc, this.frameDuration_);
@@ -1116,40 +1234,81 @@ o3djs.particles.ParticleEmitter.prototype.draw = function(world, viewProjection,
   gl.bindTexture(gl.TEXTURE_2D, this.colorTexture_);
   gl.uniform1i(shader.colorSamplerLoc, 1);
   gl.activeTexture(gl.TEXTURE0);
-  
+
   // Set up vertex attributes
   var sizeofFloat = gl.sizeInBytes(gl.FLOAT);
   var stride = sizeofFloat * o3djs.particles.LAST_IDX;
   gl.bindBuffer(gl.ARRAY_BUFFER, this.particleBuffer_);
-  gl.vertexAttribPointer(shader.uvLifeTimeFrameStartLoc, 4, gl.FLOAT, false, stride,
-                         sizeofFloat * o3djs.particles.UV_LIFE_TIME_FRAME_START_IDX);
+  gl.vertexAttribPointer(
+    shader.uvLifeTimeFrameStartLoc,
+    4,
+    gl.FLOAT,
+    false,
+    stride,
+    sizeofFloat * o3djs.particles.UV_LIFE_TIME_FRAME_START_IDX
+  );
   gl.enableVertexAttribArray(shader.uvLifeTimeFrameStartLoc);
-  gl.vertexAttribPointer(shader.positionStartTimeLoc, 4, gl.FLOAT, false, stride,
-                         sizeofFloat * o3djs.particles.POSITION_START_TIME_IDX);
+  gl.vertexAttribPointer(
+    shader.positionStartTimeLoc,
+    4,
+    gl.FLOAT,
+    false,
+    stride,
+    sizeofFloat * o3djs.particles.POSITION_START_TIME_IDX
+  );
   gl.enableVertexAttribArray(shader.positionStartTimeLoc);
-  gl.vertexAttribPointer(shader.velocityStartSizeLoc, 4, gl.FLOAT, false, stride,
-                         sizeofFloat * o3djs.particles.VELOCITY_START_SIZE_IDX);
+  gl.vertexAttribPointer(
+    shader.velocityStartSizeLoc,
+    4,
+    gl.FLOAT,
+    false,
+    stride,
+    sizeofFloat * o3djs.particles.VELOCITY_START_SIZE_IDX
+  );
   gl.enableVertexAttribArray(shader.velocityStartSizeLoc);
-  gl.vertexAttribPointer(shader.accelerationEndSizeLoc, 4, gl.FLOAT, false, stride,
-                         sizeofFloat * o3djs.particles.ACCELERATION_END_SIZE_IDX);
+  gl.vertexAttribPointer(
+    shader.accelerationEndSizeLoc,
+    4,
+    gl.FLOAT,
+    false,
+    stride,
+    sizeofFloat * o3djs.particles.ACCELERATION_END_SIZE_IDX
+  );
   gl.enableVertexAttribArray(shader.accelerationEndSizeLoc);
-  gl.vertexAttribPointer(shader.spinStartSpinSpeedLoc, 4, gl.FLOAT, false, stride,
-                         sizeofFloat * o3djs.particles.SPIN_START_SPIN_SPEED_IDX);
+  gl.vertexAttribPointer(
+    shader.spinStartSpinSpeedLoc,
+    4,
+    gl.FLOAT,
+    false,
+    stride,
+    sizeofFloat * o3djs.particles.SPIN_START_SPIN_SPEED_IDX
+  );
   gl.enableVertexAttribArray(shader.spinStartSpinSpeedLoc);
   // Only for non-billboarded, i.e., 3D, particles
   if (shader.orientationLoc != undefined) {
-    gl.vertexAttribPointer(shader.orientationLoc, 4, gl.FLOAT, false, stride,
-                           sizeofFloat * o3djs.particles.ORIENTATION_IDX);
+    gl.vertexAttribPointer(
+      shader.orientationLoc,
+      4,
+      gl.FLOAT,
+      false,
+      stride,
+      sizeofFloat * o3djs.particles.ORIENTATION_IDX
+    );
     gl.enableVertexAttribArray(shader.orientationLoc);
   }
   // NOTE: comment out the next two calls if using debug shader which
   // only outputs red.
-  gl.vertexAttribPointer(shader.colorMultLoc, 4, gl.FLOAT, false, stride,
-                         sizeofFloat * o3djs.particles.COLOR_MULT_IDX);
+  gl.vertexAttribPointer(
+    shader.colorMultLoc,
+    4,
+    gl.FLOAT,
+    false,
+    stride,
+    sizeofFloat * o3djs.particles.COLOR_MULT_IDX
+  );
   gl.enableVertexAttribArray(shader.colorMultLoc);
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer_);
-  gl.drawElements(gl.TRIANGLES, this.numParticles_ * 6, 
-                  gl.UNSIGNED_SHORT, 0);
+  gl.drawElements(gl.TRIANGLES, this.numParticles_ * 6, gl.UNSIGNED_SHORT, 0);
 
   gl.disableVertexAttribArray(shader.uvLifeTimeFrameStartLoc);
   gl.disableVertexAttribArray(shader.positionStartTimeLoc);
@@ -1168,7 +1327,7 @@ o3djs.particles.ParticleEmitter.prototype.draw = function(world, viewProjection,
  * You can use this for dust puffs, explosions, fireworks, etc...
  * @return {!o3djs.particles.OneShot} A OneShot object.
  */
-o3djs.particles.ParticleEmitter.prototype.createOneShot = function() {
+o3djs.particles.ParticleEmitter.prototype.createOneShot = function () {
   return new o3djs.particles.OneShot(this);
 };
 
@@ -1184,7 +1343,7 @@ o3djs.particles.ParticleEmitter.prototype.createOneShot = function() {
  *     one shot.
  * @param {!o3d.Transform} opt_parent The parent for this one shot.
  */
-o3djs.particles.OneShot = function(emitter) {
+o3djs.particles.OneShot = function (emitter) {
   this.emitter_ = emitter;
 
   /**
@@ -1214,7 +1373,7 @@ o3djs.particles.OneShot = function(emitter) {
  * @param {!o3djs.math.Vector3} opt_position The position of the one shot
  *     relative to its parent.
  */
-o3djs.particles.OneShot.prototype.trigger = function(opt_position) {
+o3djs.particles.OneShot.prototype.trigger = function (opt_position) {
   if (opt_position) {
     this.translation_[0] = opt_position[0];
     this.translation_[1] = opt_position[1];
@@ -1229,12 +1388,18 @@ o3djs.particles.OneShot.prototype.trigger = function(opt_position) {
  *
  * @private
  */
-o3djs.particles.OneShot.prototype.draw = function(world, viewProjection, timeOffset) {
+o3djs.particles.OneShot.prototype.draw = function (
+  world,
+  viewProjection,
+  timeOffset
+) {
   if (this.visible_) {
     var tmpWorld = null;
-    if (this.translation_[0] == 0 &&
-        this.translation_[1] == 0 &&
-        this.translation_[2] == 0) {
+    if (
+      this.translation_[0] == 0 &&
+      this.translation_[1] == 0 &&
+      this.translation_[2] == 0
+    ) {
       tmpWorld = world;
     } else {
       tmpWorld = o3djs.math.copyMatrix(world);
@@ -1265,15 +1430,20 @@ o3djs.particles.OneShot.prototype.draw = function(world, viewProjection, timeOff
  * @param {!function(): number} opt_clock A function to be the clock for
  *     the emitter.
  */
-o3djs.particles.Trail = function(
-    particleSystem,
-    maxParticles,
-    parameters,
-    opt_texture,
-    opt_perParticleParamSetter,
-    opt_clock) {
+o3djs.particles.Trail = function (
+  particleSystem,
+  maxParticles,
+  parameters,
+  opt_texture,
+  opt_perParticleParamSetter,
+  opt_clock
+) {
   o3djs.particles.ParticleEmitter.call(
-      this, particleSystem, opt_texture, opt_clock);
+    this,
+    particleSystem,
+    opt_texture,
+    opt_clock
+  );
 
   this.allocateParticles_(maxParticles);
   this.validateParameters(parameters);
@@ -1290,22 +1460,26 @@ o3djs.base.inherit(o3djs.particles.Trail, o3djs.particles.ParticleEmitter);
  * Births particles from this Trail.
  * @param {!o3djs.math.Vector3} position Position to birth particles at.
  */
-o3djs.particles.Trail.prototype.birthParticles = function(position) {
+o3djs.particles.Trail.prototype.birthParticles = function (position) {
   var numParticles = this.parameters.numParticles;
   this.parameters.startTime = this.timeSource_();
   this.parameters.position = position;
   while (this.birthIndex_ + numParticles >= this.maxParticles_) {
     var numParticlesToEnd = this.maxParticles_ - this.birthIndex_;
-    this.createParticles_(this.birthIndex_,
-                          numParticlesToEnd,
-                          this.parameters,
-                          this.perParticleParamSetter);
+    this.createParticles_(
+      this.birthIndex_,
+      numParticlesToEnd,
+      this.parameters,
+      this.perParticleParamSetter
+    );
     numParticles -= numParticlesToEnd;
     this.birthIndex_ = 0;
   }
-  this.createParticles_(this.birthIndex_,
-                        numParticles,
-                        this.parameters,
-                        this.perParticleParamSetter);
+  this.createParticles_(
+    this.birthIndex_,
+    numParticles,
+    this.parameters,
+    this.perParticleParamSetter
+  );
   this.birthIndex_ += numParticles;
 };

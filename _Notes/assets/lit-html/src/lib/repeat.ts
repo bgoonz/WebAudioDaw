@@ -12,7 +12,13 @@
  * http://polymer.github.io/PATENTS.txt
  */
 
-import {directive, DirectiveFn, NodePart, removeNodes, reparentNodes} from '../lit-html.js';
+import {
+  directive,
+  DirectiveFn,
+  NodePart,
+  removeNodes,
+  reparentNodes,
+} from "../lit-html.js";
 
 export type KeyFn<T> = (item: T) => any;
 export type ItemTemplate<T> = (item: T, index: number) => any;
@@ -26,12 +32,19 @@ function cleanMap(part: NodePart, key: any, map: Map<any, NodePart>) {
 }
 
 export function repeat<T>(
-    items: T[], keyFn: KeyFn<T>, template: ItemTemplate<T>): DirectiveFn<NodePart>;
-export function repeat<T>(items: T[], template: ItemTemplate<T>): DirectiveFn<NodePart>;
+  items: T[],
+  keyFn: KeyFn<T>,
+  template: ItemTemplate<T>
+): DirectiveFn<NodePart>;
 export function repeat<T>(
-    items: Iterable<T>,
-    keyFnOrTemplate: KeyFn<T>| ItemTemplate<T>,
-    template?: ItemTemplate<T>): DirectiveFn<NodePart> {
+  items: T[],
+  template: ItemTemplate<T>
+): DirectiveFn<NodePart>;
+export function repeat<T>(
+  items: Iterable<T>,
+  keyFnOrTemplate: KeyFn<T> | ItemTemplate<T>,
+  template?: ItemTemplate<T>
+): DirectiveFn<NodePart> {
   let keyFn: KeyFn<T>;
   if (arguments.length === 2) {
     template = keyFnOrTemplate;
@@ -45,8 +58,10 @@ export function repeat<T>(
       keyMap = new Map();
       keyMapCache.set(part, keyMap);
     }
-    const container = part.startNode.parentNode as HTMLElement | ShadowRoot |
-        DocumentFragment;
+    const container = part.startNode.parentNode as
+      | HTMLElement
+      | ShadowRoot
+      | DocumentFragment;
     let index = -1;
     let currentMarker = part.startNode.nextSibling!;
 
@@ -55,7 +70,7 @@ export function repeat<T>(
       let key;
       try {
         ++index;
-        result = template !(item, index);
+        result = template!(item, index);
         key = keyFn ? keyFn(item) : index;
       } catch (e) {
         console.error(e);
@@ -65,8 +80,8 @@ export function repeat<T>(
       // Try to reuse a part
       let itemPart = keyMap.get(key);
       if (itemPart === undefined) {
-        const marker = document.createTextNode('');
-        const endNode = document.createTextNode('');
+        const marker = document.createTextNode("");
+        const endNode = document.createTextNode("");
         container.insertBefore(marker, currentMarker);
         container.insertBefore(endNode, currentMarker);
         itemPart = new NodePart(part.instance, marker, endNode);

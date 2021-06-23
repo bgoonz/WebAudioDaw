@@ -1,8 +1,7 @@
-let kBox2DCanvasElement = document.getElementById('canvas');
+let kBox2DCanvasElement = document.getElementById("canvas");
 let kWorldWidth = kBox2DCanvasElement.clientWidth; // 500
 let kWorldHeight = kBox2DCanvasElement.clientHeight; // 300
 let kWorldWallWidth = 5;
-
 
 /**
  * [createWorld description]
@@ -16,13 +15,22 @@ function createWorld() {
   let doSleep = true;
   let world = new b2World(worldAABB, gravity, doSleep);
   createGround(world);
-  createBox(world, kWorldWallWidth, 0.5 * kWorldWidth, 
-            kWorldWallWidth, 0.5 * kWorldWidth);
-  createBox(world, kWorldWidth - kWorldWallWidth, 0.5 * kWorldWidth, 
-            kWorldWallWidth, 0.5 * kWorldWidth);
+  createBox(
+    world,
+    kWorldWallWidth,
+    0.5 * kWorldWidth,
+    kWorldWallWidth,
+    0.5 * kWorldWidth
+  );
+  createBox(
+    world,
+    kWorldWidth - kWorldWallWidth,
+    0.5 * kWorldWidth,
+    kWorldWallWidth,
+    0.5 * kWorldWidth
+  );
   return world;
 }
-
 
 /**
  * [createGround description]
@@ -36,9 +44,8 @@ function createGround(world) {
   let groundBd = new b2BodyDef();
   groundBd.AddShape(groundSd);
   groundBd.position.Set(0, 340);
-  return world.CreateBody(groundBd)
+  return world.CreateBody(groundBd);
 }
-
 
 /**
  * [createBall description]
@@ -55,10 +62,9 @@ function createBall(world, x, y) {
   ballSd.friction = 0;
   let ballBd = new b2BodyDef();
   ballBd.AddShape(ballSd);
-  ballBd.position.Set(x,y);
+  ballBd.position.Set(x, y);
   return world.CreateBody(ballBd);
 }
-
 
 /**
  * [createBox description]
@@ -71,16 +77,15 @@ function createBall(world, x, y) {
  * @return {[type]}        [description]
  */
 function createBox(world, x, y, width, height, fixed) {
-  if (typeof(fixed) == 'undefined') fixed = true;
+  if (typeof fixed == "undefined") fixed = true;
   let boxSd = new b2BoxDef();
   if (!fixed) boxSd.density = 1.0;
   boxSd.extents.Set(width, height);
   let boxBd = new b2BodyDef();
   boxBd.AddShape(boxSd);
-  boxBd.position.Set(x,y);
-  return world.CreateBody(boxBd)
+  boxBd.position.Set(x, y);
+  return world.CreateBody(boxBd);
 }
-
 
 /**
  * [demos description]

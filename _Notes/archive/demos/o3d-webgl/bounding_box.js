@@ -29,15 +29,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * Creates BoundingBox from minExtent and maxExtent
  * @param {!o3d.math.Point3} opt_minExtent optional minimum extent of the box.
  * @param {!o3d.math.Point3} opt_maxExtent optional maximum extent of the box.
  * @constructor
  */
-o3d.BoundingBox =
-    function(opt_minExtent, opt_maxExtent) {
+o3d.BoundingBox = function (opt_minExtent, opt_maxExtent) {
   o3d.ParamObject.call(this);
   if (!opt_minExtent) {
     opt_minExtent = [0, 0, 0];
@@ -48,14 +46,13 @@ o3d.BoundingBox =
   this.minExtent = [opt_minExtent[0], opt_minExtent[1], opt_minExtent[2]];
   this.maxExtent = [opt_maxExtent[0], opt_maxExtent[1], opt_maxExtent[2]];
 };
-o3d.inherit('BoundingBox', 'ParamObject');
-
+o3d.inherit("BoundingBox", "ParamObject");
 
 /**
  * Computes a list of 8 3-dimensional vectors for the corners of the box.
  * @return {!Array.<Array<numbers>>} The list of corners.
  */
-o3d.BoundingBox.prototype.corners_ = function() {
+o3d.BoundingBox.prototype.corners_ = function () {
   var result = [];
   var m = [this.minExtent, this.maxExtent];
   for (var i = 0; i < 2; ++i) {
@@ -69,7 +66,6 @@ o3d.BoundingBox.prototype.corners_ = function() {
   return result;
 };
 
-
 /**
  * Computes the smallest bounding box containing all the points in the given
  * list, and either modifies the optional box passed in to match, or returns
@@ -79,7 +75,7 @@ o3d.BoundingBox.prototype.corners_ = function() {
  *     returning a new box.
  * @private
  */
-o3d.BoundingBox.fitBoxToPoints_ = function(points, opt_targetBox) {
+o3d.BoundingBox.fitBoxToPoints_ = function (points, opt_targetBox) {
   var target = opt_targetBox || new o3d.BoundingBox();
   for (var index = 0; index < 3; ++index) {
     target.maxExtent[index] = target.minExtent[index] = points[0][index];
@@ -92,13 +88,11 @@ o3d.BoundingBox.fitBoxToPoints_ = function(points, opt_targetBox) {
   return target;
 };
 
-
 /**
  * True if this boundingbox has been initialized.
  * @type {boolean}
  */
 o3d.BoundingBox.prototype.valid = false;
-
 
 /**
  * The min extent of the box.
@@ -106,13 +100,11 @@ o3d.BoundingBox.prototype.valid = false;
  */
 o3d.BoundingBox.prototype.minExtent = [0, 0, 0];
 
-
 /**
  * The max extent of the box.
  * @type {!o3d.math.Point3}
  */
 o3d.BoundingBox.prototype.maxExtent = [0, 0, 0];
-
 
 /**
  * Multiplies the bounding box by the given matrix returning a new bounding
@@ -120,8 +112,7 @@ o3d.BoundingBox.prototype.maxExtent = [0, 0, 0];
  * @param {!o3d.math.Matrix4} matrix The matrix to multiply by.
  * @return {!o3d.BoundingBox}  The new bounding box.
  */
-o3d.BoundingBox.prototype.mul =
-    function(matrix) {
+o3d.BoundingBox.prototype.mul = function (matrix) {
   var corners = this.corners_();
   var new_corners = [];
 
@@ -132,24 +123,26 @@ o3d.BoundingBox.prototype.mul =
   return o3d.BoundingBox.fitBoxToPoints_(new_corners);
 };
 
-
 /**
  * Adds a bounding box to this bounding box returning a bounding box that
  * encompases both.
  * @param {!o3d.BoundingBox} box BoundingBox to add to this BoundingBox.
  * @return {!o3d.BoundingBox}  The new bounding box.
  */
-o3d.BoundingBox.prototype.add =
-    function(box) {
+o3d.BoundingBox.prototype.add = function (box) {
   return new o3d.BoundingBox(
-    [Math.min(box.minExtent[0], this.minExtent[0]),
-     Math.min(box.minExtent[1], this.minExtent[1]),
-     Math.min(box.minExtent[2], this.minExtent[2])],
-    [Math.max(box.maxExtent[0], this.maxExtent[0]),
-     Math.max(box.maxExtent[1], this.maxExtent[1]),
-     Math.max(box.maxExtent[2], this.maxExtent[2])]);
+    [
+      Math.min(box.minExtent[0], this.minExtent[0]),
+      Math.min(box.minExtent[1], this.minExtent[1]),
+      Math.min(box.minExtent[2], this.minExtent[2]),
+    ],
+    [
+      Math.max(box.maxExtent[0], this.maxExtent[0]),
+      Math.max(box.maxExtent[1], this.maxExtent[1]),
+      Math.max(box.maxExtent[2], this.maxExtent[2]),
+    ]
+  );
 };
-
 
 /**
  * Checks if a ray defined in same coordinate system as this box intersects
@@ -163,13 +156,12 @@ o3d.BoundingBox.prototype.add =
  *     intersected the box and result.position is the exact point of
  *     intersection.
  */
-o3d.BoundingBox.prototype.intersectRay =
-    function(start, end) {
-  var result = new RayIntersectionInfo;
+o3d.BoundingBox.prototype.intersectRay = function (start, end) {
+  var result = new RayIntersectionInfo();
 
   if (this.valid) {
     result.valid = true;
-    result.intersected = true;  // True until proven false.
+    result.intersected = true; // True until proven false.
 
     var kNumberOfDimensions = 3;
     var kRight = 0;
@@ -187,7 +179,7 @@ o3d.BoundingBox.prototype.intersectRay =
     for (var i = 0; i < kNumberOfDimensions; ++i) {
       quadrant.push(0.0);
       max_t.push(0.0);
-      candidate_plane.push(0,0);
+      candidate_plane.push(0, 0);
     }
 
     var which_plane;
@@ -199,18 +191,18 @@ o3d.BoundingBox.prototype.intersectRay =
         quadrant[i] = kLeft;
         candidate_plane[i] = min_extent_[i];
         inside = false;
-      } else if (start[i] >  max_extent_[i]) {
+      } else if (start[i] > max_extent_[i]) {
         quadrant[i] = kRight;
-        candidate_plane[i] =  max_extent_[i];
+        candidate_plane[i] = max_extent_[i];
         inside = false;
-      } else  {
+      } else {
         quadrant[i] = kMiddle;
       }
     }
 
     // Ray origin inside bounding box.
     if (inside) {
-       result.position = start;
+      result.position = start;
       result.inside = true;
     } else {
       // Calculate T distances to candidate planes.
@@ -255,7 +247,6 @@ o3d.BoundingBox.prototype.intersectRay =
   return result;
 };
 
-
 /**
  * Returns true if the bounding box is inside the frustum matrix.
  * It checks all 8 corners of the bounding box against the 6 frustum planes
@@ -269,25 +260,23 @@ o3d.BoundingBox.prototype.intersectRay =
  *     local space to view frustum space.
  * @return {boolean} True if the box is in the frustum.
  */
-o3d.BoundingBox.prototype.inFrustum =
-    function(matrix) {
+o3d.BoundingBox.prototype.inFrustum = function (matrix) {
   var corners = this.corners_();
   var bb_test = 0x3f;
   for (var i = 0; i < corners.length; ++i) {
     var corner = corners[i];
     var p = o3d.Transform.transformPoint(matrix, corner);
-    bb_test &= (((p[0] > 1.0) << 0) |
-                ((p[0] < -1.0) << 1) |
-                ((p[1] > 1.0) << 2) |
-                ((p[1] < -1.0) << 3) |
-                ((p[2] > 1.0) << 4) |
-                ((p[2] < 0.0) << 5));
+    bb_test &=
+      ((p[0] > 1.0) << 0) |
+      ((p[0] < -1.0) << 1) |
+      ((p[1] > 1.0) << 2) |
+      ((p[1] < -1.0) << 3) |
+      ((p[2] > 1.0) << 4) |
+      ((p[2] < 0.0) << 5);
     if (bb_test == 0) {
       return true;
     }
   }
 
-  return (bb_test == 0);
+  return bb_test == 0;
 };
-
-

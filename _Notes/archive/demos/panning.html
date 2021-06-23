@@ -1,96 +1,89 @@
-
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>
-Title
-</title>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>Title</title>
 
-<!--
+    <!--
 <link rel="stylesheet" type="text/css" href = "simple.css" />
 -->
 
-<!-- Slider stuff -->
-<script type="text/javascript" src="lib/events.js"></script>
+    <!-- Slider stuff -->
+    <script type="text/javascript" src="lib/events.js"></script>
 
+    <style type="text/css">
+      #slider {
+        margin: 10px;
+      }
+    </style>
 
+    <!-- Our javascript code -->
+    <script type="text/javascript">
+      function output(str) {
+        console.log(str);
+      }
 
+      // Events
+      // init() once the page has finished loading.
+      window.onload = init;
 
-<style type="text/css">
-  #slider { margin: 10px; }
-</style>
+      var context;
+      var source;
+      var buffer;
+      var audioBuffer;
+      var panner;
 
-<!-- Our javascript code -->
-<script type="text/javascript">
+      function init() {
+        initAudio();
+      }
 
-function output(str) {
-    console.log(str);
-}
+      function loadAudioBuffer(url) {
+        // Load asynchronously
 
-// Events
-// init() once the page has finished loading.
-window.onload = init;
+        var request = new XMLHttpRequest();
+        request.open("GET", url, true);
+        request.responseType = "arraybuffer";
 
-var context;
-var source;
-var buffer;
-var audioBuffer;
-var panner;
+        request.onload = function () {
+          context.decodeAudioData(
+            request.response,
+            function (buffer) {
+              audioBuffer = buffer;
+              finishLoad(); // add in the slider, etc. now that we've loaded the audio
+            },
+            function (error) {
+              console.error(error);
+            }
+          );
+        };
 
-function init() {
-    initAudio();
-}
+        request.send();
+      }
 
-function loadAudioBuffer(url) {
-    // Load asynchronously
+      function initAudio() {
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        context = new AudioContext();
 
-    var request = new XMLHttpRequest();
-    request.open("GET", url, true);
-    request.responseType = "arraybuffer";
+        source = context.createBufferSource();
+        panner = context.createPanner();
 
-    request.onload = function() {
-        context.decodeAudioData(request.response, function(buffer) {
-            audioBuffer = buffer;
-            finishLoad();  // add in the slider, etc. now that we've loaded the audio
-        }, function(error) {
-            console.error(error);
-        });
-    };
+        // Connect audio processing graph
+        source.connect(panner);
+        panner.connect(context.destination);
 
-    request.send();
-}
+        loadAudioBuffer("sounds/hyper-reality/br-jam-loop.wav");
+      }
 
-function initAudio() {
-    window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    context = new AudioContext();
-    
-    source = context.createBufferSource();
-    panner = context.createPanner();
-    
-    // Connect audio processing graph
-    source.connect(panner);
-    panner.connect(context.destination);
+      function finishLoad() {
+        source.buffer = audioBuffer;
+        source.loop = true;
+        source.start(0.0);
+      }
+    </script>
+  </head>
 
-    loadAudioBuffer("sounds/hyper-reality/br-jam-loop.wav");
-}
-
-function finishLoad() {
-    source.buffer = audioBuffer;
-    source.loop = true;
-    source.start(0.0);
-}
-
-</script>
-
-</head>
-
-<body>
-
-<!-- Sliders and other controls will be added here -->
-<div id="controls"> </div>
-
-</body>
+  <body>
+    <!-- Sliders and other controls will be added here -->
+    <div id="controls"></div>
+  </body>
 </html>

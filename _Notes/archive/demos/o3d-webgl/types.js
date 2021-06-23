@@ -29,12 +29,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * Namespace for math types.
  */
-o3d.math = {}
-
+o3d.math = {};
 
 /**
  * An Array of 3 numbers.
@@ -42,13 +40,11 @@ o3d.math = {}
  */
 o3d.math.Point3 = goog.typedef;
 
-
 /**
  * An Array of 3 numbers.
  * @type {!Array.<number>}
  */
 o3d.math.Vector3 = goog.typedef;
-
 
 /**
  * An Array of 2 numbers.
@@ -56,20 +52,17 @@ o3d.math.Vector3 = goog.typedef;
  */
 o3d.Float2 = goog.typedef;
 
-
 /**
  * An Array of 3 numbers.
  * @type {!Array.<number>}
  */
 o3d.Float3 = goog.typedef;
 
-
 /**
  * An Array of 4 numbers.
  * @type {!Array.<number>}
  */
 o3d.Float4 = goog.typedef;
-
 
 /**
  * A 4x4 Matrix of numbers.
@@ -83,13 +76,11 @@ o3d.math.Matrix4 = goog.typedef;
  */
 o3d.math.Quat = goog.typedef;
 
-
 /**
  * A function.
  * @type {Object}
  */
 o3d.ErrorCallback = goog.typedef;
-
 
 /**
  * A function.
@@ -97,20 +88,17 @@ o3d.ErrorCallback = goog.typedef;
  */
 o3d.TickCallback = goog.typedef;
 
-
 /**
  * A function.
  * @type {Object}
  */
 o3d.RenderCallback = goog.typedef;
 
-
 /**
  * A function.
  * @type {Object}
  */
 o3d.LostResourcesCallback = goog.typedef;
-
 
 /**
  * A function.

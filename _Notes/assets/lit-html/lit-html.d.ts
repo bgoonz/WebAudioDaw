@@ -11,32 +11,46 @@
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-export declare const templateCaches: Map<string, Map<TemplateStringsArray, Template>>;
+export declare const templateCaches: Map<
+  string,
+  Map<TemplateStringsArray, Template>
+>;
 /**
  * Interprets a template literal as an HTML template that can efficiently
  * render to and update a container.
  */
-export declare const html: (strings: TemplateStringsArray, ...values: any[]) => TemplateResult;
+export declare const html: (
+  strings: TemplateStringsArray,
+  ...values: any[]
+) => TemplateResult;
 /**
  * Interprets a template literal as an SVG template that can efficiently
  * render to and update a container.
  */
-export declare const svg: (strings: TemplateStringsArray, ...values: any[]) => SVGTemplateResult;
+export declare const svg: (
+  strings: TemplateStringsArray,
+  ...values: any[]
+) => SVGTemplateResult;
 /**
  * The return type of `html`, which holds a Template and the values from
  * interpolated expressions.
  */
 export declare class TemplateResult {
-    strings: TemplateStringsArray;
-    values: any[];
-    type: string;
-    partCallback: PartCallback;
-    constructor(strings: TemplateStringsArray, values: any[], type: string, partCallback?: PartCallback);
-    /**
-     * Returns a string of HTML used to create a <template> element.
-     */
-    getHTML(): string;
-    getTemplateElement(): HTMLTemplateElement;
+  strings: TemplateStringsArray;
+  values: any[];
+  type: string;
+  partCallback: PartCallback;
+  constructor(
+    strings: TemplateStringsArray,
+    values: any[],
+    type: string,
+    partCallback?: PartCallback
+  );
+  /**
+   * Returns a string of HTML used to create a <template> element.
+   */
+  getHTML(): string;
+  getTemplateElement(): HTMLTemplateElement;
 }
 /**
  * A TemplateResult for SVG fragments.
@@ -46,8 +60,8 @@ export declare class TemplateResult {
  * clones only container the original fragment.
  */
 export declare class SVGTemplateResult extends TemplateResult {
-    getHTML(): string;
-    getTemplateElement(): HTMLTemplateElement;
+  getHTML(): string;
+  getTemplateElement(): HTMLTemplateElement;
 }
 /**
  * A function type that creates a Template from a TemplateResult.
@@ -74,9 +88,11 @@ export declare type TemplateFactory = (result: TemplateResult) => Template;
  * The default TemplateFactory which caches Templates keyed on
  * result.type and result.strings.
  */
-export declare function defaultTemplateFactory(result: TemplateResult): Template;
+export declare function defaultTemplateFactory(
+  result: TemplateResult
+): Template;
 export declare type TemplateContainer = (Element | DocumentFragment) & {
-    __templateInstance?: TemplateInstance;
+  __templateInstance?: TemplateInstance;
 };
 /**
  * Renders a template to a container.
@@ -92,7 +108,11 @@ export declare type TemplateContainer = (Element | DocumentFragment) & {
  * @param templateFactory a function to create a Template or retreive one from
  *     cache.
  */
-export declare function render(result: TemplateResult, container: Element | DocumentFragment, templateFactory?: TemplateFactory): void;
+export declare function render(
+  result: TemplateResult,
+  container: Element | DocumentFragment,
+  templateFactory?: TemplateFactory
+): void;
 /**
  * A placeholder for a dynamic expression in an HTML template.
  *
@@ -110,21 +130,27 @@ export declare function render(result: TemplateResult, container: Element | Docu
  * to Part.update().
  */
 export declare class TemplatePart {
-    type: string;
-    index: number;
-    name?: string | undefined;
-    rawName?: string | undefined;
-    strings?: string[] | undefined;
-    constructor(type: string, index: number, name?: string | undefined, rawName?: string | undefined, strings?: string[] | undefined);
+  type: string;
+  index: number;
+  name?: string | undefined;
+  rawName?: string | undefined;
+  strings?: string[] | undefined;
+  constructor(
+    type: string,
+    index: number,
+    name?: string | undefined,
+    rawName?: string | undefined,
+    strings?: string[] | undefined
+  );
 }
 export declare const isTemplatePartActive: (part: TemplatePart) => boolean;
 /**
  * An updateable Template that tracks the location of dynamic parts.
  */
 export declare class Template {
-    parts: TemplatePart[];
-    element: HTMLTemplateElement;
-    constructor(result: TemplateResult, element: HTMLTemplateElement);
+  parts: TemplatePart[];
+  element: HTMLTemplateElement;
+  constructor(result: TemplateResult, element: HTMLTemplateElement);
 }
 /**
  * Returns a value ready to be inserted into a Part from a user-provided value.
@@ -135,8 +161,8 @@ export declare class Template {
  */
 export declare const getValue: (part: Part, value: any) => any;
 export interface DirectiveFn<P = Part> {
-    (part: P): void;
-    __litDirective?: true;
+  (part: P): void;
+  __litDirective?: true;
 }
 export declare const directive: <P = Part>(f: DirectiveFn<P>) => DirectiveFn<P>;
 /**
@@ -149,56 +175,73 @@ export declare const noChange: {};
  */
 export { noChange as directiveValue };
 export interface Part {
-    instance: TemplateInstance;
-    size?: number;
+  instance: TemplateInstance;
+  size?: number;
 }
 export interface SinglePart extends Part {
-    setValue(value: any): void;
+  setValue(value: any): void;
 }
 export interface MultiPart extends Part {
-    setValue(values: any[], startIndex: number): void;
+  setValue(values: any[], startIndex: number): void;
 }
 export declare class AttributePart implements MultiPart {
-    instance: TemplateInstance;
-    element: Element;
-    name: string;
-    strings: string[];
-    size: number;
-    _previousValues: any;
-    constructor(instance: TemplateInstance, element: Element, name: string, strings: string[]);
-    protected _interpolate(values: any[], startIndex: number): string;
-    protected _equalToPreviousValues(values: any[], startIndex: number): boolean;
-    setValue(values: any[], startIndex: number): void;
+  instance: TemplateInstance;
+  element: Element;
+  name: string;
+  strings: string[];
+  size: number;
+  _previousValues: any;
+  constructor(
+    instance: TemplateInstance,
+    element: Element,
+    name: string,
+    strings: string[]
+  );
+  protected _interpolate(values: any[], startIndex: number): string;
+  protected _equalToPreviousValues(values: any[], startIndex: number): boolean;
+  setValue(values: any[], startIndex: number): void;
 }
 export declare class NodePart implements SinglePart {
-    instance: TemplateInstance;
-    startNode: Node;
-    endNode: Node;
-    _previousValue: any;
-    constructor(instance: TemplateInstance, startNode: Node, endNode: Node);
-    setValue(value: any): void;
-    private _insert;
-    private _setNode;
-    private _setText;
-    private _setTemplateResult;
-    private _setIterable;
-    private _setPromise;
-    clear(startNode?: Node): void;
+  instance: TemplateInstance;
+  startNode: Node;
+  endNode: Node;
+  _previousValue: any;
+  constructor(instance: TemplateInstance, startNode: Node, endNode: Node);
+  setValue(value: any): void;
+  private _insert;
+  private _setNode;
+  private _setText;
+  private _setTemplateResult;
+  private _setIterable;
+  private _setPromise;
+  clear(startNode?: Node): void;
 }
-export declare type PartCallback = (instance: TemplateInstance, templatePart: TemplatePart, node: Node) => Part;
-export declare const defaultPartCallback: (instance: TemplateInstance, templatePart: TemplatePart, node: Node) => Part;
+export declare type PartCallback = (
+  instance: TemplateInstance,
+  templatePart: TemplatePart,
+  node: Node
+) => Part;
+export declare const defaultPartCallback: (
+  instance: TemplateInstance,
+  templatePart: TemplatePart,
+  node: Node
+) => Part;
 /**
  * An instance of a `Template` that can be attached to the DOM and updated
  * with new values.
  */
 export declare class TemplateInstance {
-    _parts: Array<Part | undefined>;
-    _partCallback: PartCallback;
-    _getTemplate: TemplateFactory;
-    template: Template;
-    constructor(template: Template, partCallback: PartCallback, getTemplate: TemplateFactory);
-    update(values: any[]): void;
-    _clone(): DocumentFragment;
+  _parts: Array<Part | undefined>;
+  _partCallback: PartCallback;
+  _getTemplate: TemplateFactory;
+  template: Template;
+  constructor(
+    template: Template,
+    partCallback: PartCallback,
+    getTemplate: TemplateFactory
+  );
+  update(values: any[]): void;
+  _clone(): DocumentFragment;
 }
 /**
  * Reparents nodes, starting from `startNode` (inclusive) to `endNode`
@@ -206,9 +249,18 @@ export declare class TemplateInstance {
  * `beforeNode`. If `beforeNode` is null, it appends the nodes to the
  * container.
  */
-export declare const reparentNodes: (container: Node, start: Node | null, end?: Node | null, before?: Node | null) => void;
+export declare const reparentNodes: (
+  container: Node,
+  start: Node | null,
+  end?: Node | null,
+  before?: Node | null
+) => void;
 /**
  * Removes nodes, starting from `startNode` (inclusive) to `endNode`
  * (exclusive), from `container`.
  */
-export declare const removeNodes: (container: Node, startNode: Node | null, endNode?: Node | null) => void;
+export declare const removeNodes: (
+  container: Node,
+  startNode: Node | null,
+  endNode?: Node | null
+) => void;

@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-
 /**
  * A simple MessagePort tester.
  *
@@ -28,15 +27,20 @@ class MessengerProcessor extends AudioWorkletProcessor {
   }
 
   handleMessage_(event) {
-    console.log('[Processor:Received] ' + event.data.message +
-                ' (' + event.data.contextTimestamp + ')');
+    console.log(
+      "[Processor:Received] " +
+        event.data.message +
+        " (" +
+        event.data.contextTimestamp +
+        ")"
+    );
   }
 
   process() {
     // Post a message to the node for every 1 second.
     if (currentTime - this._lastUpdate > 1.0) {
       this.port.postMessage({
-        message: '1 second passed.',
+        message: "1 second passed.",
         contextTimestamp: currentTime,
       });
       this._lastUpdate = currentTime;
@@ -46,4 +50,4 @@ class MessengerProcessor extends AudioWorkletProcessor {
   }
 }
 
-registerProcessor('messenger-processor', MessengerProcessor);
+registerProcessor("messenger-processor", MessengerProcessor);

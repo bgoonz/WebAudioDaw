@@ -29,18 +29,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * A RayIntersectionInfo is used to return the results of ray intersection
  * tests.
  * @constructor
  */
-o3d.RayIntersectionInfo = function() {
+o3d.RayIntersectionInfo = function () {
   o3d.NamedObject.call(this);
   o3d.RayIntersectionInfo.prototype.position = [0, 0, 0];
 };
-o3d.inherit('RayIntersectionInfo', 'NamedObject');
-
+o3d.inherit("RayIntersectionInfo", "NamedObject");
 
 /**
  * True if this ray intersection info is valid. For example if you call
@@ -50,13 +48,11 @@ o3d.inherit('RayIntersectionInfo', 'NamedObject');
  */
 o3d.RayIntersectionInfo.prototype.valid = false;
 
-
 /**
  * True if the origin of the ray is found to be inside the box.
  * @type {boolean}
  */
 o3d.RayIntersectionInfo.prototype.inside = false;
-
 
 /**
  * True if this ray intersection intersected something.
@@ -64,21 +60,14 @@ o3d.RayIntersectionInfo.prototype.inside = false;
  */
 o3d.RayIntersectionInfo.prototype.intersected = false;
 
-
-
 /**
  * The position the ray intersected something.
  * type {!o3d.Point3}
  */
 o3d.RayIntersectionInfo.prototype.position = [0, 0, 0];
 
-
-
 /**
  * The index of the primitive that was intersected.
  * @type {number}
  */
 o3d.RayIntersectionInfo.prototype.primitiveIndex = -1;
-
-
-

@@ -1,19 +1,19 @@
-const DB_NAME = 'recordings';
-const STORE_NAME = 'audio';
+const DB_NAME = "recordings";
+const STORE_NAME = "audio";
 
 /** Storage for audio blobs in an IndexedDB. */
 class IndexedDBStorage {
   /**
    * Asynchronously opens the storage.
    * @return {Promise<void>}
-  */
+   */
   open() {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(DB_NAME);
       request.onerror = reject;
       request.onupgradeneeded = () => {
         // Create ObjectStore on first connection.
-        request.result.createObjectStore(STORE_NAME, {autoIncrement: true});
+        request.result.createObjectStore(STORE_NAME, { autoIncrement: true });
       };
       request.onsuccess = () => {
         this.db = request.result;
@@ -29,7 +29,7 @@ class IndexedDBStorage {
    */
   save(data) {
     return new Promise((resolve, reject) => {
-      const transaction = this.db.transaction([STORE_NAME], 'readwrite');
+      const transaction = this.db.transaction([STORE_NAME], "readwrite");
       transaction.onerror = reject;
       // Insert with auto-increment ID.
       const put = transaction.objectStore(STORE_NAME).put(data);
@@ -47,7 +47,7 @@ class IndexedDBStorage {
    */
   delete(id) {
     return new Promise((resolve, reject) => {
-      const transaction = this.db.transaction([STORE_NAME], 'readwrite');
+      const transaction = this.db.transaction([STORE_NAME], "readwrite");
       transaction.onerror = reject;
       transaction.onsuccess = resolve;
       transaction.objectStore(STORE_NAME).delete(id);
@@ -65,7 +65,8 @@ class IndexedDBStorage {
     const db = this.db;
     return {
       [Symbol.asyncIterator]() {
-        let promise; let cursor;
+        let promise;
+        let cursor;
 
         /**
          * Loads the next entry.
@@ -74,7 +75,7 @@ class IndexedDBStorage {
         function next() {
           return new Promise((resolve, reject) => {
             // Keep resolve() and reject() in the local scope.
-            promise = {resolve, reject};
+            promise = { resolve, reject };
 
             if (cursor) {
               // cursor is undefined on the initial invocation, which triggers
@@ -102,7 +103,7 @@ class IndexedDBStorage {
                   done: false,
                 });
               } else {
-                promise.resolve({done: true});
+                promise.resolve({ done: true });
               }
             };
             request.onerror = (event) => {
@@ -111,10 +112,10 @@ class IndexedDBStorage {
           });
         }
 
-        return {next};
+        return { next };
       },
     };
   }
 }
 
-export {IndexedDBStorage};
+export { IndexedDBStorage };

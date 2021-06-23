@@ -11,16 +11,29 @@
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-import { AttributePart, Part, SVGTemplateResult, TemplateInstance, TemplatePart, TemplateResult } from '../lit-html.js';
-export { render } from '../lit-html.js';
+import {
+  AttributePart,
+  Part,
+  SVGTemplateResult,
+  TemplateInstance,
+  TemplatePart,
+  TemplateResult,
+} from "../lit-html.js";
+export { render } from "../lit-html.js";
 /**
  * Interprets a template literal as a lit-extended HTML template.
  */
-export declare const html: (strings: TemplateStringsArray, ...values: any[]) => TemplateResult;
+export declare const html: (
+  strings: TemplateStringsArray,
+  ...values: any[]
+) => TemplateResult;
 /**
  * Interprets a template literal as a lit-extended SVG template.
  */
-export declare const svg: (strings: TemplateStringsArray, ...values: any[]) => SVGTemplateResult;
+export declare const svg: (
+  strings: TemplateStringsArray,
+  ...values: any[]
+) => SVGTemplateResult;
 /**
  * A PartCallback which allows templates to set properties and declarative
  * event handlers.
@@ -46,7 +59,11 @@ export declare const svg: (strings: TemplateStringsArray, ...values: any[]) => S
  *     html`<button on-click=${(e)=> this.onClickHandler(e)}>Buy Now</button>`
  *
  */
-export declare const extendedPartCallback: (instance: TemplateInstance, templatePart: TemplatePart, node: Node) => Part;
+export declare const extendedPartCallback: (
+  instance: TemplateInstance,
+  templatePart: TemplatePart,
+  node: Node
+) => Part;
 /**
  * Implements a boolean attribute, roughly as defined in the HTML
  * specification.
@@ -55,17 +72,17 @@ export declare const extendedPartCallback: (instance: TemplateInstance, template
  * ''. If the value is falsey, the attribute is removed.
  */
 export declare class BooleanAttributePart extends AttributePart {
-    setValue(values: any[], startIndex: number): void;
+  setValue(values: any[], startIndex: number): void;
 }
 export declare class PropertyPart extends AttributePart {
-    setValue(values: any[], startIndex: number): void;
+  setValue(values: any[], startIndex: number): void;
 }
 export declare class EventPart implements Part {
-    instance: TemplateInstance;
-    element: Element;
-    eventName: string;
-    private _listener;
-    constructor(instance: TemplateInstance, element: Element, eventName: string);
-    setValue(value: any): void;
-    handleEvent(event: Event): void;
+  instance: TemplateInstance;
+  element: Element;
+  eventName: string;
+  private _listener;
+  constructor(instance: TemplateInstance, element: Element, eventName: string);
+  setValue(value: any): void;
+  handleEvent(event: Event): void;
 }

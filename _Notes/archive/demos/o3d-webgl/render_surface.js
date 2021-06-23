@@ -29,17 +29,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * A RenderSurfaceBase is the base for RenderSurface and
  * RenderDepthStencilSurface.
- * 
+ *
  * @param {number} width The width of this RenderSurface.
  * @param {number} height The height of this RenderSurface.
  * @param {o3d.Texture} texture The texture of this RenderSurface.
  * @constructor
  */
-o3d.RenderSurfaceBase = function(width, height, texture) {
+o3d.RenderSurfaceBase = function (width, height, texture) {
   o3d.ParamObject.call(this);
 
   /**
@@ -71,12 +70,11 @@ o3d.RenderSurfaceBase = function(width, height, texture) {
    * @private
    */
   this.framebuffer_ = null;
-
 };
-o3d.inherit('RenderSurfaceBase', 'ParamObject');
+o3d.inherit("RenderSurfaceBase", "ParamObject");
 
-o3d.ParamObject.setUpO3DParam_(o3d.RenderSurfaceBase, 'width', 'ParamInteger');
-o3d.ParamObject.setUpO3DParam_(o3d.RenderSurfaceBase, 'height', 'ParamInteger');
+o3d.ParamObject.setUpO3DParam_(o3d.RenderSurfaceBase, "width", "ParamInteger");
+o3d.ParamObject.setUpO3DParam_(o3d.RenderSurfaceBase, "height", "ParamInteger");
 
 /**
  * A RenderSurface encapsulates the notion of a renderable surface.
@@ -86,17 +84,16 @@ o3d.ParamObject.setUpO3DParam_(o3d.RenderSurfaceBase, 'height', 'ParamInteger');
  * only be accessed through the texture getRenderSurface(...) interfaces.
  * @constructor
  */
-o3d.RenderSurface = function() {
+o3d.RenderSurface = function () {
   o3d.RenderSurfaceBase.call(this);
 };
-o3d.inherit('RenderSurface', 'RenderSurfaceBase');
-
+o3d.inherit("RenderSurface", "RenderSurfaceBase");
 
 /**
  * Initializes a render surface to render to the given texture.
  * @param {o3d.Texture2D} texture The texture.
  */
-o3d.RenderSurface.prototype.initWithTexture = function(texture, level) {
+o3d.RenderSurface.prototype.initWithTexture = function (texture, level) {
   this.framebuffer_ = this.gl.createFramebuffer();
   this.texture = texture;
   this.level = level;
@@ -108,7 +105,7 @@ o3d.RenderSurface.prototype.initWithTexture = function(texture, level) {
  * A RenderDepthStencilSurface represents a depth stencil render surface.
  * @constructor
  */
-o3d.RenderDepthStencilSurface = function() {
+o3d.RenderDepthStencilSurface = function () {
   o3d.RenderSurfaceBase.call(this);
 
   /**
@@ -118,8 +115,7 @@ o3d.RenderDepthStencilSurface = function() {
    */
   this.depth_stencil_buffer_ = null;
 };
-o3d.inherit('RenderDepthStencilSurface', 'RenderSurfaceBase');
-
+o3d.inherit("RenderDepthStencilSurface", "RenderSurfaceBase");
 
 /**
  * Allocates depth and stnecil buffers of the given size.
@@ -127,12 +123,18 @@ o3d.inherit('RenderDepthStencilSurface', 'RenderSurfaceBase');
  * @param {number} height
  * @private
  */
-o3d.RenderDepthStencilSurface.prototype.initWithSize_ =
-    function(width, height) {
+o3d.RenderDepthStencilSurface.prototype.initWithSize_ = function (
+  width,
+  height
+) {
   this.depth_stencil_buffer_ = this.gl.createRenderbuffer();
   this.gl.bindRenderbuffer(this.gl.RENDERBUFFER, this.depth_stencil_buffer_);
   this.gl.renderbufferStorage(
-     this.gl.RENDERBUFFER, this.gl.DEPTH_COMPONENT16, width, height);
+    this.gl.RENDERBUFFER,
+    this.gl.DEPTH_COMPONENT16,
+    width,
+    height
+  );
   this.width = width;
   this.height = height;
 };

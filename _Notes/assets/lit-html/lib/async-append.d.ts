@@ -11,7 +11,7 @@
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-import { DirectiveFn, NodePart } from '../lit-html.js';
+import { DirectiveFn, NodePart } from "../lit-html.js";
 /**
  * A directive that renders the items of an async iterable[1], appending new
  * values after previous values, similar to the built-in support for iterables.
@@ -29,4 +29,7 @@ import { DirectiveFn, NodePart } from '../lit-html.js';
  * @param mapper An optional function that maps from (value, index) to another
  *     value. Useful for generating templates for each item in the iterable.
  */
-export declare const asyncAppend: <T>(value: AsyncIterable<T>, mapper?: ((v: T, index?: number | undefined) => any) | undefined) => DirectiveFn<NodePart>;
+export declare const asyncAppend: <T>(
+  value: AsyncIterable<T>,
+  mapper?: ((v: T, index?: number | undefined) => any) | undefined
+) => DirectiveFn<NodePart>;

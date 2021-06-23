@@ -10,14 +10,13 @@
  */
 class ConstructorErrorProcessor extends AudioWorkletProcessor {
   constructor() {
-    throw 'ConstructorErrorProcessor: an error thrown from constructor.';
+    throw "ConstructorErrorProcessor: an error thrown from constructor.";
   }
 
   process() {
     return true;
   }
 }
-
 
 /**
  * A processor with an error in its process callback.
@@ -31,11 +30,10 @@ class ProcessErrorProcessor extends AudioWorkletProcessor {
   }
 
   process() {
-    throw 'ProcessErrorProcessor: an error throw from process method.';
+    throw "ProcessErrorProcessor: an error throw from process method.";
     return true;
   }
 }
 
-
-registerProcessor('constructor-error', ConstructorErrorProcessor);
-registerProcessor('process-error', ProcessErrorProcessor);
+registerProcessor("constructor-error", ConstructorErrorProcessor);
+registerProcessor("process-error", ProcessErrorProcessor);

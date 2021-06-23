@@ -29,16 +29,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * A StateSet is a render node that sets render states of all of its
  * children. You can make this a parent of a part of the render graph to set
  * render states in a more global way.
- * 
+ *
  * @param {o3d.State} opt_state The State the defines what states to set.
  * @constructor
  */
-o3d.StateSet = function(opt_state) {
+o3d.StateSet = function (opt_state) {
   o3d.RenderNode.call(this);
 
   /**
@@ -47,15 +46,13 @@ o3d.StateSet = function(opt_state) {
    */
   this.state = opt_state || null;
 };
-o3d.inherit('StateSet', 'RenderNode');
+o3d.inherit("StateSet", "RenderNode");
 
-o3d.ParamObject.setUpO3DParam_(o3d.StateSet, 'state', 'ParamState');
+o3d.ParamObject.setUpO3DParam_(o3d.StateSet, "state", "ParamState");
 
 /**
  * Sets the current state to the member state.
  */
-o3d.StateSet.prototype.before = function() {
-  if (this.state)
-    this.state.set();
+o3d.StateSet.prototype.before = function () {
+  if (this.state) this.state.set();
 };
-

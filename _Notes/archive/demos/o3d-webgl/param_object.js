@@ -29,24 +29,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * A ParamObject is the base class for all objects that can have Params.
  * Defines methods to add and remove params, search for params, etc.
  * @constructor
  */
-o3d.ParamObject = function() {
+o3d.ParamObject = function () {
   o3d.NamedObject.call(this);
   this.params_ = {};
 };
-o3d.inherit('ParamObject', 'NamedObject');
+o3d.inherit("ParamObject", "NamedObject");
 
-o3d.ParamObject.O3D_PREFIX_ = 'o3d.';
+o3d.ParamObject.O3D_PREFIX_ = "o3d.";
 
 /**
  * Creates a Param with the given name and type on the ParamObject.
  * Will fail if a param with the same name already exists.
- * 
+ *
  * @param {string} param_name The name of the Param to be created.
  * @param {string} param_type_name The type of Param to create.
  *     Valid types are
@@ -99,29 +98,25 @@ o3d.ParamObject.O3D_PREFIX_ = 'o3d.';
  *     'WorldViewProjectionInverseTransposeParamMatrix4'
  * @return {!o3d.Param}  The newly created Param or null on failure.
  */
-o3d.ParamObject.prototype.createParam =
-    function(param_name, param_type_name) {
-  if (this.params_[param_name])
-    return null;
+o3d.ParamObject.prototype.createParam = function (param_name, param_type_name) {
+  if (this.params_[param_name]) return null;
   param_type_name = o3d.filterTypeName_(param_type_name);
   if (!o3d.global.o3d[param_type_name])
-    throw ('Invalid param type name: ' + param_type_name);
-  var param = new o3d.global.o3d[param_type_name];
+    throw "Invalid param type name: " + param_type_name;
+  var param = new o3d.global.o3d[param_type_name]();
   param.gl = this.gl;
   param.owner_ = this;
   this.params_[param_name] = param;
   return this.filterResult_(this.params_[param_name]);
 };
 
-
 /**
  * Searches by name for a Param defined in the object.
- * 
+ *
  * @param {string} param_name Name to search for.
  * @return {!o3d.Param}  The Param with the given name, or null otherwise.
  */
-o3d.ParamObject.prototype.getParam =
-    function(param_name) {
+o3d.ParamObject.prototype.getParam = function (param_name) {
   var result = this.params_[param_name];
   var o3d_name;
   if (!result) {
@@ -150,39 +145,35 @@ o3d.ParamObject.prototype.getParam =
   return this.filterResult_(result);
 };
 
-
 /**
  * Removes a Param from a ParamObject.
- * 
+ *
  * This function will fail if the param does not exist on this ParamObject
  * or if the param is unremovable.
- * 
+ *
  * @param {!o3d.Param} param param to remove.
  * @return {boolean}  True if the param was removed.
  */
-o3d.ParamObject.prototype.removeParam =
-    function(param) {
+o3d.ParamObject.prototype.removeParam = function (param) {
   o3d.notImplemented();
 };
 
-
 /**
  * Gets all the param on this param object.
- * 
+ *
  * Each access to this field gets the entire list, so it is best to get it
  * just once. For example:
- * 
+ *
  * var params = paramObject.params;
  * for (var i = 0; i < params.length; i++) {
  *   var param = params[i];
  * }
- * 
+ *
  * Note that modifications to this array [e.g. push()] will not affect
  * the underlying ParamObject, while modifications to the array's members
  * will affect them.
  */
 o3d.ParamObject.prototype.params_ = {};
-
 
 /**
  * Copies all the params from a the given source_param_object to this param
@@ -191,29 +182,24 @@ o3d.ParamObject.prototype.params_ = {};
  * @param {o3d.ParamObject} source_param_object param object to copy params
  *     from.
  */
-o3d.ParamObject.prototype.copyParams =
-    function(source_param_object) {
+o3d.ParamObject.prototype.copyParams = function (source_param_object) {
   o3d.notImplemented();
 };
-
 
 /**
  * Filters results, turning 'undefined' into 'null'.
  * @private
  */
-o3d.ParamObject.prototype.filterResult_= function(result) {
-  return (result ? result : null);
+o3d.ParamObject.prototype.filterResult_ = function (result) {
+  return result ? result : null;
 };
-
 
 /**
  * Sets up an o3d-scoped parameter against the given constructor
  * function of the given type for the given field.
  * @private
  */
-o3d.ParamObject.setUpO3DParam_ = function(constructor,
-                                          fieldName,
-                                          paramType) {
+o3d.ParamObject.setUpO3DParam_ = function (constructor, fieldName, paramType) {
   var o3dParamName = o3d.ParamObject.O3D_PREFIX_ + fieldName;
 
   // The lazyParamMap primarily handles the case where getParam is
@@ -227,15 +213,12 @@ o3d.ParamObject.setUpO3DParam_ = function(constructor,
   }
   lazyParamMap[o3dParamName] = paramType;
 
-  constructor.prototype.__defineGetter__(fieldName,
-      function() {
-        var param = this.getParam(o3dParamName);
-        return param.value;
-      });
-  constructor.prototype.__defineSetter__(fieldName,
-      function(v) {
-        var param = this.getParam(o3dParamName);
-        param.value = v;
-      });
+  constructor.prototype.__defineGetter__(fieldName, function () {
+    var param = this.getParam(o3dParamName);
+    return param.value;
+  });
+  constructor.prototype.__defineSetter__(fieldName, function (v) {
+    var param = this.getParam(o3dParamName);
+    param.value = v;
+  });
 };
-

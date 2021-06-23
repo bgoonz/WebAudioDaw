@@ -29,34 +29,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * A RawData object contains raw binary data which could contain
  * image, audio, text, or other information.
- * 
+ *
  * var request =  g_pack.createArchiveRequest();
- * 
+ *
  * request.onfileavailable = function(rawData) {
  *   var texture = g_pack.createTextureFromRawData(rawData, true);
  *   ...
  * };
- * 
+ *
  * request.send();
  * @constructor
  */
-o3d.RawData = function() {
+o3d.RawData = function () {
   o3d.NamedObject.call(this);
 };
-o3d.inherit('RawData', 'NamedObject');
-
+o3d.inherit("RawData", "NamedObject");
 
 /**
  * Returns the raw data as a string. The data must be a valid utf-8 string
  * and the uri must end in .json, .txt, .xml, .ini or .csv
  * @type {string}
  */
-o3d.RawData.prototype.stringValue = '';
-
+o3d.RawData.prototype.stringValue = "";
 
 /**
  * The data as an image if it is an image.
@@ -65,14 +62,11 @@ o3d.RawData.prototype.stringValue = '';
  */
 o3d.RawData.prototype.image_ = null;
 
-
 /**
  * The uri of the RawData.
  * @type {string}
  */
-o3d.RawData.prototype.uri = '';
-
-
+o3d.RawData.prototype.uri = "";
 
 /**
  * The length in bytes of the RawData.
@@ -80,24 +74,17 @@ o3d.RawData.prototype.uri = '';
  */
 o3d.RawData.prototype.length = 0;
 
-
-
 /**
  * Discards all the resources associated with this data object.
  */
-o3d.RawData.prototype.discard = function() {
+o3d.RawData.prototype.discard = function () {
   o3d.notImplemented();
 };
-
-
 
 /**
  * Flushes the memory resources associated with this data object,
  * but keeps a cache in case the data object is used later.
  */
-o3d.RawData.prototype.flush = function() {
+o3d.RawData.prototype.flush = function () {
   o3d.notImplemented();
 };
-
-
-

@@ -35,7 +35,6 @@
  */
 o3d.Renderer = {};
 
-
 /**
  * @type {number}
  */
@@ -60,7 +59,6 @@ o3d.Renderer.GPU_NOT_UP_TO_SPEC = 2;
 o3d.Renderer.OUT_OF_RESOURCES = 3;
 o3d.Renderer.INITIALIZATION_ERROR = 4;
 
-
 /**
  * @type {number}
  */
@@ -76,13 +74,11 @@ o3d.Renderer.DisplayMode = goog.typedef;
  */
 o3d.Renderer.DISPLAY_MODE_DEFAULT = 0;
 
-
 /**
  * The interval timer for the render callback.
  * @type {Object}
  */
 o3d.Renderer.render_callback_interval_ = null;
-
 
 /**
  * Global private list of all clients to be rendered every frame.
@@ -90,11 +86,10 @@ o3d.Renderer.render_callback_interval_ = null;
  */
 o3d.Renderer.clients_ = [];
 
-
 /**
  * Renders all clients associated with this renderer.
  */
-o3d.Renderer.renderClients = function() {
+o3d.Renderer.renderClients = function () {
   for (var i = 0; i < o3d.Renderer.clients_.length; ++i) {
     var client = o3d.Renderer.clients_[i];
 
@@ -102,26 +97,22 @@ o3d.Renderer.renderClients = function() {
   }
 };
 
-
-
 /**
  * Sets a timer to traverse the rendergraph every sixtieth of a second.
  */
-o3d.Renderer.installRenderInterval = function() {
+o3d.Renderer.installRenderInterval = function () {
   // o3d.Renderer.render_callback_interval_ = setInterval(
   //     "o3d.Renderer.renderClients()", 1000.0 / 60.0);
 };
-
 
 /**
  * The ClientInfo is used to get information about the client.
  * @constructor
  */
-o3d.ClientInfo = function() {
+o3d.ClientInfo = function () {
   o3d.NamedObject.call(this);
 };
-o3d.inherit('ClientInfo', 'NamedObject');
-
+o3d.inherit("ClientInfo", "NamedObject");
 
 /**
  * The number of objects the client is currently tracking.
@@ -130,23 +121,17 @@ o3d.inherit('ClientInfo', 'NamedObject');
  */
 o3d.ClientInfo.prototype.num_objects = 0;
 
-
-
 /**
  * The amount of texture memory used.
  * @type {number}
  */
 o3d.ClientInfo.prototype.texture_memory_used = 0;
 
-
-
 /**
  * The amount of texture memory used.
  * @type {number}
  */
 o3d.ClientInfo.prototype.buffer_memory_used = 0;
-
-
 
 /**
  * Whether or not O3D is using the software renderer.
@@ -177,8 +162,6 @@ o3d.ClientInfo.prototype.buffer_memory_used = 0;
  */
 o3d.ClientInfo.prototype.software_renderer = false;
 
-
-
 /**
  * Whether or not the GPU supports non power of two textures.
  * NOTE: O3D always allows non power of two textures.
@@ -192,7 +175,6 @@ o3d.ClientInfo.prototype.software_renderer = false;
  */
 o3d.ClientInfo.prototype.non_power_of_two_textures = true;
 
-
 /**
  * The Client class is the main point of entry to O3D.  It defines methods
  * for creating and deleting packs. Each new object created by the Client is
@@ -202,21 +184,20 @@ o3d.ClientInfo.prototype.non_power_of_two_textures = true;
  * node for the render graph.
  * @constructor
  */
-o3d.Client = function() {
+o3d.Client = function () {
   o3d.NamedObject.call(this);
 
   var tempPack = this.createPack();
-  this.root = tempPack.createObject('Transform');
-  this.renderGraphRoot = tempPack.createObject('RenderNode');
+  this.root = tempPack.createObject("Transform");
+  this.renderGraphRoot = tempPack.createObject("RenderNode");
   this.clientId = o3d.Client.nextId++;
   this.packs_ = [tempPack];
 
-  if (o3d.Renderer.clients_.length == 0)
-    o3d.Renderer.installRenderInterval();
+  if (o3d.Renderer.clients_.length == 0) o3d.Renderer.installRenderInterval();
 
   o3d.Renderer.clients_.push(this);
 };
-o3d.inherit('Client', 'NamedObject');
+o3d.inherit("Client", "NamedObject");
 
 /**
  * @type {function(!o3d.RenderEvent): void}
@@ -239,13 +220,11 @@ o3d.Client.ErrorCallback = goog.typedef;
  */
 o3d.Client.prototype.renderGraphRoot = null;
 
-
 /**
  * Global counter to give the client a unique ID number.
  * @type {number}
  */
 o3d.Client.nextId = 0;
-
 
 /**
  * The time of the last render in seconds.
@@ -253,13 +232,11 @@ o3d.Client.nextId = 0;
  */
 o3d.Client.prototype.then_ = 0;
 
-
 /**
  * The transform graph root.
  * @type {o3d.Transform}
  */
 o3d.Client.prototype.root = null;
-
 
 /**
  * A list of all packs for this client.
@@ -267,26 +244,22 @@ o3d.Client.prototype.root = null;
  */
 o3d.Client.prototype.packs_ = [];
 
-
 /**
  * Function that gets called when the client encounters an error.
  */
-o3d.Client.prototype.error_callback = function(error_message) {
+o3d.Client.prototype.error_callback = function (error_message) {
   alert(error_message);
 };
-
 
 /**
  * Function that gets called right before the client renders.
  */
-o3d.Client.prototype.render_callback = function(render_event) {};
-
+o3d.Client.prototype.render_callback = function (render_event) {};
 
 /**
  * Function that gets called every tick.
  */
-o3d.Client.prototype.tick_callback = function(tick_event) {};
-
+o3d.Client.prototype.tick_callback = function (tick_event) {};
 
 /**
  * Call this function from window.onunload to ensure the browser does not
@@ -304,33 +277,27 @@ o3d.Client.prototype.cleanup = function () {
   this.clearErrorCallback();
 };
 
-
 /**
  * Creates a pack object.
  *   A pack object.
  * @return {!o3d.Pack} A new pack object.
  */
-o3d.Client.prototype.createPack =
-    function() {
-  var pack = new o3d.Pack;
+o3d.Client.prototype.createPack = function () {
+  var pack = new o3d.Pack();
   pack.client = this;
   pack.gl = this.gl;
   this.packs_.push(pack);
   return pack;
 };
 
-
 /**
  * Creates a pack object.
  *   A pack object.
  * @param {!o3d.Pack} pack The pack to remove.
  */
-o3d.Client.prototype.destroyPack =
-    function(pack) {
+o3d.Client.prototype.destroyPack = function (pack) {
   o3d.removeFromArray(this.packs_, pack);
 };
-
-
 
 /**
  * Searches the Client for an object matching the given id.
@@ -339,11 +306,9 @@ o3d.Client.prototype.destroyPack =
  * @return {o3d.ObjectBase}  The object or null if a object
  *     with the given id is not found.
  */
-o3d.Client.prototype.getObjectById =
-    function(id) {
+o3d.Client.prototype.getObjectById = function (id) {
   o3d.notImplemented();
 };
-
 
 /**
  * Searches the Client for objects of a particular name and type.
@@ -351,8 +316,7 @@ o3d.Client.prototype.getObjectById =
  * @param {string} class_name name of class to look for.
  * @return {!Array.<!o3d.ObjectBase>}  Array of objects found.
  */
-o3d.Client.prototype.getObjects =
-    function(name, class_name) {
+o3d.Client.prototype.getObjects = function (name, class_name) {
   var objects = [];
 
   for (var i = 0; i < this.packs_.length; ++i) {
@@ -363,14 +327,12 @@ o3d.Client.prototype.getObjects =
   return objects;
 };
 
-
 /**
  * Searches the Client for objects of a particular type.
  * @param {string} class_name name of class to look for.
  * @return {!Array.<!Object>}  Array of objects found.
  */
-o3d.Client.prototype.getObjectsByClassName =
-    function(class_name) {
+o3d.Client.prototype.getObjectsByClassName = function (class_name) {
   var objects = [];
 
   for (var i = 0; i < this.packs_.length; ++i) {
@@ -380,7 +342,6 @@ o3d.Client.prototype.getObjectsByClassName =
 
   return objects;
 };
-
 
 /**
  * @type {number}
@@ -395,7 +356,6 @@ o3d.Client.RenderMode = goog.typedef;
 o3d.Client.RENDERMODE_CONTINUOUS = 0;
 o3d.Client.RENDERMODE_ON_DEMAND = 1;
 
-
 /**
  * The current render mode. The default mode is RENDERMODE_CONTINUOUS.\n
  * Valid values are:
@@ -406,21 +366,17 @@ o3d.Client.RENDERMODE_ON_DEMAND = 1;
  */
 o3d.Client.prototype.renderMode = o3d.Client.RENDERMODE_CONTINUOUS;
 
-
-
 /**
  * Forces a render of the current scene if the current render mode is
  * RENDERMODE_ON_DEMAND.
  */
-o3d.Client.prototype.render = function() {
+o3d.Client.prototype.render = function () {
   // Synthesize a render event.
-  var render_event = new o3d.RenderEvent;
+  var render_event = new o3d.RenderEvent();
 
-  var now = (new Date()).getTime() * 0.001;
-  if(this.then_ == 0.0)
-    render_event.elapsedTime = 0.0;
-  else
-    render_event.elapsedTime = now - this.then_;
+  var now = new Date().getTime() * 0.001;
+  if (this.then_ == 0.0) render_event.elapsedTime = 0.0;
+  else render_event.elapsedTime = now - this.then_;
 
   if (this.render_callback) {
     for (var stat in this.render_stats_) {
@@ -432,15 +388,13 @@ o3d.Client.prototype.render = function() {
   this.renderTree(this.renderGraphRoot);
 };
 
-
 /**
  * An object for various statistics that are gather during the render tree
  * tranversal.
  *
  * @type {Object}
  */
-o3d.Client.prototype.render_stats = {}
-
+o3d.Client.prototype.render_stats = {};
 
 /**
  * Renders a render graph.
@@ -455,21 +409,18 @@ o3d.Client.prototype.render_stats = {}
  *
  * @param {!o3d.RenderNode} render_node root RenderNode to start rendering from.
  */
-o3d.Client.prototype.renderTree =
-    function(render_node) {
-
+o3d.Client.prototype.renderTree = function (render_node) {
   this.render_stats_ = {
     drawElementsCulled: 0,
     drawElementsProcessed: 0,
     drawElementsRendered: 0,
     primitivesRendered: 0,
     transformsCulled: 0,
-    transformsProcessed: 0
+    transformsProcessed: 0,
   };
 
   render_node.render();
 };
-
 
 /**
  * Returns an array of DisplayModes which are available for use in full-screen
@@ -478,7 +429,6 @@ o3d.Client.prototype.renderTree =
  * @type {!Array.<!o3d.Client.DispalyMode>}
  */
 o3d.Client.prototype.getDisplayModes = [];
-
 
 /**
  * Makes a region of the plugin area that will invoke full-screen mode if
@@ -494,21 +444,23 @@ o3d.Client.prototype.getDisplayModes = [];
  * @param {number} height height in pixels.
  * @param {number} mode_id Id of mode to use.
  */
-o3d.Client.prototype.setFullscreenClickRegion =
-    function(x, y, width, height, mode_id) {
+o3d.Client.prototype.setFullscreenClickRegion = function (
+  x,
+  y,
+  width,
+  height,
+  mode_id
+) {
   o3d.notImplemented();
 };
-
 
 /**
  * Deactivates the plugin click region that was previously created with
  * SetFullscreenClickRegion().
  */
-o3d.Client.prototype.clearFullscreenClickRegion = function() {
+o3d.Client.prototype.clearFullscreenClickRegion = function () {
   o3d.notImplemented();
 };
-
-
 
 /**
  * Cancels full-screen display, reverting to displaying content only in the
@@ -516,19 +468,15 @@ o3d.Client.prototype.clearFullscreenClickRegion = function() {
  * no effect.  This does not deactivate the plugin click region--if the user
  * clicks there again, we'll go back to full-screen display.
  */
-o3d.Client.prototype.cancelFullscreenDisplay = function() {
+o3d.Client.prototype.cancelFullscreenDisplay = function () {
   render_node.render();
 };
-
-
 
 /**
  * Gets info about the client.
  * @type {!o3d.ClientInfo}
  */
 o3d.Client.prototype.client_info = null;
-
-
 
 /**
  * Whether content is displayed in full-screen mode or in a plugin window.  The
@@ -537,62 +485,55 @@ o3d.Client.prototype.client_info = null;
  */
 o3d.Client.prototype.fullscreen = false;
 
-
 /**
  * Returns the width of the current drawing area [plugin or full-screen] in
  * pixels.
  */
-o3d.Client.prototype.__defineGetter__('width',
-    function() {
-      return this.gl.hack_canvas.width;
-    }
-);
+o3d.Client.prototype.__defineGetter__("width", function () {
+  return this.gl.hack_canvas.width;
+});
 
-o3d.Client.prototype.__defineSetter__('width',
-    function(x) {
-      this.gl.hack_canvas.width = x;
-    }
-);
-
+o3d.Client.prototype.__defineSetter__("width", function (x) {
+  this.gl.hack_canvas.width = x;
+});
 
 /**
  * Returns the height of the current drawing area [plugin or full-screen] in
  * pixels.
  */
-o3d.Client.prototype.__defineGetter__('height',
-    function() {
-      return this.gl.hack_canvas.height;
-    }
-);
+o3d.Client.prototype.__defineGetter__("height", function () {
+  return this.gl.hack_canvas.height;
+});
 
-o3d.Client.prototype.__defineSetter__('height',
-    function(x) {
-      this.gl.hack_canvas.height = x;
-    }
-);
-
+o3d.Client.prototype.__defineSetter__("height", function (x) {
+  this.gl.hack_canvas.height = x;
+});
 
 /**
  * Initializes this client using the canvas.
  * @param {Canvas}
  */
-o3d.Client.prototype.initWithCanvas = function(canvas) {
+o3d.Client.prototype.initWithCanvas = function (canvas) {
   var gl;
 
   var standard_attributes = {
-    alpha : true,
-    depth : true,
-    stencil : true,
-    antialias : true,
-    premultipliedAlpha : true
+    alpha: true,
+    depth: true,
+    stencil: true,
+    antialias: true,
+    premultipliedAlpha: true,
   };
 
-  try {gl = canvas.getContext("experimental-webgl", standard_attributes) } catch(e) { }
+  try {
+    gl = canvas.getContext("experimental-webgl", standard_attributes);
+  } catch (e) {}
   if (!gl)
-      try {gl = canvas.getContext("moz-webgl") } catch(e) { }
+    try {
+      gl = canvas.getContext("moz-webgl");
+    } catch (e) {}
   if (!gl) {
-      alert("No WebGL context found");
-      return null;
+    alert("No WebGL context found");
+    return null;
   }
 
   // TODO(petersont): hack workaround for WebGLRenderingContext.canvas
@@ -603,10 +544,8 @@ o3d.Client.prototype.initWithCanvas = function(canvas) {
   this.renderGraphRoot.gl = gl;
 
   gl.client = this;
-  gl.displayInfo = {width: canvas.width,
-                    height: canvas.height};
+  gl.displayInfo = { width: canvas.width, height: canvas.height };
 };
-
 
 /**
  * Sets the per frame render callback.
@@ -625,23 +564,20 @@ o3d.Client.prototype.initWithCanvas = function(canvas) {
  * @param {!o3d.RenderCallback} render_callback The callback to call
  *     each frame.
  */
-o3d.Client.prototype.setRenderCallback =
-    function(render_callback) {
+o3d.Client.prototype.setRenderCallback = function (render_callback) {
   if (this.render_callback) {
     this.clearRenderCallback();
   }
   this.render_callback = render_callback;
 };
 
-
 /**
  * Clears the per frame render callback.
  */
-o3d.Client.prototype.clearRenderCallback = function() {
+o3d.Client.prototype.clearRenderCallback = function () {
   clearInterval(this.render_callback_interval_);
   this.render_callback = null;
 };
-
 
 /**
  * Sets a render callback to be called at the end of the
@@ -662,20 +598,16 @@ o3d.Client.prototype.clearRenderCallback = function() {
  * @param {!o3d.RenderCallback} post_render_callback The callback to call
  *     each frame.
  */
-o3d.Client.prototype.setPostRenderCallback =
-    function(post_render_callback) {
+o3d.Client.prototype.setPostRenderCallback = function (post_render_callback) {
   this.postRenderCallback = post_render_callback;
 };
-
 
 /**
  * Clears the post render callback.
  */
-o3d.Client.prototype.clearPostRenderCallback = function() {
+o3d.Client.prototype.clearPostRenderCallback = function () {
   this.postRenderCallback = null;
 };
-
-
 
 /**
  * Sets the lost resources callback.
@@ -688,30 +620,27 @@ o3d.Client.prototype.clearPostRenderCallback = function() {
  * @param {!o3d.LostResourcesCallback} lost_resources_callback The callback when
  *     resources are lost.
  */
-o3d.Client.prototype.setLostResourcesCallback =
-    function(lost_resources_callback) {
+o3d.Client.prototype.setLostResourcesCallback = function (
+  lost_resources_callback
+) {
   this.lostResourcesCallback = lost_resources_callback;
 };
-
 
 /**
  * Clears the lost resources callback.
  */
-o3d.Client.prototype.clearLostResourcesCallback =
-    function() {
+o3d.Client.prototype.clearLostResourcesCallback = function () {
   this.lostResourcesCallback = null;
 };
-
 
 /**
  * Returns the event object for processing.
  * @param {Event} event A mouse-related DOM event.
  * @private
  */
-o3d.Client.getEvent_ = function(event) {
+o3d.Client.getEvent_ = function (event) {
   return event ? event : window.event;
 };
-
 
 /**
  * Returns an object with event, element, name and wheel in a semi cross
@@ -721,16 +650,12 @@ o3d.Client.getEvent_ = function(event) {
  * @return {!EventInfo} Info about the event.
  * @private
  */
-o3d.Client.getEventInfo_ = function(event) {
+o3d.Client.getEventInfo_ = function (event) {
   var elem = event.target ? event.target : event.srcElement;
-  var name = elem.id ? elem.id : ('->' + elem.toString());
+  var name = elem.id ? elem.id : "->" + elem.toString();
   var wheel = event.detail ? event.detail : -event.wheelDelta;
-  return { event: event,
-           element: elem,
-           name: name,
-           wheel: wheel };
+  return { event: event, element: elem, name: name, wheel: wheel };
 };
-
 
 /**
  * Returns the absolute position of an element for certain browsers.
@@ -739,7 +664,7 @@ o3d.Client.getEventInfo_ = function(event) {
  *     of the given element.
  * @private
  */
-o3d.Client.getAbsolutePosition_ = function(element) {
+o3d.Client.getAbsolutePosition_ = function (element) {
   var r = { x: element.offsetLeft, y: element.offsetTop };
   if (element.offsetParent) {
     var tmp = o3d.Client.getAbsolutePosition_(element.offsetParent);
@@ -761,12 +686,12 @@ o3d.Client.getAbsolutePosition_ = function(element) {
  * @return {!Object} An object containing keys 'x' and 'y'.
  * @private
  */
-o3d.Client.getRelativeCoordinates_ = function(eventInfo, opt_reference) {
+o3d.Client.getRelativeCoordinates_ = function (eventInfo, opt_reference) {
   var x, y;
   var event = eventInfo.event;
   var element = eventInfo.element;
   var reference = opt_reference || eventInfo.element;
-  if (!window.opera && typeof event.offsetX != 'undefined') {
+  if (!window.opera && typeof event.offsetX != "undefined") {
     // Use offset coordinates and find common offsetParent
     var pos = { x: event.offsetX, y: event.offsetY };
     // Send the coordinates upwards through the offsetParent chain.
@@ -780,9 +705,9 @@ o3d.Client.getRelativeCoordinates_ = function(eventInfo, opt_reference) {
     }
     // Look for the coordinates starting from the reference element.
     var e = reference;
-    var offset = { x: 0, y: 0 }
+    var offset = { x: 0, y: 0 };
     while (e) {
-      if (typeof e.mouseX_ != 'undefined') {
+      if (typeof e.mouseX_ != "undefined") {
         x = e.mouseX_ - offset.x;
         y = e.mouseY_ - offset.y;
         break;
@@ -807,7 +732,6 @@ o3d.Client.getRelativeCoordinates_ = function(eventInfo, opt_reference) {
   return { x: x, y: y };
 };
 
-
 /**
  * Wraps a user's event callback with one that properly computes
  * relative coordinates for the event.
@@ -815,8 +739,8 @@ o3d.Client.getRelativeCoordinates_ = function(eventInfo, opt_reference) {
  * @return {!o3d.EventCallback} Wrapped handler function.
  * @private
  */
-o3d.Client.wrapEventCallback_ = function(handler) {
-  return function(event) {
+o3d.Client.wrapEventCallback_ = function (handler) {
+  return function (event) {
     event = o3d.Client.getEvent_(event);
     var info = o3d.Client.getEventInfo_(event);
     var relativeCoords = o3d.Client.getRelativeCoordinates_(info);
@@ -825,7 +749,6 @@ o3d.Client.wrapEventCallback_ = function(handler) {
     handler(event);
   };
 };
-
 
 /**
  * Sets a callback for a given event type.
@@ -836,12 +759,11 @@ o3d.Client.wrapEventCallback_ = function(handler) {
  * @param {string} type Type of event to set callback for.
  * @param {!o3d.EventCallback} handler Function to call on event.
  */
-o3d.Client.prototype.setEventCallback =
-    function(type, handler) {
+o3d.Client.prototype.setEventCallback = function (type, handler) {
   var listener = this.gl.hack_canvas;
   // TODO(petersont): Figure out a way for a canvas to listen to a key event
   // directly.
-  var forKeyEvent = type.substr(0, 3) == 'key';
+  var forKeyEvent = type.substr(0, 3) == "key";
   if (forKeyEvent) {
     listener = document;
   } else {
@@ -850,20 +772,17 @@ o3d.Client.prototype.setEventCallback =
   listener.addEventListener(type, handler, true);
 };
 
-
 /**
  * Removes the previously-registered callback for an event of the given type.
  * @param {string} type Type of event to clear callback for.
  */
-o3d.Client.prototype.clearEventCallback =
-    function(type) {
-  var forKeyEvent = type.substr(0, 3) == 'key';
+o3d.Client.prototype.clearEventCallback = function (type) {
+  var forKeyEvent = type.substr(0, 3) == "key";
   if (forKeyEvent) {
     listener = document;
   }
   listener.removeEventListener(type);
 };
-
 
 /**
  * Sets the texture to use when a Texture or Sampler is missing while
@@ -884,11 +803,9 @@ o3d.Client.prototype.clearEventCallback =
  *
  * @param {o3d.Texture} texture texture to use for missing textures or null.
  */
-o3d.Client.prototype.setErrorTexture =
-    function(texture) {
+o3d.Client.prototype.setErrorTexture = function (texture) {
   o3d.notImplemented();
 };
-
 
 /**
  * Sets a callback for when the client ticks. The client processes some things
@@ -904,11 +821,9 @@ o3d.Client.prototype.setErrorTexture =
  * @param {o3d.TickCallback} tick_callback TickCallback to call when the
  *     Client ticks.
  */
-o3d.Client.prototype.setTickCallback =
-    function(tick_callback) {
+o3d.Client.prototype.setTickCallback = function (tick_callback) {
   this.tickCallback = tick_callback;
 };
-
 
 /**
  * Clears the tick callback
@@ -917,10 +832,9 @@ o3d.Client.prototype.setTickCallback =
  * pass in. It will be deleted if you call SetTickCallback a second
  * time or if you call clearTickCallback
  */
-o3d.Client.prototype.clearTickCallback = function() {
+o3d.Client.prototype.clearTickCallback = function () {
   this.tickCallback = null;
 };
-
 
 /**
  * Sets a callback for when the client gets an error. For example when a shader
@@ -943,16 +857,14 @@ o3d.Client.prototype.clearTickCallback = function() {
  * @param {o3d.ErrorCallback} error_callback ErrorCallback to call when the
  *     Client gets an error.
  */
-o3d.Client.prototype.setErrorCallback =
-    function(error_callback) {
+o3d.Client.prototype.setErrorCallback = function (error_callback) {
   // Other code expects to not see a null error callback.
   if (error_callback) {
     this.error_callback = error_callback;
   } else {
-    this.error_callback = function(string) {};
+    this.error_callback = function (string) {};
   }
 };
-
 
 /**
  * Clears the Error callback
@@ -961,19 +873,16 @@ o3d.Client.prototype.setErrorCallback =
  * pass in. It will be deleted if you call SetErrorCallback a second
  * time or if you call ClearErrorCallback.
  */
-o3d.Client.prototype.clearErrorCallback = function() {
+o3d.Client.prototype.clearErrorCallback = function () {
   this.setErrorCallback(null);
 };
-
-
 
 /**
  * Makes all parameters get re-evaluated.
  */
-o3d.Client.prototype.invalidateAllParameters = function() {
+o3d.Client.prototype.invalidateAllParameters = function () {
   o3d.notImplemented();
 };
-
 
 /**
  * Gets a copy of the current backbuffer of O3D as a data: url.
@@ -982,11 +891,9 @@ o3d.Client.prototype.invalidateAllParameters = function() {
  *    for info about toDataURL.
  * @return {string}  A Data URL for the backbuffer.
  */
-o3d.Client.prototype.toDataURL =
-    function(opt_mime_type) {
+o3d.Client.prototype.toDataURL = function (opt_mime_type) {
   o3d.notImplemented();
 };
-
 
 /**
  * Returns the status of initializing the renderer so we can display the
@@ -998,8 +905,6 @@ o3d.Client.prototype.toDataURL =
  */
 o3d.Client.prototype.renderer_init_status = 0;
 
-
-
 /**
  * Gets / Sets the cursor's shape.
  *
@@ -1007,15 +912,12 @@ o3d.Client.prototype.renderer_init_status = 0;
  */
 o3d.Client.prototype.cursor = null;
 
-
 /**
  * The last error reported by the plugin.
  *
  * @type {string}
  */
-o3d.Client.prototype.last_error_ = '';
-
-
+o3d.Client.prototype.last_error_ = "";
 
 /**
  * All the objects managed by this client.
@@ -1037,8 +939,6 @@ o3d.Client.prototype.last_error_ = '';
  */
 o3d.Client.prototype.objects = [];
 
-
-
 /**
  * Clears the error returned in lastError.
  */
@@ -1046,27 +946,21 @@ o3d.Client.prototype.clearLastError = function () {
   o3d.notImplemented();
 };
 
-
-
 /**
  * Resets the profiling information.
  */
-o3d.Client.prototype.profileReset = function() {
+o3d.Client.prototype.profileReset = function () {
   o3d.notImplemented();
 };
-
-
 
 /**
  * Returns the profiling information as a string.
  *  The profiling info.
  * @return {string}
  */
-o3d.Client.prototype.profileToString = function() {
+o3d.Client.prototype.profileToString = function () {
   o3d.notImplemented();
 };
-
-
 
 /**
  * A unique id for this client.
@@ -1074,12 +968,8 @@ o3d.Client.prototype.profileToString = function() {
  */
 o3d.Client.prototype.clientId = 0;
 
-
-
 /**
  * The canvas associated with this client.
  * @type {Element}
  */
 o3d.Client.prototype.canvas = null;
-
-

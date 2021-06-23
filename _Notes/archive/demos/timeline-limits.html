@@ -1,7 +1,7 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-<!-- This is used to create the audioparam automation clipping graph at
+    <!-- This is used to create the audioparam automation clipping graph at
 http://webaudio.github.io/web-audio-api/#computation-of-value
 
 Be careful when changing this, and if you do, think about updating the spec with a new image.
@@ -16,7 +16,7 @@ Be careful when changing this, and if you do, think about updating the spec with
   </head>
 
   <body>
-    <div id="graph" style="width:900px;height:540px;"></div>
+    <div id="graph" style="width: 900px; height: 540px"></div>
     <script>
       var peakValue = 4;
       var sampleRate = 500;
@@ -49,18 +49,19 @@ Be careful when changing this, and if you do, think about updating the spec with
         clippedData.push([t[k], clipped[k]]);
       }
 
-      $.plot("#graph", [{
-        label: "Clipped automation",
-        data: clippedData,
-        lineWidth: 1,
-      }, {
-        label: "Unclipped automation",
-        data: plotData,
-        dashes: { show: true },
-        lineWidth: 1
-      },
+      $.plot("#graph", [
+        {
+          label: "Clipped automation",
+          data: clippedData,
+          lineWidth: 1,
+        },
+        {
+          label: "Unclipped automation",
+          data: plotData,
+          dashes: { show: true },
+          lineWidth: 1,
+        },
       ]);
-      
     </script>
   </body>
 </html>

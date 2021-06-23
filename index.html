@@ -11,9 +11,7 @@
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
         <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
         <!--<link href="css/bootstrap-responsive.css" rel="stylesheet">-->
-
         <!-- <style>
-     
     </style> -->
     <link rel="stylesheet" href="./css/main.css">
     </head>
@@ -31,11 +29,9 @@
                   <ul class="nav">
                     <li><a href="#">Export</a></li>
                     <li><a href="#">Save</a></li>
-                    
                     <li><a id="step-backward" href="#"><i class="icon-step-backward icon-white"></i></a></li>
                     <li><a id="playPause" href="#"><i class="icon-play icon-white"></i></a></li>
                     <li><a id="stop" href="#"><i class="icon-stop icon-white"></i></a></li>
-                    
                 </ul>
                 <div id="navigation" style="display:flex; display-flex:row">
                 <h6>Navigation</h6>
@@ -44,13 +40,7 @@
         <li>something</li>
         <li>something</li>
       </ul>
-
 </div>
-              
-              
-
-        
-              
                 </div><!--/.nav-collapse -->
               </div>
             </div>
@@ -58,7 +48,6 @@
         <br>              
         <br>                    
         <br>  
- 
         <div class="container-fluid">
             <div id="holder">
             <div class="row-fluid" id="trackBed">
@@ -88,7 +77,6 @@
                                    <li class="effectDrag"><a href="#">Tremolo</a></li>
                                    <li class="effectDrag"><a href="#">Compressor</a></li>
                                    <li class="effectDrag"><a href="#">Delay</a></li>
-                                   
                                 </ul>
                             </div>
                         </div>
@@ -98,7 +86,6 @@
                             <li><a href="#effects" data-toggle="tab">Effects</a></li>
                         </ul>
                     </div>
-                    
                 </div>
                 <div id="tracks" class="span9 scrollable">
                     <div class="row-fluid">
@@ -121,7 +108,6 @@
                         </div>
                         <div class="span10 timeline">
                             <canvas id="timeline" width="500" height="20" style="padding-top:10px;">
-                                
                             </canvas>
                         </div>
                     </div>
@@ -141,19 +127,10 @@
                         <li class="hidden effect" id="Reverb">
                             <h6 style="margin:0px 0;">Reverb</h6>
                             <p class="left-knob-label">Reverb Type</p>
-                            
                             <p class="right-knob-label">Wet/Dry</p>
                             <span class="knobs">
-                                <!--<form>
-                                <select id="reverbList">
-                                    <option>reverb1</option>
-                                    <option>reverb2</option>  
-                                </select>
-                            </form> -->
-                                <input id="reverbIrSelectKnob" data-fgColor="#222222" data-linecap=round data-angleOffset=-125 data-angleArc=250 data-width="50" data-min="0" data-max="1" class="dial" value="0">
+                                                     <input id="reverbIrSelectKnob" data-fgColor="#222222" data-linecap=round data-angleOffset=-125 data-angleArc=250 data-width="50" data-min="0" data-max="1" class="dial" value="0">
                                 <input id = "reverbWetDryKnob" data-fgColor="#bd362f" data-linecap=round data-angleOffset=-125 data-angleArc=250 data-width="50" class="dial">
-                                
-                                
                             </span>
                             <button class="effectClose">&times;</button>
                         </li>
@@ -214,36 +191,16 @@
                 </div>
                 </div>
             </div>
-
-
         </div>
-        
         <div id="plugins">
-        
         <iframe id="inlineFrameExample"
     title="Inline Frame Example"
     frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true"
-    width="800"
+    width="96%"
     height="800"
-    src="./ADD-ONS/midi-synth/index.html">
+    src="./iframe-stage/index.html">
 </iframe>
-
-        <iframe id="inlineFrameExample"
-    title="Inline Frame Example"
-    frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true"
-    width="800"
-    height="800"
-    src="https://deploy-preview-5--jolly-austin-0c1a1d.netlify.app/organizer">
-</iframe>
-
-        
         </div>
-        
-        
-        
-        
-        
-        
         <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>

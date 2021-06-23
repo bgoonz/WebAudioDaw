@@ -29,7 +29,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * A Pack object functions as a container for O3D objects. The Pack
  * is used to control the lifetime scope of a collection of objects in bulk. The
@@ -38,12 +37,11 @@
  * reach zero while the pack is alive.
  * @constructor
  */
-o3d.Pack = function() {
+o3d.Pack = function () {
   o3d.NamedObject.call(this);
   this.objects_ = [];
 };
-o3d.inherit('Pack', 'NamedObject');
-
+o3d.inherit("Pack", "NamedObject");
 
 /**
  * Removes all internal references to the Pack from the client.
@@ -71,12 +69,10 @@ o3d.inherit('Pack', 'NamedObject');
  * pack.destroy() those objects will be freed. If the client then tries to
  * render and some objects are missing you'll immediately get an error.
  */
-o3d.Pack.prototype.destroy = function() {
+o3d.Pack.prototype.destroy = function () {
   this.objects_ = [];
   this.client.removePack(this);
 };
-
-
 
 /**
  * Removes a pack's reference to an object. Any object created from
@@ -110,11 +106,9 @@ o3d.Pack.prototype.destroy = function() {
  * @return {boolean}  True if the object was successfully removed.
  *     False if the object is not part of this pack.
  */
-o3d.Pack.prototype.removeObject =
-    function(object) {
+o3d.Pack.prototype.removeObject = function (object) {
   o3d.removeFromArray(this.objects_, object);
 };
-
 
 /**
  * Creates an Object by Class name.
@@ -170,18 +164,16 @@ o3d.Pack.prototype.removeObject =
  *      TRSToMatrix4
  * @return {o3d.ObjectBase}  The created object.
  */
-o3d.Pack.prototype.createObject =
-    function(type_name) {
+o3d.Pack.prototype.createObject = function (type_name) {
   var foo = o3d.global.o3d[o3d.filterTypeName_(type_name)];
-  if (typeof foo != 'function') {
-    throw 'cannot find type in o3d namespace: ' + type_name
+  if (typeof foo != "function") {
+    throw "cannot find type in o3d namespace: " + type_name;
   }
   var object = new foo();
   object.gl = this.gl;
   this.objects_.push(object);
   return object;
 };
-
 
 /**
  * Creates a new Texture2D object of the specified size and format and
@@ -199,9 +191,14 @@ o3d.Pack.prototype.createObject =
  *     expose RenderSurface objects through GetRenderSurface(...).
  * @return {!o3d.Texture2D}  The Texture2D object.
  */
-o3d.Pack.prototype.createTexture2D =
-    function(width, height, format, levels, enable_render_surfaces) {
-  var texture = this.createObject('Texture2D');
+o3d.Pack.prototype.createTexture2D = function (
+  width,
+  height,
+  format,
+  levels,
+  enable_render_surfaces
+) {
+  var texture = this.createObject("Texture2D");
   texture.width = width;
   texture.height = height;
   texture.levels = levels;
@@ -213,13 +210,21 @@ o3d.Pack.prototype.createTexture2D =
     // TODO(petersont): remove this allocation once Firefox supports
     // passing null as argument to this form of texImage2D.
     var t = new Uint8Array(width * height * 4);
-    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, width, height,
-        0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, t);
+    this.gl.texImage2D(
+      this.gl.TEXTURE_2D,
+      0,
+      this.gl.RGBA,
+      width,
+      height,
+      0,
+      this.gl.RGBA,
+      this.gl.UNSIGNED_BYTE,
+      t
+    );
   }
 
   return texture;
 };
-
 
 /**
  * Creates a new TextureCUBE object of the specified size and format and
@@ -236,9 +241,13 @@ o3d.Pack.prototype.createTexture2D =
  *     will expose RenderSurface objects through GetRenderSurface(...).
  * @return {!o3d.TextureCUBE}  The TextureCUBE object.
  */
-o3d.Pack.prototype.createTextureCUBE =
-    function(edgeLength, format, levels, enableRenderSurfaces) {
-  var texture = this.createObject('TextureCUBE');
+o3d.Pack.prototype.createTextureCUBE = function (
+  edgeLength,
+  format,
+  levels,
+  enableRenderSurfaces
+) {
+  var texture = this.createObject("TextureCUBE");
   texture.edgeLength = edgeLength;
   texture.texture_ = this.gl.createTexture();
   texture.texture_target_ = this.gl.TEXTURE_CUBE_MAP;
@@ -248,22 +257,41 @@ o3d.Pack.prototype.createTextureCUBE =
   // passing null as argument to this form of texImage2D.
   var t = new Uint8Array(edgeLength * edgeLength * 4);
   for (var ii = 0; ii < 6; ++ii) {
-    this.gl.texImage2D(this.gl.TEXTURE_CUBE_MAP_POSITIVE_X + ii,
-                       0, this.gl.RGBA, edgeLength, edgeLength, 0,
-                       this.gl.RGBA, this.gl.UNSIGNED_BYTE, t);
+    this.gl.texImage2D(
+      this.gl.TEXTURE_CUBE_MAP_POSITIVE_X + ii,
+      0,
+      this.gl.RGBA,
+      edgeLength,
+      edgeLength,
+      0,
+      this.gl.RGBA,
+      this.gl.UNSIGNED_BYTE,
+      t
+    );
   }
-  this.gl.texParameteri(this.gl.TEXTURE_CUBE_MAP,
-    this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
-  this.gl.texParameteri(this.gl.TEXTURE_CUBE_MAP,
-    this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
-  this.gl.texParameteri(this.gl.TEXTURE_CUBE_MAP,
-    this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
-  this.gl.texParameteri(this.gl.TEXTURE_CUBE_MAP,
-    this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+  this.gl.texParameteri(
+    this.gl.TEXTURE_CUBE_MAP,
+    this.gl.TEXTURE_MAG_FILTER,
+    this.gl.LINEAR
+  );
+  this.gl.texParameteri(
+    this.gl.TEXTURE_CUBE_MAP,
+    this.gl.TEXTURE_MIN_FILTER,
+    this.gl.LINEAR
+  );
+  this.gl.texParameteri(
+    this.gl.TEXTURE_CUBE_MAP,
+    this.gl.TEXTURE_WRAP_S,
+    this.gl.CLAMP_TO_EDGE
+  );
+  this.gl.texParameteri(
+    this.gl.TEXTURE_CUBE_MAP,
+    this.gl.TEXTURE_WRAP_T,
+    this.gl.CLAMP_TO_EDGE
+  );
 
   return texture;
 };
-
 
 /**
  * Creates a new RenderDepthStencilSurface object of a format suitable for use
@@ -275,13 +303,11 @@ o3d.Pack.prototype.createTextureCUBE =
  * @param {number} height The height of the RenderSurface in pixels
  * @return {!o3d.RenderDepthStencilSurface}  The RenderSurface object.
  */
-o3d.Pack.prototype.createDepthStencilSurface =
-    function(width, height) {
+o3d.Pack.prototype.createDepthStencilSurface = function (width, height) {
   var surface = this.createObject("RenderDepthStencilSurface");
   surface.initWithSize_(width, height);
   return surface;
 };
-
 
 /**
  * Search the pack for all objects of a certain class with a certain name.
@@ -296,23 +322,20 @@ o3d.Pack.prototype.createDepthStencilSurface =
  *     ClearBuffers, DrawPasses, etc...
  * @return {!Array.<!o3d.ObjectBase>}  Array of Objects.
  */
-o3d.Pack.prototype.getObjects =
-    function(name, class_type_name) {
+o3d.Pack.prototype.getObjects = function (name, class_type_name) {
   class_type_name = o3d.filterTypeName_(class_type_name);
 
   var found = [];
 
   for (var i = 0; i < this.objects_.length; ++i) {
     var object = this.objects_[i];
-    if (object.isAClassName(class_type_name) &&
-        object.name == name) {
+    if (object.isAClassName(class_type_name) && object.name == name) {
       found.push(object);
     }
   }
 
   return found;
 };
-
 
 /**
  * Search the pack for all objects of a certain class
@@ -326,9 +349,8 @@ o3d.Pack.prototype.getObjects =
  *     ClearBuffers, DrawPasses, etc...
  * @return {!Array.<!o3d.ObjectBase>}  Array of Objects.
  */
-o3d.Pack.prototype.getObjectsByClassName =
-    function(class_type_name) {
-  if (class_type_name.substr(0, 4) == 'o3d.') {
+o3d.Pack.prototype.getObjectsByClassName = function (class_type_name) {
+  if (class_type_name.substr(0, 4) == "o3d.") {
     class_type_name = class_type_name.substr(4);
   }
 
@@ -343,7 +365,6 @@ o3d.Pack.prototype.getObjectsByClassName =
 
   return found;
 };
-
 
 /**
  * All the objects managed by this pack.
@@ -363,7 +384,6 @@ o3d.Pack.prototype.getObjectsByClassName =
  */
 o3d.Pack.prototype.objects_ = [];
 
-
 /**
  * Creates a FileRequest to be used to asynchronously load a Texture or
  * RawData. Note: Loading a "TEXTURE" is deprecated. The recommended way to
@@ -372,18 +392,16 @@ o3d.Pack.prototype.objects_ = [];
  * @param {string} type Must be "TEXTURE" or "RAWDATA"
  * @return {!o3d.FileRequest}  a FileRequest
  */
-o3d.Pack.prototype.createFileRequest =
-    function(type) {
-  return this.createObject('FileRequest');
+o3d.Pack.prototype.createFileRequest = function (type) {
+  return this.createObject("FileRequest");
 };
 
 /**
  * Creates an ArchiveRequest so we can stream in assets from an archive.
  * @return {!o3d.ArchiveRequest}  an ArchiveRequest
  */
-o3d.Pack.prototype.createArchiveRequest =
-    function() {
-  return this.createObject('ArchiveRequest');
+o3d.Pack.prototype.createArchiveRequest = function () {
+  return this.createObject("ArchiveRequest");
 };
 
 /**
@@ -397,23 +415,21 @@ o3d.Pack.prototype.createArchiveRequest =
  *     format.
  * @return {!Array.<!o3d.Bitmap>}  An Array of Bitmaps object.
  */
-o3d.Pack.prototype.createBitmapsFromRawData =
-    function(raw_data) {
-  var bitmap = this.createObject('Bitmap')
+o3d.Pack.prototype.createBitmapsFromRawData = function (raw_data) {
+  var bitmap = this.createObject("Bitmap");
   if (!raw_data.image_) {
-    throw ('Cannot create bitmap from non-image data.');
+    throw "Cannot create bitmap from non-image data.";
     return [];
   }
   bitmap.height = raw_data.image_.height;
   bitmap.width = raw_data.image_.width;
 
-  var canvas = document.createElement('CANVAS');
+  var canvas = document.createElement("CANVAS");
 
   canvas.width = bitmap.width;
   canvas.height = bitmap.height;
-  var context = canvas.getContext('2d');
-  context.drawImage(raw_data.image_,
-      0, 0, bitmap.width, bitmap.height);
+  var context = canvas.getContext("2d");
+  context.drawImage(raw_data.image_, 0, 0, bitmap.width, bitmap.height);
 
   bitmap.canvas_ = canvas;
   // Most images require a vertical flip.
@@ -426,14 +442,11 @@ o3d.Pack.prototype.createBitmapsFromRawData =
   return [bitmap];
 };
 
-
 /**
  * Create RawData given a data URL.
  * @param {string} data_url The data URL from which to create the RawData.
  * @return {!o3d.RawData}  The RawData.
  */
-o3d.Pack.prototype.createRawDataFromDataURL =
-    function(data_url) {
+o3d.Pack.prototype.createRawDataFromDataURL = function (data_url) {
   o3d.notImplemented();
 };
-

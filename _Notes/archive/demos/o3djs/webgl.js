@@ -29,18 +29,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * @fileoverview This file contains utility functions for o3d running on
  * top of webgl.  The function o3djs.webgl.makeClients replaces the
  * function o3djs.util.makeClients.
  */
 
-o3djs.provide('o3djs.webgl');
+o3djs.provide("o3djs.webgl");
 
-o3djs.require('o3djs.effect');
-o3djs.require('o3djs.util');
-
+o3djs.require("o3djs.effect");
+o3djs.require("o3djs.util");
 
 /**
  * A Module with various utilities.
@@ -48,18 +46,19 @@ o3djs.require('o3djs.util');
  */
 o3djs.webgl = o3djs.webgl || {};
 
-
 /**
  * Finds all divs with an id that starts with "o3d" and inits a canvas
  * under them with o3d client object and the o3d namespace.
  */
-o3djs.webgl.makeClients = function(callback,
-                                   opt_features,
-                                   opt_requiredVersion,
-                                   opt_failureCallback,
-                                   opt_id,
-                                   opt_tag,
-                                   opt_debug) {
+o3djs.webgl.makeClients = function (
+  callback,
+  opt_features,
+  opt_requiredVersion,
+  opt_failureCallback,
+  opt_id,
+  opt_tag,
+  opt_debug
+) {
   opt_failureCallback = opt_failureCallback || o3djs.webgl.informPluginFailure;
 
   var clientElements = [];
@@ -69,11 +68,11 @@ o3djs.webgl.makeClients = function(callback,
     var element = elements[ee];
     var features = opt_features;
     if (!features) {
-      var o3d_features = element.getAttribute('o3d_features');
+      var o3d_features = element.getAttribute("o3d_features");
       if (o3d_features) {
         features = o3d_features;
       } else {
-        features = '';
+        features = "";
       }
     }
     var objElem = o3djs.webgl.createClient(element, features, opt_debug);
@@ -83,7 +82,7 @@ o3djs.webgl.makeClients = function(callback,
   // Wait for the client elements to be fully initialized. This
   // involves waiting for the page to fully layout and the initial
   // resize event to be processed.
-  var clearId = window.setInterval(function() {
+  var clearId = window.setInterval(function () {
     for (var cc = 0; cc < clientElements.length; ++cc) {
       var element = clientElements[cc];
       if (!element.sizeInitialized_) {
@@ -95,7 +94,6 @@ o3djs.webgl.makeClients = function(callback,
   });
 };
 
-
 /**
  * Adds a wrapper object to single gl function context that checks for errors
  * before the call.
@@ -103,39 +101,37 @@ o3djs.webgl.makeClients = function(callback,
  * @param {string} fname The name of the function.
  * @return {}
  */
-o3djs.webgl.createGLErrorWrapper = function(context, fname) {
-    return function() {
-        var rv = context[fname].apply(context, arguments);
-        var err = context.getError();
-        if (err != 0) {
-            throw "GL error " + err + " in " + fname;
-        }
-        return rv;
-    };
+o3djs.webgl.createGLErrorWrapper = function (context, fname) {
+  return function () {
+    var rv = context[fname].apply(context, arguments);
+    var err = context.getError();
+    if (err != 0) {
+      throw "GL error " + err + " in " + fname;
+    }
+    return rv;
+  };
 };
-
 
 /**
  * Adds a wrapper object to a webgl context that checks for errors
  * before each function call.
  */
-o3djs.webgl.addDebuggingWrapper = function(context) {
-    // Thanks to Ilmari Heikkinen for the idea on how to implement this
-    // so elegantly.
-    var wrap = {};
-    for (var i in context) {
-      if (typeof context[i] == 'function') {
-          wrap[i] = o3djs.webgl.createGLErrorWrapper(context, i);
-      } else {
-          wrap[i] = context[i];
-      }
+o3djs.webgl.addDebuggingWrapper = function (context) {
+  // Thanks to Ilmari Heikkinen for the idea on how to implement this
+  // so elegantly.
+  var wrap = {};
+  for (var i in context) {
+    if (typeof context[i] == "function") {
+      wrap[i] = o3djs.webgl.createGLErrorWrapper(context, i);
+    } else {
+      wrap[i] = context[i];
     }
-    wrap.getError = function() {
-        return context.getError();
-    };
-    return wrap;
+  }
+  wrap.getError = function () {
+    return context.getError();
+  };
+  return wrap;
 };
-
 
 /**
  * Creates a canvas under the given parent element and an o3d.Client
@@ -146,33 +142,33 @@ o3djs.webgl.addDebuggingWrapper = function(context) {
  * @ param {boolean} opt_debug Whether gl debugging features should be
  *     enabled.
  */
-o3djs.webgl.createClient = function(element, opt_features, opt_debug) {
-  opt_features = opt_features || '';
+o3djs.webgl.createClient = function (element, opt_features, opt_debug) {
+  opt_features = opt_features || "";
   opt_debug = opt_debug || false;
 
   // If we're creating a webgl client, the assumption is we're using webgl,
   // in which case the only acceptable shader language is glsl.  So, here
   // we set the shader language to glsl.
-  o3djs.effect.setLanguage('glsl');
+  o3djs.effect.setLanguage("glsl");
 
   // Make the canvas automatically resize to fill the containing
   // element (div), and initialize its size correctly.
   var canvas;
-  canvas = document.createElement('canvas');
+  canvas = document.createElement("canvas");
   canvas.style.width = "100%";
   canvas.style.height = "100%";
 
-  var client = new o3d.Client;
+  var client = new o3d.Client();
 
-  var resizeHandler = function() {
+  var resizeHandler = function () {
     var width = Math.max(1, canvas.clientWidth);
     var height = Math.max(1, canvas.clientHeight);
     canvas.width = width;
     canvas.height = height;
     canvas.sizeInitialized_ = true;
-    client.gl.displayInfo = {width: canvas.width, height: canvas.height};
+    client.gl.displayInfo = { width: canvas.width, height: canvas.height };
   };
-  window.addEventListener('resize', resizeHandler, false);
+  window.addEventListener("resize", resizeHandler, false);
   setTimeout(resizeHandler, 0);
 
   client.initWithCanvas(canvas);
@@ -186,5 +182,3 @@ o3djs.webgl.createClient = function(element, opt_features, opt_debug) {
   element.appendChild(canvas);
   return canvas;
 };
-
-

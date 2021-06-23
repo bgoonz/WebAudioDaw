@@ -29,210 +29,221 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>
-Title
-</title>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>Title</title>
 
-<!--
+    <!--
 <link rel="stylesheet" type="text/css" href = "simple.css" />
 -->
 
-<!-- Slider stuff -->
-<script type="text/javascript" src="lib/events.js"></script>
+    <!-- Slider stuff -->
+    <script type="text/javascript" src="lib/events.js"></script>
 
+    <style type="text/css">
+      #slider {
+        margin: 10px;
+      }
+    </style>
 
+    <!-- WebGL stuff -->
+    <script src="visualizer-gl/o3djs/base.js"></script>
+    <script src="visualizer-gl/cameracontroller.js"></script>
 
+    <!-- TODO(kbr): remove this dependency -->
+    <script src="visualizer-gl/moz/matrix4x4.js"></script>
 
-<style type="text/css">
-  #slider { margin: 10px; }
-</style>
+    <!-- Visualizer GL library -->
+    <script type="text/javascript" src="visualizer-gl/visualizer.js"></script>
 
-<!-- WebGL stuff -->
-<script src="visualizer-gl/o3djs/base.js"></script>
-<script src="visualizer-gl/cameracontroller.js"></script>
+    <!-- Our javascript code -->
+    <script type="text/javascript">
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
-<!-- TODO(kbr): remove this dependency -->
-<script src="visualizer-gl/moz/matrix4x4.js"></script>
+      o3djs.require("o3djs.shader");
 
-<!-- Visualizer GL library -->
-<script type="text/javascript" src="visualizer-gl/visualizer.js"></script>
+      function output(str) {
+        console.log(str);
+      }
 
-<!-- Our javascript code -->
-<script type="text/javascript">
+      // Events
+      // init() once the page has finished loading.
+      window.onload = init;
 
-window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      var context;
+      var source;
+      var filterNode;
+      var gainNode;
+      var analyser;
+      var buffer;
+      var audioBuffer;
 
-o3djs.require('o3djs.shader');
+      var analyserView1;
+      var analyserView2;
 
-function output(str) {
-    console.log(str);
-}
+      function init() {
+        analyserView1 = new AnalyserView("view1");
 
-// Events
-// init() once the page has finished loading.
-window.onload = init;
+        initAudio();
+        analyserView1.initByteBuffer();
+      }
 
-var context;
-var source;
-var filterNode;
-var gainNode;
-var analyser;
-var buffer;
-var audioBuffer;
+      function loadAudioBuffer(url) {
+        // Load asynchronously
 
-var analyserView1;
-var analyserView2;
+        var request = new XMLHttpRequest();
+        request.open("GET", url, true);
+        request.responseType = "arraybuffer";
 
-function init() {
-    analyserView1 = new AnalyserView("view1");
+        request.onload = function () {
+          context.decodeAudioData(
+            request.response,
+            function (buffer) {
+              audioBuffer = buffer;
+              finishLoad(); // add in the slider, etc. now that we've loaded the audio
+            },
+            function (error) {
+              console.error(error);
+            }
+          );
+        };
 
-    initAudio();
-    analyserView1.initByteBuffer();
-}
+        request.send();
+      }
 
-function loadAudioBuffer(url) {
-    // Load asynchronously
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = (function () {
+          return (
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame || // comment out if FF4 is slow (it caps framerate at ~30fps: https://bugzilla.mozilla.org/show_bug.cgi?id=630127)
+            window.oRequestAnimationFrame ||
+            window.msRequestAnimationFrame ||
+            function (
+              /* function FrameRequestCallback */ callback,
+              /* DOMElement Element */ element
+            ) {
+              window.setTimeout(callback, 1000 / 60);
+            }
+          );
+        })();
+      }
 
-    var request = new XMLHttpRequest();
-    request.open("GET", url, true);
-    request.responseType = "arraybuffer";
+      function draw() {
+        analyserView1.doFrequencyAnalysis();
+        window.requestAnimationFrame(draw);
+        var info = document.getElementById("info");
+        info.innerHTML = filterNode.frequency.value;
+      }
 
-    request.onload = function() { 
-        context.decodeAudioData(request.response, function(buffer) {
-            audioBuffer = buffer;
-            finishLoad();  // add in the slider, etc. now that we've loaded the audio
-        }, function(error) {
-            console.error(error);
-        });
-    };
+      function initAudio() {
+        context = new AudioContext();
 
-    request.send();
-}
+        source = context.createBufferSource();
+        filterNode = context.createBiquadFilter();
+        filterNode.type = "notch";
 
-if ( !window.requestAnimationFrame ) {
+        filterNode.frequency.value = 10;
+        filterNode.Q.value = 0.1;
 
-        window.requestAnimationFrame = ( function() {
+        gainNode = context.createGain();
 
-                return window.webkitRequestAnimationFrame ||
-                window.mozRequestAnimationFrame || // comment out if FF4 is slow (it caps framerate at ~30fps: https://bugzilla.mozilla.org/show_bug.cgi?id=630127)
-                window.oRequestAnimationFrame ||
-                window.msRequestAnimationFrame ||
-                function( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element ) {
+        analyser = context.createAnalyser();
+        analyser.fftSize = 2048;
 
-                        window.setTimeout( callback, 1000 / 60 );
+        // Connect audio processing graph
+        source.connect(filterNode);
+        filterNode.connect(gainNode);
+        gainNode.connect(analyser);
+        analyser.connect(context.destination);
 
-                };
+        loadAudioBuffer("sounds/tones/pinkgood.wav");
+      }
 
-        } )();
+      function finishLoad() {
+        source.buffer = audioBuffer;
+        source.loop = true;
 
-}
+        source.start(0.0);
 
-function draw() {
-    analyserView1.doFrequencyAnalysis();
-    window.requestAnimationFrame(draw);
-    var info = document.getElementById("info");
-    info.innerHTML = filterNode.frequency.value;
-}
+        var startTime = context.currentTime;
 
-function initAudio() {
-    context = new AudioContext();
-    
-    source = context.createBufferSource();
-    filterNode = context.createBiquadFilter();
-    filterNode.type = "notch";
+        // filterNode.frequency.setValueAtTime(200.0, startTime);
+        //
+        // var period = 2;
+        // for (var i = 0; i < 100; ++i) {
+        //     filterNode.frequency.exponentialRampToValueAtTime(200.0, startTime + i*period);
+        //     filterNode.frequency.exponentialRampToValueAtTime(10000.0, startTime + i*period + 0.5*period);
+        // }
 
-    filterNode.frequency.value = 10;
-    filterNode.Q.value = .1;
-        
-    gainNode = context.createGain();
-    
-    analyser = context.createAnalyser();
-    analyser.fftSize = 2048;
+        filterNode.frequency.value = 1000;
 
-    // Connect audio processing graph
-    source.connect(filterNode);
-    filterNode.connect(gainNode);
-    gainNode.connect(analyser);
-    analyser.connect(context.destination);
+        var osc = context.createOscillator();
+        osc.type = "triangle";
+        osc.frequency.value = 0.25;
+        osc.start(0);
+        var gainNode = context.createGain();
+        gainNode.gain.value = 4800;
+        osc.connect(gainNode);
+        // gainNode.connect(filterNode.frequency);
 
-    loadAudioBuffer("sounds/tones/pinkgood.wav");
-}
+        filterNode.detune.value = 0;
+        gainNode.connect(filterNode.detune);
 
-function finishLoad() {
-    source.buffer = audioBuffer;
-    source.loop = true;
+        window.requestAnimationFrame(draw);
+      }
+    </script>
+  </head>
 
-    source.start(0.0);
-    
-    var startTime = context.currentTime;
+  <body>
+    <!-- Canvas tag for WebGL output -->
 
-    // filterNode.frequency.setValueAtTime(200.0, startTime);
-    // 
-    // var period = 2;
-    // for (var i = 0; i < 100; ++i) {
-    //     filterNode.frequency.exponentialRampToValueAtTime(200.0, startTime + i*period);
-    //     filterNode.frequency.exponentialRampToValueAtTime(10000.0, startTime + i*period + 0.5*period);
-    // }
-
-    filterNode.frequency.value = 1000;
-
-    var osc = context.createOscillator();
-    osc.type = "triangle";
-    osc.frequency.value = .25;
-    osc.start(0);
-    var gainNode = context.createGain();
-    gainNode.gain.value = 4800;
-    osc.connect(gainNode);
-    // gainNode.connect(filterNode.frequency);
-
-    filterNode.detune.value = 0;
-    gainNode.connect(filterNode.detune);
-    
-    
-
-
-    
-    window.requestAnimationFrame(draw);
-}
-
-</script>
-
-</head>
-
-<body>
-
-<!-- Canvas tag for WebGL output -->
-
-<!--
+    <!--
 <canvas id="view1" width="1280px" height="800px"></canvas>
 <canvas id="view2" width="1280px" height="800px"></canvas>
 -->
 
-<canvas id="view1" width="1280px" height="800px"></canvas>
+    <canvas id="view1" width="1280px" height="800px"></canvas>
 
-<!--
+    <!--
 <canvas id="view2" width="640px" height="400px"></canvas>
 -->
 
-<!-- Sliders and other controls will be added here -->
-<div id="info"> </div>
+    <!-- Sliders and other controls will be added here -->
+    <div id="info"></div>
 
-<div id="controls"> </div>
+    <div id="controls"></div>
 
-<!-- Analyser type -->
-<input type="radio" name="radioSet" value="data" onMouseDown="analyserView1.setAnalysisType(ANALYSISTYPE_FREQUENCY);" />
-Frequency
-<input type="radio" name="radioSet" value="data" onMouseDown="analyserView1.setAnalysisType(ANALYSISTYPE_SONOGRAM);" />
-Sonogram
-<input type="radio" name="radioSet" value="data" checked="checked" onMouseDown="analyserView1.setAnalysisType(ANALYSISTYPE_3D_SONOGRAM);" />
-3D Sonogram
-<input type="radio" name="radioSet" value="data" onMouseDown="analyserView1.setAnalysisType(ANALYSISTYPE_WAVEFORM);"/>
-Waveform
-
-</body>
+    <!-- Analyser type -->
+    <input
+      type="radio"
+      name="radioSet"
+      value="data"
+      onMouseDown="analyserView1.setAnalysisType(ANALYSISTYPE_FREQUENCY);"
+    />
+    Frequency
+    <input
+      type="radio"
+      name="radioSet"
+      value="data"
+      onMouseDown="analyserView1.setAnalysisType(ANALYSISTYPE_SONOGRAM);"
+    />
+    Sonogram
+    <input
+      type="radio"
+      name="radioSet"
+      value="data"
+      checked="checked"
+      onMouseDown="analyserView1.setAnalysisType(ANALYSISTYPE_3D_SONOGRAM);"
+    />
+    3D Sonogram
+    <input
+      type="radio"
+      name="radioSet"
+      value="data"
+      onMouseDown="analyserView1.setAnalysisType(ANALYSISTYPE_WAVEFORM);"
+    />
+    Waveform
+  </body>
 </html>

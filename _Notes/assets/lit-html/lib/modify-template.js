@@ -11,9 +11,9 @@
  * subject to an additional IP rights grant found at
  * http://polymer.github.io/PATENTS.txt
  */
-import { isTemplatePartActive } from '../lit-html.js';
-const walkerNodeFilter = NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT |
-    NodeFilter.SHOW_TEXT;
+import { isTemplatePartActive } from "../lit-html.js";
+const walkerNodeFilter =
+  NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_TEXT;
 /**
  * Removes the list of nodes from a Template safely. In addition to removing
  * nodes from the Template, the Template part indices are updated to match
@@ -30,58 +30,66 @@ const walkerNodeFilter = NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT |
  * div <-- stop removing since previous sibling is the removing node (div#1, removed 4 nodes)
  */
 export function removeNodesFromTemplate(template, nodesToRemove) {
-    const { element: { content }, parts } = template;
-    const walker = document.createTreeWalker(content, walkerNodeFilter, null, false);
-    let partIndex = 0;
-    let part = parts[0];
-    let nodeIndex = -1;
-    let removeCount = 0;
-    const nodesToRemoveInTemplate = [];
-    let currentRemovingNode = null;
-    while (walker.nextNode()) {
-        nodeIndex++;
-        const node = walker.currentNode;
-        // End removal if stepped past the removing node
-        if (node.previousSibling === currentRemovingNode) {
-            currentRemovingNode = null;
-        }
-        // A node to remove was found in the template
-        if (nodesToRemove.has(node)) {
-            nodesToRemoveInTemplate.push(node);
-            // Track node we're removing
-            if (currentRemovingNode === null) {
-                currentRemovingNode = node;
-            }
-        }
-        // When removing, increment count by which to adjust subsequent part indices
-        if (currentRemovingNode !== null) {
-            removeCount++;
-        }
-        while (part !== undefined && part.index === nodeIndex) {
-            // If part is in a removed node deactivate it by setting index to -1 or
-            // adjust the index as needed.
-            part.index = currentRemovingNode !== null ? -1 : part.index - removeCount;
-            part = parts[++partIndex];
-        }
+  const {
+    element: { content },
+    parts,
+  } = template;
+  const walker = document.createTreeWalker(
+    content,
+    walkerNodeFilter,
+    null,
+    false
+  );
+  let partIndex = 0;
+  let part = parts[0];
+  let nodeIndex = -1;
+  let removeCount = 0;
+  const nodesToRemoveInTemplate = [];
+  let currentRemovingNode = null;
+  while (walker.nextNode()) {
+    nodeIndex++;
+    const node = walker.currentNode;
+    // End removal if stepped past the removing node
+    if (node.previousSibling === currentRemovingNode) {
+      currentRemovingNode = null;
     }
-    nodesToRemoveInTemplate.forEach((n) => n.parentNode.removeChild(n));
+    // A node to remove was found in the template
+    if (nodesToRemove.has(node)) {
+      nodesToRemoveInTemplate.push(node);
+      // Track node we're removing
+      if (currentRemovingNode === null) {
+        currentRemovingNode = node;
+      }
+    }
+    // When removing, increment count by which to adjust subsequent part indices
+    if (currentRemovingNode !== null) {
+      removeCount++;
+    }
+    while (part !== undefined && part.index === nodeIndex) {
+      // If part is in a removed node deactivate it by setting index to -1 or
+      // adjust the index as needed.
+      part.index = currentRemovingNode !== null ? -1 : part.index - removeCount;
+      part = parts[++partIndex];
+    }
+  }
+  nodesToRemoveInTemplate.forEach((n) => n.parentNode.removeChild(n));
 }
 const countNodes = (node) => {
-    let count = 1;
-    const walker = document.createTreeWalker(node, walkerNodeFilter, null, false);
-    while (walker.nextNode()) {
-        count++;
-    }
-    return count;
+  let count = 1;
+  const walker = document.createTreeWalker(node, walkerNodeFilter, null, false);
+  while (walker.nextNode()) {
+    count++;
+  }
+  return count;
 };
 const nextActiveIndexInTemplateParts = (parts, startIndex = -1) => {
-    for (let i = startIndex + 1; i < parts.length; i++) {
-        const part = parts[i];
-        if (isTemplatePartActive(part)) {
-            return i;
-        }
+  for (let i = startIndex + 1; i < parts.length; i++) {
+    const part = parts[i];
+    if (isTemplatePartActive(part)) {
+      return i;
     }
-    return -1;
+  }
+  return -1;
 };
 /**
  * Inserts the given node into the Template, optionally before the given
@@ -89,35 +97,43 @@ const nextActiveIndexInTemplateParts = (parts, startIndex = -1) => {
  * part indices are updated to match the mutated Template DOM.
  */
 export function insertNodeIntoTemplate(template, node, refNode = null) {
-    const { element: { content }, parts } = template;
-    // If there's no refNode, then put node at end of template.
-    // No part indices need to be shifted in this case.
-    if (refNode === null || refNode === undefined) {
-        content.appendChild(node);
+  const {
+    element: { content },
+    parts,
+  } = template;
+  // If there's no refNode, then put node at end of template.
+  // No part indices need to be shifted in this case.
+  if (refNode === null || refNode === undefined) {
+    content.appendChild(node);
+    return;
+  }
+  const walker = document.createTreeWalker(
+    content,
+    walkerNodeFilter,
+    null,
+    false
+  );
+  let partIndex = nextActiveIndexInTemplateParts(parts);
+  let insertCount = 0;
+  let walkerIndex = -1;
+  while (walker.nextNode()) {
+    walkerIndex++;
+    const walkerNode = walker.currentNode;
+    if (walkerNode === refNode) {
+      refNode.parentNode.insertBefore(node, refNode);
+      insertCount = countNodes(node);
+    }
+    while (partIndex !== -1 && parts[partIndex].index === walkerIndex) {
+      // If we've inserted the node, simply adjust all subsequent parts
+      if (insertCount > 0) {
+        while (partIndex !== -1) {
+          parts[partIndex].index += insertCount;
+          partIndex = nextActiveIndexInTemplateParts(parts, partIndex);
+        }
         return;
+      }
+      partIndex = nextActiveIndexInTemplateParts(parts, partIndex);
     }
-    const walker = document.createTreeWalker(content, walkerNodeFilter, null, false);
-    let partIndex = nextActiveIndexInTemplateParts(parts);
-    let insertCount = 0;
-    let walkerIndex = -1;
-    while (walker.nextNode()) {
-        walkerIndex++;
-        const walkerNode = walker.currentNode;
-        if (walkerNode === refNode) {
-            refNode.parentNode.insertBefore(node, refNode);
-            insertCount = countNodes(node);
-        }
-        while (partIndex !== -1 && parts[partIndex].index === walkerIndex) {
-            // If we've inserted the node, simply adjust all subsequent parts
-            if (insertCount > 0) {
-                while (partIndex !== -1) {
-                    parts[partIndex].index += insertCount;
-                    partIndex = nextActiveIndexInTemplateParts(parts, partIndex);
-                }
-                return;
-            }
-            partIndex = nextActiveIndexInTemplateParts(parts, partIndex);
-        }
-    }
+  }
 }
 //# sourceMappingURL=modify-template.js.map

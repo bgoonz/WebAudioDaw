@@ -12,10 +12,10 @@
  * http://polymer.github.io/PATENTS.txt
  */
 
-import {Template, isTemplatePartActive, TemplatePart} from '../lit-html.js';
+import { Template, isTemplatePartActive, TemplatePart } from "../lit-html.js";
 
-const walkerNodeFilter = NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT |
-NodeFilter.SHOW_TEXT;
+const walkerNodeFilter =
+  NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_TEXT;
 
 /**
  * Removes the list of nodes from a Template safely. In addition to removing
@@ -32,19 +32,26 @@ NodeFilter.SHOW_TEXT;
  *         div
  * div <-- stop removing since previous sibling is the removing node (div#1, removed 4 nodes)
  */
-export function removeNodesFromTemplate(template: Template, nodesToRemove: Set<Node>) {
-  const {element: {content}, parts} = template;
+export function removeNodesFromTemplate(
+  template: Template,
+  nodesToRemove: Set<Node>
+) {
+  const {
+    element: { content },
+    parts,
+  } = template;
   const walker = document.createTreeWalker(
     content,
     walkerNodeFilter,
     null as any,
-    false);
+    false
+  );
   let partIndex = 0;
   let part = parts[0];
   let nodeIndex = -1;
   let removeCount = 0;
   const nodesToRemoveInTemplate = [];
-  let currentRemovingNode: Node|null = null;
+  let currentRemovingNode: Node | null = null;
   while (walker.nextNode()) {
     nodeIndex++;
     const node = walker.currentNode as Element;
@@ -80,14 +87,18 @@ const countNodes = (node: Node) => {
     node,
     walkerNodeFilter,
     null as any,
-    false);
+    false
+  );
   while (walker.nextNode()) {
     count++;
   }
   return count;
 };
 
-const nextActiveIndexInTemplateParts = (parts: TemplatePart[], startIndex: number = -1) => {
+const nextActiveIndexInTemplateParts = (
+  parts: TemplatePart[],
+  startIndex: number = -1
+) => {
   for (let i = startIndex + 1; i < parts.length; i++) {
     const part = parts[i];
     if (isTemplatePartActive(part)) {
@@ -103,8 +114,14 @@ const nextActiveIndexInTemplateParts = (parts: TemplatePart[], startIndex: numbe
  * part indices are updated to match the mutated Template DOM.
  */
 export function insertNodeIntoTemplate(
-    template: Template, node: Node, refNode: Node|null = null) {
-  const {element: {content}, parts} = template;
+  template: Template,
+  node: Node,
+  refNode: Node | null = null
+) {
+  const {
+    element: { content },
+    parts,
+  } = template;
   // If there's no refNode, then put node at end of template.
   // No part indices need to be shifted in this case.
   if (refNode === null || refNode === undefined) {
@@ -112,10 +129,11 @@ export function insertNodeIntoTemplate(
     return;
   }
   const walker = document.createTreeWalker(
-      content,
-      walkerNodeFilter,
-      null as any,
-      false);
+    content,
+    walkerNodeFilter,
+    null as any,
+    false
+  );
   let partIndex = nextActiveIndexInTemplateParts(parts);
   let insertCount = 0;
   let walkerIndex = -1;

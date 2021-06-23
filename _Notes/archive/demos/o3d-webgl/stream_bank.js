@@ -29,22 +29,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * The StreamBank a collection of streams that hold vertices.
  * @constructor
  */
-o3d.StreamBank = function() {
+o3d.StreamBank = function () {
   o3d.NamedObject.call(this);
   this.vertexStreams = [];
 };
-o3d.inherit('StreamBank', 'NamedObject');
+o3d.inherit("StreamBank", "NamedObject");
 
 /**
  * Array of streams.
  */
 o3d.StreamBank.prototype.vertexStreams = [];
-
 
 /**
  * Binds a VertexBuffer field to the StreamBank and defines how the data in
@@ -56,15 +54,22 @@ o3d.StreamBank.prototype.vertexStreams = [];
  * @param {number} start_index The first element to use.
  * @return {boolean}  True if successful.
  */
-o3d.StreamBank.prototype.setVertexStream =
-    function(semantic, semantic_index, field, start_index) {
+o3d.StreamBank.prototype.setVertexStream = function (
+  semantic,
+  semantic_index,
+  field,
+  start_index
+) {
   if (this.vertexStreams[semantic] == undefined) {
     this.vertexStreams[semantic] = [];
   }
   this.vertexStreams[semantic][semantic_index] = new o3d.Stream(
-    semantic, semantic_index, field, start_index);
+    semantic,
+    semantic_index,
+    field,
+    start_index
+  );
 };
-
 
 /**
  * Searches the vertex streams bound to the StreamBank for one with the given
@@ -74,14 +79,12 @@ o3d.StreamBank.prototype.setVertexStream =
  *     semantic to use.
  * @return {o3d.Stream}  The found stream or null if it does not exist.
  */
-o3d.StreamBank.prototype.getVertexStream =
-    function(semantic, semantic_index) {
+o3d.StreamBank.prototype.getVertexStream = function (semantic, semantic_index) {
   if (this.vertexStreams[semantic] == undefined) {
     return;
   }
   return this.vertexStreams[semantic][semantic_index];
 };
-
 
 /**
  * Removes a vertex stream from this StreamBank.
@@ -90,13 +93,13 @@ o3d.StreamBank.prototype.getVertexStream =
  *     semantic to use.
  * @return {boolean}  true if the specified stream existed.
  */
-o3d.StreamBank.prototype.removeVertexStream =
-    function(semantic, semantic_index) {
+o3d.StreamBank.prototype.removeVertexStream = function (
+  semantic,
+  semantic_index
+) {
   if (this.vertexStreams[semantic] == undefined) {
     return false;
   }
   this.vertexStreams[semantic][semantic_index] = null;
   return true;
 };
-
-

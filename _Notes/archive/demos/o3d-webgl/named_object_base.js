@@ -29,21 +29,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * Base class for all objects that are identifiable by a name.
  * @constructor
  */
-o3d.NamedObjectBase = function() {
+o3d.NamedObjectBase = function () {
   o3d.ObjectBase.call(this);
 };
-o3d.inherit('NamedObjectBase', 'ObjectBase');
-
+o3d.inherit("NamedObjectBase", "ObjectBase");
 
 /**
  * The object's name.
  * @type {string}
  */
 o3d.NamedObjectBase.prototype.name = "";
-
-

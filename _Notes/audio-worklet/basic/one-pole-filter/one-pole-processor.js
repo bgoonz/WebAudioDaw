@@ -10,12 +10,14 @@
  */
 class OnePoleProcessor extends AudioWorkletProcessor {
   static get parameterDescriptors() {
-    return [{
-      name: 'frequency',
-      defaultValue: 250,
-      minValue: 0,
-      maxValue: 0.5 * sampleRate
-    }];
+    return [
+      {
+        name: "frequency",
+        defaultValue: 250,
+        minValue: 0,
+        maxValue: 0.5 * sampleRate,
+      },
+    ];
   }
 
   constructor() {
@@ -24,7 +26,7 @@ class OnePoleProcessor extends AudioWorkletProcessor {
   }
 
   updateCoefficientsWithFrequency_(frequency) {
-    this.b1_ = Math.exp(-2 * Math.PI * frequency / sampleRate);
+    this.b1_ = Math.exp((-2 * Math.PI * frequency) / sampleRate);
     this.a0_ = 1.0 - this.b1_;
     this.z1_ = 0;
   }
@@ -59,4 +61,4 @@ class OnePoleProcessor extends AudioWorkletProcessor {
   }
 }
 
-registerProcessor('one-pole-processor', OnePoleProcessor);
+registerProcessor("one-pole-processor", OnePoleProcessor);

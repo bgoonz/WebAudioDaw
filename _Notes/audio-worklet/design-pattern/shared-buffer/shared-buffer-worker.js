@@ -30,31 +30,31 @@
 // Indices for the State SAB.
 const STATE = {
   // Flag for Atomics.wait() and notify().
-  'REQUEST_RENDER': 0,
+  REQUEST_RENDER: 0,
 
   // Available frames in Input SAB.
-  'IB_FRAMES_AVAILABLE': 1,
+  IB_FRAMES_AVAILABLE: 1,
 
   // Read index of Input SAB.
-  'IB_READ_INDEX': 2,
+  IB_READ_INDEX: 2,
 
   // Write index of Input SAB.
-  'IB_WRITE_INDEX': 3,
+  IB_WRITE_INDEX: 3,
 
   // Available frames in Output SAB.
-  'OB_FRAMES_AVAILABLE': 4,
+  OB_FRAMES_AVAILABLE: 4,
 
   // Read index of Output SAB.
-  'OB_READ_INDEX': 5,
+  OB_READ_INDEX: 5,
 
   // Write index of Output SAB.
-  'OB_WRITE_INDEX': 6,
+  OB_WRITE_INDEX: 6,
 
   // Size of Input and Output SAB.
-  'RING_BUFFER_LENGTH': 7,
+  RING_BUFFER_LENGTH: 7,
 
   // Size of user-supplied processing callback.
-  'KERNEL_LENGTH': 8,
+  KERNEL_LENGTH: 8,
 };
 
 // Worker processor config.
@@ -75,7 +75,6 @@ let States;
 let InputRingBuffer;
 let OutputRingBuffer;
 
-
 /**
  * Process audio data in the ring buffer with the user-supplied kernel.
  *
@@ -87,22 +86,19 @@ function processKernel() {
   let outputWriteIndex = States[STATE.OB_WRITE_INDEX];
 
   if (isNaN(InputRingBuffer[0][inputReadIndex]))
-    console.error('Found NaN at buffer index: %d', inputReadIndex);
+    console.error("Found NaN at buffer index: %d", inputReadIndex);
 
   // A stupid processing kernel that clones audio data sample-by-sample. Also
   // note here we are handling only the first channel.
   for (let i = 0; i < CONFIG.kernelLength; ++i) {
     OutputRingBuffer[0][outputWriteIndex] = InputRingBuffer[0][inputReadIndex];
-    if (++outputWriteIndex === CONFIG.ringBufferLength)
-      outputWriteIndex = 0;
-    if (++inputReadIndex === CONFIG.ringBufferLength)
-      inputReadIndex = 0;
+    if (++outputWriteIndex === CONFIG.ringBufferLength) outputWriteIndex = 0;
+    if (++inputReadIndex === CONFIG.ringBufferLength) inputReadIndex = 0;
   }
 
   States[STATE.IB_READ_INDEX] = inputReadIndex;
   States[STATE.OB_WRITE_INDEX] = outputWriteIndex;
 }
-
 
 /**
  * Waits for the signal delivered via |States| SAB. When signaled, process
@@ -110,7 +106,7 @@ function processKernel() {
  */
 function waitOnRenderRequest() {
   // As long as |REQUEST_RENDER| is zero, keep waiting. (sleep)
-  while (Atomics.wait(States, STATE.REQUEST_RENDER, 0) === 'ok') {
+  while (Atomics.wait(States, STATE.REQUEST_RENDER, 0) === "ok") {
     processKernel();
 
     // Update the number of available frames in the buffer.
@@ -138,7 +134,7 @@ function initialize(options) {
 
   if (!self.SharedArrayBuffer) {
     postMessage({
-      message: 'WORKER_ERROR',
+      message: "WORKER_ERROR",
       detail: `SharedArrayBuffer is not supported in your browser. See
           https://developers.google.com/web/updates/2018/06/audio-worklet-design-pattern
           for more info.`,
@@ -148,14 +144,15 @@ function initialize(options) {
 
   // Allocate SABs.
   const SharedBuffers = {
-    states:
-        new SharedArrayBuffer(CONFIG.stateBufferLength * CONFIG.bytesPerState),
-    inputRingBuffer:
-        new SharedArrayBuffer(CONFIG.ringBufferLength *
-                              CONFIG.channelCount * CONFIG.bytesPerSample),
-    outputRingBuffer:
-        new SharedArrayBuffer(CONFIG.ringBufferLength *
-                              CONFIG.channelCount * CONFIG.bytesPerSample),
+    states: new SharedArrayBuffer(
+      CONFIG.stateBufferLength * CONFIG.bytesPerState
+    ),
+    inputRingBuffer: new SharedArrayBuffer(
+      CONFIG.ringBufferLength * CONFIG.channelCount * CONFIG.bytesPerSample
+    ),
+    outputRingBuffer: new SharedArrayBuffer(
+      CONFIG.ringBufferLength * CONFIG.channelCount * CONFIG.bytesPerSample
+    ),
   };
 
   // Get TypedArrayView from SAB.
@@ -169,7 +166,7 @@ function initialize(options) {
 
   // Notify AWN in the main scope that the worker is ready.
   postMessage({
-    message: 'WORKER_READY',
+    message: "WORKER_READY",
     SharedBuffers: SharedBuffers,
   });
 
@@ -178,10 +175,10 @@ function initialize(options) {
 }
 
 onmessage = (eventFromMain) => {
-  if (eventFromMain.data.message === 'INITIALIZE_WORKER') {
+  if (eventFromMain.data.message === "INITIALIZE_WORKER") {
     initialize(eventFromMain.data.options);
     return;
   }
 
-  console.log('[SharedBufferWorker] Unknown message: ', eventFromMain);
+  console.log("[SharedBufferWorker] Unknown message: ", eventFromMain);
 };

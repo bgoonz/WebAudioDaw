@@ -29,7 +29,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * An Element manages DrawElements for classes inherited from Element.
  *
@@ -43,8 +42,12 @@
  *     frustum.
  * @constructor
  */
-o3d.Element =
-    function(opt_material, opt_boundingBox, opt_zSortPoint, opt_cull) {
+o3d.Element = function (
+  opt_material,
+  opt_boundingBox,
+  opt_zSortPoint,
+  opt_cull
+) {
   o3d.ParamObject.call(this);
 
   /**
@@ -59,8 +62,8 @@ o3d.Element =
    * used to render this Element.
    * @type {o3d.BoundingBox}
    */
-  this.boundingBox = opt_boundingBox ||
-      new o3d.BoundingBox([-1, -1, -1], [1, 1, 1]);
+  this.boundingBox =
+    opt_boundingBox || new o3d.BoundingBox([-1, -1, -1], [1, 1, 1]);
 
   /**
    * The z sort point for this element. If this Element is drawn by a DrawPass
@@ -120,26 +123,22 @@ o3d.Element =
    */
   this.drawElements = [];
 };
-o3d.inherit('Element', 'ParamObject');
+o3d.inherit("Element", "ParamObject");
 
-o3d.ParamObject.setUpO3DParam_(o3d.Element, 'material', 'ParamMaterial');
-o3d.ParamObject.setUpO3DParam_(o3d.Element, 'boundingBox', 'ParamBoundingBox');
-o3d.ParamObject.setUpO3DParam_(o3d.Element, 'zSortPoint', 'ParamFloat3');
-o3d.ParamObject.setUpO3DParam_(o3d.Element, 'priority', 'ParamFloat');
-o3d.ParamObject.setUpO3DParam_(o3d.Element, 'cull', 'ParamBoolean');
+o3d.ParamObject.setUpO3DParam_(o3d.Element, "material", "ParamMaterial");
+o3d.ParamObject.setUpO3DParam_(o3d.Element, "boundingBox", "ParamBoundingBox");
+o3d.ParamObject.setUpO3DParam_(o3d.Element, "zSortPoint", "ParamFloat3");
+o3d.ParamObject.setUpO3DParam_(o3d.Element, "priority", "ParamFloat");
+o3d.ParamObject.setUpO3DParam_(o3d.Element, "cull", "ParamBoolean");
 
-o3d.Element.prototype.__defineSetter__('owner',
-    function(o) {
-      this.owner_ = o;
-      o.addElement(this);
-    }
-);
+o3d.Element.prototype.__defineSetter__("owner", function (o) {
+  this.owner_ = o;
+  o.addElement(this);
+});
 
-o3d.Element.prototype.__defineGetter__('owner',
-    function() {
-      return this.owner_;
-    }
-);
+o3d.Element.prototype.__defineGetter__("owner", function () {
+  return this.owner_;
+});
 
 /**
  * Creates a DrawElement for this Element. Note that unlike
@@ -153,15 +152,13 @@ o3d.Element.prototype.__defineGetter__('owner',
  *     setup a shadow pass by passing in a shadow material.
  * @return {!o3d.DrawElement} The created draw element.
  */
-o3d.Element.prototype.createDrawElement =
-    function(pack, material) {
-  drawElement = pack.createObject('DrawElement');
+o3d.Element.prototype.createDrawElement = function (pack, material) {
+  drawElement = pack.createObject("DrawElement");
   drawElement.owner = this;
   drawElement.material = material || this.material;
   this.drawElements.push(drawElement);
   return drawElement;
 };
-
 
 /**
  * Computes the intersection of a ray in the same coordinate system as
@@ -175,11 +172,14 @@ o3d.Element.prototype.createDrawElement =
  *     intersected() is true then the ray intersected a something. position()
  *     is the exact point of intersection.
  */
-o3d.Element.prototype.intersectRay =
-    function(position_stream_index, cull, start, end) {
+o3d.Element.prototype.intersectRay = function (
+  position_stream_index,
+  cull,
+  start,
+  end
+) {
   o3d.notImplemented();
 };
-
 
 /**
  * Computes the bounding box in same coordinate system as the specified
@@ -187,15 +187,11 @@ o3d.Element.prototype.intersectRay =
  * @param {number} position_stream_index Index of POSITION stream.
  * @return {!o3d.BoundingBox}  The boundingbox for this element in local space.
  */
-o3d.Element.prototype.getBoundingBox =
-    function(position_stream_index) {
+o3d.Element.prototype.getBoundingBox = function (position_stream_index) {
   return this.boundingBox;
 };
-
 
 /**
  * Virtual function that renders the element.
  */
-o3d.Element.prototype.render = function() { };
-
-
+o3d.Element.prototype.render = function () {};

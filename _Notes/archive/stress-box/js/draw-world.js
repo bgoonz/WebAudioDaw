@@ -4,14 +4,14 @@
  * @param  {[type]} context [description]
  * @return {[type]}         [description]
  */
-function drawJoint (joint, context) {
+function drawJoint(joint, context) {
   let b1 = joint.m_body1;
   let b2 = joint.m_body2;
   let x1 = b1.m_position;
   let x2 = b2.m_position;
   let p1 = joint.GetAnchor1();
   let p2 = joint.GetAnchor2();
-  context.strokeStyle = '#00eeee';
+  context.strokeStyle = "#00eeee";
   context.beginPath();
 
   switch (joint.m_type) {
@@ -42,15 +42,14 @@ function drawJoint (joint, context) {
   context.stroke();
 }
 
-
 /**
  * [drawShape description]
  * @param  {[type]} shape   [description]
  * @param  {[type]} context [description]
  * @return {[type]}         [description]
  */
-function drawShape (shape, context) {
-  context.strokeStyle = '#ffffff';
+function drawShape(shape, context) {
+  context.strokeStyle = "#ffffff";
   context.beginPath();
 
   switch (shape.m_type) {
@@ -60,7 +59,7 @@ function drawShape (shape, context) {
       let r = circle.m_radius;
       let segments = 16.0;
       let theta = 0.0;
-      let dtheta = 2.0 * Math.PI / segments;
+      let dtheta = (2.0 * Math.PI) / segments;
 
       // draw circle
       context.moveTo(pos.x + r, pos.y);
@@ -81,20 +80,23 @@ function drawShape (shape, context) {
 
     case b2Shape.e_polyShape:
       let poly = shape;
-      let tV = b2Math.AddVV(poly.m_position,
-                            b2Math.b2MulMV(poly.m_R, poly.m_vertices[0]));
+      let tV = b2Math.AddVV(
+        poly.m_position,
+        b2Math.b2MulMV(poly.m_R, poly.m_vertices[0])
+      );
       context.moveTo(tV.x, tV.y);
       for (let i = 0; i < poly.m_vertexCount; i++) {
-        let v = b2Math.AddVV(poly.m_position,
-                             b2Math.b2MulMV(poly.m_R, poly.m_vertices[i]));
+        let v = b2Math.AddVV(
+          poly.m_position,
+          b2Math.b2MulMV(poly.m_R, poly.m_vertices[i])
+        );
         context.lineTo(v.x, v.y);
       }
       context.lineTo(tV.x, tV.y);
       break;
-    }
+  }
   context.stroke();
 }
-
 
 /**
  * [drawWorld description]
@@ -102,7 +104,7 @@ function drawShape (shape, context) {
  * @param  {[type]} context [description]
  * @return {[type]}         [description]
  */
-function drawWorld (world, context) {
+function drawWorld(world, context) {
   for (var j = world.m_jointList; j; j = j.m_next) {
     drawJoint(j, context);
   }

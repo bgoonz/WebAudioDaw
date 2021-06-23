@@ -21,7 +21,9 @@
  */
 class NoiseGenerator extends AudioWorkletProcessor {
   static get parameterDescriptors() {
-    return [{name: 'amplitude', defaultValue: 0.25, minValue: 0, maxValue: 1}];
+    return [
+      { name: "amplitude", defaultValue: 0.25, minValue: 0, maxValue: 1 },
+    ];
   }
 
   process(inputs, outputs, parameters) {
@@ -34,8 +36,10 @@ class NoiseGenerator extends AudioWorkletProcessor {
       for (let i = 0; i < outputChannel.length; ++i) {
         // This loop can branch out based on AudioParam array length, but
         // here we took a simple approach for the demonstration purpose.
-        outputChannel[i] = 2 * (Math.random() - 0.5) *
-            (isAmplitudeConstant ? amplitude[0] : amplitude[i]);
+        outputChannel[i] =
+          2 *
+          (Math.random() - 0.5) *
+          (isAmplitudeConstant ? amplitude[0] : amplitude[i]);
       }
     }
 
@@ -43,4 +47,4 @@ class NoiseGenerator extends AudioWorkletProcessor {
   }
 }
 
-registerProcessor('noise-generator', NoiseGenerator);
+registerProcessor("noise-generator", NoiseGenerator);

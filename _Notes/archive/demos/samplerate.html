@@ -29,62 +29,66 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>
-Title
-</title>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>Title</title>
 
-<link rel="stylesheet" type="text/css" href = "style/simple.css" />
+    <link rel="stylesheet" type="text/css" href="style/simple.css" />
 
-<!-- Slider stuff -->
-<script type="text/javascript" src="lib/events.js"></script>
-<style type="text/css">
-  #slider { margin: 10px; }
-</style>
+    <!-- Slider stuff -->
+    <script type="text/javascript" src="lib/events.js"></script>
+    <style type="text/css">
+      #slider {
+        margin: 10px;
+      }
+    </style>
 
-<!-- Our javascript code -->
-<script type="text/javascript">
+    <!-- Our javascript code -->
+    <script type="text/javascript">
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
-window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      // Events
+      // init() once the page has finished loading.
 
-// Events
-// init() once the page has finished loading.
+      var context;
+      var source;
+      var gain;
 
-var context;
-var source;
-var gain;
+      function getSampleRate() {
+        context = new AudioContext();
+        source = context.createBufferSource();
+        gain = context.createGain();
+        source.connect(context.destination);
+        source.start(0);
 
-function getSampleRate() {
-    context = new AudioContext();
-    source = context.createBufferSource();
-    gain = context.createGain();
-    source.connect(context.destination);
-    source.start(0);
+        var s = "context.sampleRate = " + context.sampleRate;
+        var e = document.getElementById("sample-rate");
 
-    var s = "context.sampleRate = " + context.sampleRate;
-    var e = document.getElementById("sample-rate");
-    
-    e.innerHTML = s;
-}
+        e.innerHTML = s;
+      }
+    </script>
+  </head>
 
-</script>
-</head>
+  <body>
+    <span onclick="getSampleRate();">
+      CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK
+      FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR
+      SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR
+      SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR
+      SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR
+      SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR
+      SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR
+      SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR
+      SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR
+      SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR
+      SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR
+      SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR
+      SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR
+      SAMPLE-RATE
+    </span>
 
-<body>
-
-<span onclick="getSampleRate();">
-CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE 
-CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE 
-CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE 
-CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE 
-CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE CLICK FOR SAMPLE-RATE 
-</span>
-
-<div id="sample-rate"></div>
-
-</body>
+    <div id="sample-rate"></div>
+  </body>
 </html>

@@ -29,7 +29,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * A ObjectBase is a base class that manages a set of components in a
  * Buffer of a specific type. ObjectBases are managed by Buffers and can
@@ -37,14 +36,13 @@
  * is removed from a Buffer the ObjectBase's buffer property will be set
  * to null.
  */
-o3d.ObjectBase = function() { };
-
+o3d.ObjectBase = function () {};
 
 /**
  * Used by isAClassName.
  * @type {string}
  */
-o3d.ObjectBase.prototype.className = 'o3d.ObjectBase';
+o3d.ObjectBase.prototype.className = "o3d.ObjectBase";
 
 /**
  * @type {o3d.ObjectBase}
@@ -57,7 +55,7 @@ o3d.ObjectBase.prototype.superClass = null;
  * @param {string} className The name of a class.
  * @return {boolean} Whether this is counts as a className.
  */
-o3d.ObjectBase.prototype.isAClassName = function(className) {
+o3d.ObjectBase.prototype.isAClassName = function (className) {
   var object = this;
   while (object != undefined) {
     if (object.className == className) {
@@ -67,5 +65,3 @@ o3d.ObjectBase.prototype.isAClassName = function(className) {
   }
   return false;
 };
-
-

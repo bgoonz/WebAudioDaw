@@ -29,19 +29,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 /**
  * Namespace o3d
  * @constructor
  */
-o3d.Stream = function(semantic, semantic_index, field, start_index) {
+o3d.Stream = function (semantic, semantic_index, field, start_index) {
   o3d.NamedObject.call(this);
   this.semantic = semantic;
   this.semanticIndex = semantic_index;
   this.field = field;
   this.startIndex = start_index;
 };
-o3d.inherit('Stream', 'NamedObject')
+o3d.inherit("Stream", "NamedObject");
 
 /**
  * @type {number}
@@ -57,7 +56,7 @@ o3d.Stream.Semantic = goog.typedef;
  *  BINORMAL,
  *  COLOR,
  *  TEXCOORD
- * 
+ *
  * Semantics used when binding buffers to the streambank.  They determine how
  * the Stream links up to the shader inputs.
  */
@@ -69,21 +68,15 @@ o3d.Stream.BINORMAL = 4;
 o3d.Stream.COLOR = 5;
 o3d.Stream.TEXCOORD = 6;
 
-
-
 /**
  * The associated Field.
  */
 o3d.Stream.prototype.field = null;
 
-
-
 /**
  * The semantic specified for the Stream.
  */
 o3d.Stream.prototype.semantic = o3d.Stream.UNKNOWN_SEMANTIC;
-
-
 
 /**
  * The semantic index specified for the Stream
@@ -91,12 +84,7 @@ o3d.Stream.prototype.semantic = o3d.Stream.UNKNOWN_SEMANTIC;
  */
 o3d.Stream.prototype.semanticIndex = 0;
 
-
-
 /**
  * The start index for the Stream.
  */
 o3d.Stream.prototype.startIndex = 0;
-
-
-
