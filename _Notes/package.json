@@ -12,7 +12,7 @@
     "eslint-config-google": "0.14.0",
     "gulp": "3.9.1",
     "gulp-concat-css": "3.1.0",
-    "lit-html": "0.14.0",
+    "lit-html": "1.4.1",
     "run-sequence": "2.2.1"
   }
 }
