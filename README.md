@@ -7,7 +7,6 @@ MihirBegMusicLab is an open source online digital audio workstation (DAW) based 
 
 ![ScreenShot](https://raw.github.com/pvererecchia/MihirBegMusicLab/master/img/MihirBegMusicLab.PNG)
 
-
 <h6>Project Summary</h6>
 <p>
 The goal of the MihirBegMusicLab project was to create an open source online digital audio workstation using Google's Web Audio API. This API is
@@ -158,4 +157,3 @@ The technologies we have used so far or are planning to use:
 
 <hr>
   <br>
-

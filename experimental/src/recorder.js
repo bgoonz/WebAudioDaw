@@ -44,12 +44,16 @@
     };
 
     this.clear = function () {
-      worker.postMessage({ command: "clear" });
+      worker.postMessage({
+        command: "clear",
+      });
     };
 
     this.getBuffer = function (cb) {
       currCallback = cb || config.callback;
-      worker.postMessage({ command: "getBuffer" });
+      worker.postMessage({
+        command: "getBuffer",
+      });
     };
 
     this.exportWAV = function (cb, type) {

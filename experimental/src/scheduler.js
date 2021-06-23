@@ -64,7 +64,10 @@ function nextNote() {
 
 function scheduleNote(beatNumber, noteTime) {
   // push the note on the queue, even if we're not playing.
-  notesInQueue.push({ note: beatNumber, time: noteTime });
+  notesInQueue.push({
+    note: beatNumber,
+    time: noteTime,
+  });
   var samples;
 
   if (isPlaying) {
@@ -86,7 +89,10 @@ function scheduleNote(beatNumber, noteTime) {
       source.buffer = buffers[samples[i].id].buffer;
 
       //push source node and the scheduled start time of the sample
-      activeSources.push({ sourceNode: source, sourceStartBar: beatNumber });
+      activeSources.push({
+        sourceNode: source,
+        sourceStartBar: beatNumber,
+      });
       source.start(noteTime);
       //source.stop(noteTime + buffers[samples[i]].buffer.duration);
     }
@@ -197,6 +203,7 @@ function schedStepBack(time) {
 
   clockOutput(0);
 }
+
 function draw() {
   var currentNote = last16thNoteDrawn;
   var currentTime = ac.currentTime;

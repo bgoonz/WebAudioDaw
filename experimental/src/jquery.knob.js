@@ -438,7 +438,12 @@
         kval,
         to,
         m = 1,
-        kv = { 37: -s.o.step, 38: s.o.step, 39: s.o.step, 40: -s.o.step };
+        kv = {
+          37: -s.o.step,
+          38: s.o.step,
+          39: s.o.step,
+          40: -s.o.step,
+        };
 
       this.$.bind("keydown", function (e) {
         var kc = e.keyCode;

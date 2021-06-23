@@ -124,9 +124,17 @@ var wavesurfer = (function () {
           );
           var newStartTime = $(this).attr("data-startTime");
           if (times[newStartTime] == null) {
-            times[newStartTime] = [{ id: song.id, track: song.track }];
+            times[newStartTime] = [
+              {
+                id: song.id,
+                track: song.track,
+              },
+            ];
           } else {
-            times[newStartTime].push({ id: song.id, track: song.track });
+            times[newStartTime].push({
+              id: song.id,
+              track: song.track,
+            });
           }
         },
       });
@@ -196,7 +204,10 @@ var wavesurfer = (function () {
           var currentStartTime = this;
           if (times[currentStartTime] == null) {
             times[currentStartTime] = [
-              { id: currentSample.id, track: currentSample.track },
+              {
+                id: currentSample.id,
+                track: currentSample.track,
+              },
             ];
           } else {
             times[currentStartTime].push({
@@ -229,7 +240,9 @@ function load(src, id) {
       ac.decodeAudioData(
         e.target.response,
         function (buffer) {
-          buffers[id] = { buffer: buffer };
+          buffers[id] = {
+            buffer: buffer,
+          };
         },
         Error
       );
@@ -276,9 +289,9 @@ $(document).ready(function () {
   $("#effectSortable").sortable({
     cancel: "canvas,input",
     /*
-	sort: function(event, ui){
-	     console.log($( "#effectSortable" ).sortable( "toArray" ))
-	}*/
+        sort: function(event, ui){
+             console.log($( "#effectSortable" ).sortable( "toArray" ))
+        }*/
   });
 
   $("#trackEffects").droppable({
@@ -850,7 +863,10 @@ function createTrack(trackNumber) {
             var newStartTime = $(this).attr("data-startTime");
             if (times[newStartTime] == null) {
               times[newStartTime] = [
-                { id: currentRecordingCount, track: recordTrackNumber },
+                {
+                  id: currentRecordingCount,
+                  track: recordTrackNumber,
+                },
               ];
             } else {
               times[newStartTime].push({
@@ -879,11 +895,16 @@ function createTrack(trackNumber) {
           });
           wavesurfer.load(url);
           globalWavesurfers.push(wavesurfer);
-          buffers[recordingCount] = { buffer: newBuffer };
+          buffers[recordingCount] = {
+            buffer: newBuffer,
+          };
 
           if (times[startBar] == null) {
             times[startBar] = [
-              { id: recordingCount, track: recordTrackNumber },
+              {
+                id: recordingCount,
+                track: recordTrackNumber,
+              },
             ];
           } else {
             times[startBar].push({
@@ -942,9 +963,17 @@ function createTrack(trackNumber) {
           );
           var newStartTime = $(this).attr("data-startTime");
           if (times[newStartTime] == null) {
-            times[newStartTime] = [{ id: sampleID, track: trackNumber }];
+            times[newStartTime] = [
+              {
+                id: sampleID,
+                track: trackNumber,
+              },
+            ];
           } else {
-            times[newStartTime].push({ id: sampleID, track: trackNumber });
+            times[newStartTime].push({
+              id: sampleID,
+              track: trackNumber,
+            });
           }
         },
       });
@@ -964,9 +993,17 @@ function createTrack(trackNumber) {
         load(sampleURL, sampleID);
       }
       if (times[sampleStartTime] == null) {
-        times[sampleStartTime] = [{ id: sampleID, track: trackNumber }];
+        times[sampleStartTime] = [
+          {
+            id: sampleID,
+            track: trackNumber,
+          },
+        ];
       } else {
-        times[sampleStartTime].push({ id: sampleID, track: trackNumber });
+        times[sampleStartTime].push({
+          id: sampleID,
+          track: trackNumber,
+        });
       }
     },
   });
@@ -1007,5 +1044,11 @@ window.onload = function init() {
     alert("No web audio support in this browser!");
   }
 
-  navigator.getUserMedia({ audio: true }, startUserMedia, function (e) {});
+  navigator.getUserMedia(
+    {
+      audio: true,
+    },
+    startUserMedia,
+    function (e) {}
+  );
 };
