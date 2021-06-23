@@ -6,4 +6,4 @@ An stripped down online DAW
 
 
 
-[![](http://img.youtube.com/vi/xGZSWvFess8/0.jpg)](https://www.youtube.com/watch?v=YrmGfqBbIVQ "MusicLabWebDaw Demo")
+[![](http://img.youtube.com/vi/xGZSWvFess8/0.jpg)](https://youtu.be/YrmGfqBbIVQ "MusicLabWebDaw Demo")
