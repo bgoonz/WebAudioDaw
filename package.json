@@ -10,7 +10,7 @@
     "concat-map": "^0.0.1",
     "d": "^1.0.1",
     "commander": "^5.1.0",
-    "brace-expansion": "^1.1.11",
+    "brace-expansion": "^2.0.0",
     "es6-iterator": "^2.0.3",
     "es6-map": "^0.1.5",
     "escope": "^3.6.0",
