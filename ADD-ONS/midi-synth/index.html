@@ -14,15 +14,12 @@
     <script src="js/platform.js"></script>
     <link rel="import" href="webcomponents/polymer.html" />
     <link rel="import" href="webcomponents/controls.html" />
-
-    <!-- Set up Web MIDI polyfill -->
-    <!--
-    <script src='http://cwilso.github.com/WebMIDIAPIShim/WebMIDIAPI.js'></script>
--->
-    <!-- Monkey-patch all the audio calls so it works on compliant AudioContext implementations -->
-    <!--
-    <script src="http://cwilso.github.io/AudioContext-MonkeyPatch/AudioContextMonkeyPatch.js"></script>
--->
+<style>
+body{
+  zoom:0.5;
+}
+</style>
+   
     <script type="text/javascript" src="js/midi.js"></script>
     <script type="text/javascript" src="js/waveshaper.js"></script>
     <script type="text/javascript" src="js/synth.js"></script>
@@ -31,12 +28,7 @@
 
   <body>
     <div id="synthbox">
-      <!--
-        <div class="knobContainer" id="fControl" style="left: 10px; top: 10px;">
-            <input class="knob" data-width=100 data-angleOffset=-125 data-angleArc=250 data-fgColor="#66EE66" value="35">
-            <div class="knobLabel">frequency</div>
-        </div>
--->
+      
     </div>
     <div id="keybox" touch-action="none">
       <div id="blackkeys">
@@ -67,24 +59,10 @@
       ><span id="k83" class="white key"></span>
     </div>
     <div id="githubnotice">
-      <a href="http://github.com/cwilso/midi-synth">Fork my code on Github</a>
+      <a href="https://github.com/bgoonz/MihirBegMusicLab.git">Fork my code on Github</a>
     </div>
     <div id="MIDIPlugin"></div>
 
-    <!--
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-35593052-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
--->
+    
   </body>
 </html>
