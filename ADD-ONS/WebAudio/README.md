@@ -1,11 +1,10 @@
-Web Audio Playground
-==========
+# Web Audio Playground
 
 This is the source code for the
 [Web Audio Playground](https://webaudioplayground.appspot.com/)
 application.
 
-## Installation ##
+## Installation
 
 To install the application locally,
 [download a copy of the Python App Engine SDK](https://developers.google.com/appengine/downloads)
