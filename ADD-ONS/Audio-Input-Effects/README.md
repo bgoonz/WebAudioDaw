@@ -4,4 +4,4 @@ I whipped this app up to test live audio input, letting the user select a few co
 
 Check it out [here](https://webaudiodemos.appspot.com/input/), feel free to fork, submit pull requests, etc.
 
--Chris
+https://github.com/bgoonz/

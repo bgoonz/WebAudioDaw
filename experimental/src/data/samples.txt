@@ -20,7 +20,7 @@
         {"id":"14","url":"src/data/samples/fhg_guitloop_125_superstrum_D.wav","track":"1","startTime":[],"duration":"3.8399999141693115"},
         {"id":"15","url":"src/data/samples/fhg_keys_wurlie_125_D_E_D.wav","track":"1","startTime":[],"duration":"3.8399999141693115"},
         {"id":"16","url":"src/data/samples/fhg_keys_wurlie_125_E_D.wav","track":"1","startTime":[],"duration":"3.8399999141693115"},
-        {"id":"17","url":"src/data/samples/fhg_keys_wurlie_125_F_D#.wav","track":"1","startTime":[],"duration":"3.8399999141693115"},
+        {"id":"17","url":"src/data/samples/fhg_keys_wurlie_125_F_D.wav","track":"1","startTime":[],"duration":"3.8399999141693115"},
         {"id":"18","url":"src/data/samples/fhg_sax_125_funky_AG.wav","track":"1","startTime":[],"duration":"2.504852533340454"},
         {"id":"19","url":"src/data/samples/fhg_sax_125_jazzy_D.wav","track":"1","startTime":[],"duration":"1.9199999570846558"},
         {"id":"20","url":"src/data/samples/fhg_tops_125_sleaze_hats.wav","track":"1","startTime":[],"duration":"1.9199999570846558"},

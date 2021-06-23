@@ -143,7 +143,7 @@ Pietro:
 <p>
 Projects that have helped our progress so far are 
 <a href = https://github.com/katspaugh/wavesurfer.js target="blank"> Wavesurfer.js</a> for generating waveform graphics and
-<a href = https://github.com/cwilso/metronome target="blank">Web Audio Metronome</a> for playback scheduling.
+<a href = https://github.com/bgoonz/metronome target="blank">Web Audio Metronome</a> for playback scheduling.
 </p>
 
 The technologies we have used so far or are planning to use:

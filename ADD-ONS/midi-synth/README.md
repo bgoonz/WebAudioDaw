@@ -8,4 +8,4 @@ You can try it out live at https://webaudiodemos.appspot.com/midi-synth/index.ht
 
 Check it out, feel free to fork, submit pull requests, etc.
 
--Chris
+https://github.com/bgoonz/

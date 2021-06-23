@@ -6,4 +6,4 @@ Check it out, feel free to submit issues or requests, fork, submit pull requests
 
 The live app is at http://webaudiodemos.appspot.com/metronome/index.html.
 
--Chris
+https://github.com/bgoonz/

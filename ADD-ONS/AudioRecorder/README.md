@@ -6,4 +6,4 @@ This is a code snippet/example for using RecorderJS with the web audio input fea
 Hosted live on [Web Audio Demos](http://webaudiodemos.appspot.com/AudioRecorder/index.html).
 Check it out, feel free to fork, submit pull requests, etc.
 
--Chris
+https://github.com/bgoonz/
