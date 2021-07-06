@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
-    "acorn": "^7.4.1",
+    "acorn": "^8.0.0",
     "balanced-match": "^1.0.2",
     "ast-types": "^0.14.0",
     "acorn-jsx": "^5.3.1",
