@@ -43,7 +43,7 @@
     "mocha": "5.2.0",
     "tslint": "5.20.1",
     "typedoc": "0.11.1",
-    "typescript": "2.9.2",
+    "typescript": "4.6.4",
     "uglify-es": "3.3.9",
     "wct-browser-legacy": "1.0.2",
     "web-component-tester": "6.9.2"
