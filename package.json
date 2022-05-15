@@ -37,7 +37,7 @@
     "inherits": "^2.0.4",
     "once": "^1.4.0",
     "path-is-absolute": "^1.0.1",
-    "recast": "^0.19.1",
+    "recast": "^0.21.0",
     "next-tick": "^1.0.0",
     "python-format": "^v1.0.2",
     "private": "^0.1.8",
